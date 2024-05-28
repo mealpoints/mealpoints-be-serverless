@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import ApiResponse from "../../utils/ApiResponse";
+import ApiResponse from "../../utils/APIResponse";
 
 export const getBooks = async (req: Request, res: Response) => {
   try {
