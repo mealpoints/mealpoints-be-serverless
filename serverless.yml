@@ -5,11 +5,16 @@ app: mealpoints-app-serverless
 # "service" is the name of this project. This will also be added to your AWS resource names.
 service: mealpoints-be-serverless
 
-provider:
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-plugin-typescript
+
+provider: 
   name: aws
   runtime: nodejs20.x
 functions:
   api:
-    handler: handler.handler
+    handler: dist/app.handler
     events:
-      - httpApi: '*'
+      - http: ANY /
+      - http: ANY /{proxy+}
