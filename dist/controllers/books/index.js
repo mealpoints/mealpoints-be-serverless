@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getBooks = void 0;
-const ApiResponse_1 = __importDefault(require("../../utils/ApiResponse"));
+const APIResponse_1 = __importDefault(require("../../utils/APIResponse"));
 const getBooks = async (req, res) => {
     try {
         const books = [
@@ -15,11 +15,11 @@ const getBooks = async (req, res) => {
             },
         ];
         console.debug(`Returning the books ${JSON.stringify(books)}`);
-        return ApiResponse_1.default.Ok(res, books);
+        return APIResponse_1.default.Ok(res, books);
     }
     catch (error) {
         console.error("An error ocurred:", error);
-        return ApiResponse_1.default.ServerError(res, error);
+        return APIResponse_1.default.ServerError(res, error);
     }
 };
 exports.getBooks = getBooks;
