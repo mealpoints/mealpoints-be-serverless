@@ -7,7 +7,7 @@ export const getBooks = async (req: Request, res: Response) => {
       {
         id: "ebb3d966-74e4-11ed-8db0-136d663b98e7",
         title: "Some Title",
-        author: "Some Author this is new stuff",
+        author: "Some Author this is new stuff asdasd",
       },
     ];
 

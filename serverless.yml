@@ -9,13 +9,21 @@ plugins:
   - serverless-dotenv-plugin
   - serverless-plugin-typescript
   - serverless-offline
+  - serverless-plugin-common-excludes # this should go before serverless-plugin-include-dependencies
+  - serverless-plugin-include-dependencies
+
+package:
+  patterns:
+    - '!coverage/**'
+    - '!test/**'
+    - '!secrets.yml'
 
 provider: 
   name: aws
   runtime: nodejs20.x
 functions:
   api:
-    handler: dist/app.handler
+    handler: src/app.handler
     events:
       - http: ANY /
       - http: ANY /{proxy+}
