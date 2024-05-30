@@ -5,6 +5,8 @@ app: mealpoints-app-serverless
 # "service" is the name of this project. This will also be added to your AWS resource names.
 service: mealpoints-be-serverless
 
+frameworkVersion: '3.38.0'
+
 plugins:
   - serverless-dotenv-plugin
   - serverless-plugin-typescript
@@ -17,6 +19,7 @@ package:
     - '!coverage/**'
     - '!test/**'
     - '!secrets.yml'
+    - '!node_modules/**'
 
 provider: 
   name: aws
