@@ -8,6 +8,7 @@ service: mealpoints-be-serverless
 plugins:
   - serverless-dotenv-plugin
   - serverless-plugin-typescript
+  - serverless-offline
 
 provider: 
   name: aws

@@ -15,6 +15,7 @@
     "@types/node": "^20.12.12",
     "rimraf": "^4.4.0",
     "serverless-dotenv-plugin": "^6.0.0",
+    "serverless-offline": "^13.6.0",
     "serverless-plugin-typescript": "^2.1.5",
     "ts-node": "^10.9.1",
     "typescript": "^5.4.5"
