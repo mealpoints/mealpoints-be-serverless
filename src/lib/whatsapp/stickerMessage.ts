@@ -1,8 +1,10 @@
+import { IUser } from "../../models/user.model";
 import { IWhatsappWebhookPayload } from "../../types/message";
 
 export const processStickerMessage = async (
-  message: IWhatsappWebhookPayload
+  payload: IWhatsappWebhookPayload,
+  user: IUser
 ) => {
-  console.debug("whatsapp.webhook: Processing sticker message", message);
+  console.debug("whatsapp.webhook: Processing sticker message", payload);
   return;
 };

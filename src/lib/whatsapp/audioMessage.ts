@@ -1,5 +1,10 @@
 import { IWhatsappWebhookPayload } from "../../types/message";
-export const processAudioMessage = (payload: IWhatsappWebhookPayload) => {
+import { IUser } from "../../models/user.model";
+
+export const processAudioMessage = (
+  payload: IWhatsappWebhookPayload,
+  user: IUser
+) => {
   console.debug("whatsapp.webhook: Processing audio message", payload);
   return;
 };

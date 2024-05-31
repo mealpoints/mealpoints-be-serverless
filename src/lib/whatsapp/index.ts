@@ -10,6 +10,7 @@ import { processTextMessage } from "./textMessage";
 import { processUnknownMessage } from "./unknownMessage";
 import { processVideoMessage } from "./videoMessage";
 import * as messageService from "../../services/message.service";
+import * as userService from "../../services/user.service";
 
 export const categoriseWebhook = (
   payload: IWhatsappWebhookPayload
@@ -41,24 +42,33 @@ export const processMessage = async (
   const webhookType = categoriseWebhook(payload);
   console.debug("whatsapp.webhook: Processing message type: ", webhookType);
 
+  const contact =
+    payload.entry[0].changes[0].value.metadata.display_phone_number;
+  // See if user with contact exists, if not create one
+  let user = null;
+  user = await userService.getUserByContact(contact);
+  if (!user) {
+    user = await userService.createUser({ contact });
+  }
+
   await messageService.createMessage({ user: user.id, message: payload });
 
   switch (webhookType) {
     case WebhookTypesEnum.Text:
-      return processTextMessage(payload);
+      return processTextMessage(payload, user as IUser);
     case WebhookTypesEnum.Audio:
-      return processAudioMessage(payload);
+      return processAudioMessage(payload, user as IUser);
     case WebhookTypesEnum.Document:
-      return processDocumentMessage(payload);
+      return processDocumentMessage(payload, user as IUser);
     case WebhookTypesEnum.Image:
-      return processImageMessage(payload);
+      return processImageMessage(payload, user as IUser);
     case WebhookTypesEnum.Interactive:
-      return processInteractiveMessage(payload);
+      return processInteractiveMessage(payload, user as IUser);
     case WebhookTypesEnum.Sticker:
-      return processStickerMessage(payload);
+      return processStickerMessage(payload, user as IUser);
     case WebhookTypesEnum.Video:
-      return processVideoMessage(payload);
+      return processVideoMessage(payload, user as IUser);
     default:
-      return processUnknownMessage(payload);
+      return processUnknownMessage(payload, user as IUser);
   }
 };
