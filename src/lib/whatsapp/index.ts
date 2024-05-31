@@ -39,8 +39,7 @@ export const processMessage = async (payload: IWhatsappWebhookPayload) => {
   const webhookType = categoriseWebhook(payload);
   console.debug("whatsapp.webhook: Processing message type: ", webhookType);
 
-  const contact =
-    payload.entry[0].changes[0].value.metadata.display_phone_number;
+  const contact = payload.entry[0].changes[0].value.messages[0].from;
   // See if user with contact exists, if not create one
   let user = null;
   user = await userService.getUserByContact(contact);
