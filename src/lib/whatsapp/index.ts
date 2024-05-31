@@ -35,10 +35,7 @@ export const categoriseWebhook = (
   }
 };
 
-export const processMessage = async (
-  payload: IWhatsappWebhookPayload,
-  user: IUser
-) => {
+export const processMessage = async (payload: IWhatsappWebhookPayload) => {
   const webhookType = categoriseWebhook(payload);
   console.debug("whatsapp.webhook: Processing message type: ", webhookType);
 
