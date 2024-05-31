@@ -4,6 +4,7 @@ import * as messageService from "../services/message.service";
 
 export const getBooks = async (req: Request, res: Response) => {
   try {
+    console.debug("books.controller: Gettiing messages");
     const books = await messageService.getMessages();
     return ApiResponse.Ok(res, books);
   } catch (error) {
@@ -14,6 +15,7 @@ export const getBooks = async (req: Request, res: Response) => {
 
 export const createMessage = async (req: Request, res: Response) => {
   try {
+    console.debug("books.controller: Creating message");
     const message = await messageService.createMessage(req.body);
     return ApiResponse.Ok(res, message);
   } catch (error) {

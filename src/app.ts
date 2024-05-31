@@ -4,6 +4,11 @@ import serverless from "serverless-http";
 import routes from "./routes";
 import APIResponse from "./utils/APIResponse";
 import { connectToDatabase } from "./config/db";
+import {
+  APIGatewayProxyEvent,
+  APIGatewayProxyResultV2,
+  Context,
+} from "aws-lambda";
 
 const app = express();
 
@@ -31,4 +36,12 @@ app.use(
   }
 );
 
-export const handler = serverless(app);
+const serverlessHandler = serverless(app);
+
+export const handler = async (
+  event: APIGatewayProxyEvent,
+  context: Context
+): Promise<APIGatewayProxyResultV2> => {
+  await connectToDatabase();
+  return serverlessHandler(event, context);
+};

@@ -9,13 +9,14 @@
   },
   "scripts": {
     "deploy": "sls deploy",
+    "deploy:prod": "sls deploy --stage production",
     "dev": "nodemon"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.138",
     "@types/express": "^4.17.21",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^20.12.12",
-    "rimraf": "^4.4.0",
     "serverless-dotenv-plugin": "^6.0.0",
     "serverless-offline": "^13.6.0",
     "serverless-plugin-common-excludes": "^4.0.0",

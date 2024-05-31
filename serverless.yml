@@ -28,6 +28,7 @@ package:
 provider: 
   name: aws
   runtime: nodejs20.x
+  region: ap-south-1 # Mumbai region
   environment:
     MONGODB_URI: ${env:MONGODB_URI}
 
