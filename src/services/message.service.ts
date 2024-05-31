@@ -1,9 +1,7 @@
-// create message
-
-import Message, { IMessage } from "../models/message.model";
+import Message, { IMessage, IMessageCreate } from "../models/message.model";
 
 export const createMessage = async (
-  messageData: IMessage
+  messageData: IMessageCreate
 ): Promise<IMessage> => {
   console.debug("message.service: Creating message");
   const message = await Message.create(messageData);
