@@ -3,6 +3,7 @@ import serverless from "serverless-http";
 
 import routes from "./routes";
 import APIResponse from "./utils/APIResponse";
+import { connectToDatabase } from "./config/db";
 
 const app = express();
 
@@ -11,7 +12,6 @@ app.use(express.json());
 app.use("/", routes);
 
 // Error handling
-
 // 404
 app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
