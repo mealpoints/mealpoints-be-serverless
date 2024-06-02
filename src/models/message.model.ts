@@ -1,19 +1,19 @@
-import mongoose, { Schema, Document, Mongoose } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface IMessage extends Document {
   user: string;
-  message: Object;
+  payload: Object;
   createdAt: Date;
 }
 
 export interface IMessageCreate {
   user: string;
-  message: Object;
+  payload: Object;
 }
 
 const MessageSchema: Schema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User" },
-  message: { type: Object },
+  payload: { type: Object },
   createdAt: { type: Date, default: Date.now },
 });
 

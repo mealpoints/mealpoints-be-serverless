@@ -47,7 +47,7 @@ export const processMessage = async (payload: IWhatsappWebhookPayload) => {
     user = await userService.createUser({ contact });
   }
 
-  await messageService.createMessage({ user: user.id, message: payload });
+  await messageService.createMessage({ user: user.id, payload });
 
   switch (webhookType) {
     case WebhookTypesEnum.Text:
