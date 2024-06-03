@@ -9,17 +9,17 @@ export const processTextMessage = async (
   user: IUser,
   conversation: IConversation
 ) => {
-  console.debug(
-    "[whatsapp.textMessage/processTextMessage]: Processing text message",
-    payload
-  );
+  console.debug("[whatsapp.textMessage/processTextMessage]");
+  const message: string = payload.entry[0].changes[0].value.messages[0].text
+    ?.body as string;
 
   try {
     const whatsappMessageResponse = await messageService.sendMessage({
       user: user.id,
       conversation: conversation.id,
-      payload:
-        "Hello, I am a bot. I am currently learning how to respond to messages. Please be patient with me.",
+      payload: `Thank you for your message. We are processing your request:
+
+      ${message}`,
       type: MessageTypesEnum.Text,
     });
     return whatsappMessageResponse;

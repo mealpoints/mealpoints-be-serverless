@@ -13,7 +13,7 @@ import * as userService from "./user.service";
 export const createRecievedMessage = async (
   messageData: IRecievedMessageCreate
 ): Promise<IRecievedMessage> => {
-  console.debug("[message.service/createRecievedMessage]: Creating message");
+  console.debug("[message.service/createRecievedMessage]");
   const message = await RecievedMessage.create(messageData);
   return message;
 };
@@ -22,7 +22,7 @@ export const createSentMessage = async (
   messageData: ISentMessageCreate
 ): Promise<ISentMessage> => {
   try {
-    console.debug("[message.service/createSentMessage]: Creating message");
+    console.debug("[message.service/createSentMessage]");
     const message = await SentMessage.create(messageData);
     return message;
   } catch (error) {
@@ -36,9 +36,7 @@ export const updateSentMessageStatusByWAID = async (
   status: StatusEnum
 ): Promise<ISentMessage> => {
   try {
-    console.debug(
-      "[message.service/updateSentMessageStatusByWAID]: Updating message"
-    );
+    console.debug("[message.service/updateSentMessageStatusByWAID]");
     const sentMessage = await SentMessage.findOneAndUpdate(
       { wamid },
       { status },
@@ -64,9 +62,7 @@ export const updateSentMessageStatus = async (
   status: StatusEnum
 ): Promise<ISentMessage> => {
   try {
-    console.debug(
-      "[message.service/updateSentMessageStatus]: Updating message"
-    );
+    console.debug("[message.service/updateSentMessageStatus]");
     const sentMessage = await SentMessage.findByIdAndUpdate(
       messageId,
       { status },
@@ -85,10 +81,7 @@ export const updateSentMessageStatus = async (
 };
 
 export const sendMessage = async (messageData: ISentMessageCreate) => {
-  console.debug(
-    "[message.service/sendMessage]:  Sending message:",
-    JSON.stringify(messageData)
-  );
+  console.debug("[message.service/sendMessage]");
   try {
     const user = await userService.getUserById(messageData.user);
     if (!user) {

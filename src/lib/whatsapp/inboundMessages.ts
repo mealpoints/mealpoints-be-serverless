@@ -46,10 +46,7 @@ export const categoriseInboundMessageWebhook = (
 export const processInboundMessageWebhook = async (payload: WebhookObject) => {
   const webhookType = categoriseInboundMessageWebhook(payload);
 
-  console.debug(
-    "[whatsapp.inboundMessages/processInboundMessageWebhook]: Processing message type:",
-    webhookType
-  );
+  console.debug("[whatsapp.inboundMessages/processInboundMessageWebhook]");
 
   const contact = payload.entry[0].changes[0].value.messages[0].from;
 
@@ -78,7 +75,7 @@ export const processInboundMessageWebhook = async (payload: WebhookObject) => {
       return processDocumentMessage(payload);
     }
     case WebhookTypesEnum.Image: {
-      return processImageMessage(payload);
+      return processImageMessage(payload, user, conversation);
     }
     case WebhookTypesEnum.Interactive: {
       return processInteractiveMessage(payload);

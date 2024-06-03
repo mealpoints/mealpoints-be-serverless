@@ -44,9 +44,7 @@ export const sendMessage = (
   phoneNumber: string,
   message: string
 ): Promise<AxiosResponse> => {
-  console.debug(
-    `[whatsapp.handler/sendMessage]: Sending message: ${message} to phoneNumber: ${phoneNumber}`
-  );
+  console.debug(`[whatsapp.handler/sendMessage]`);
 
   const data: MessageResponse = {
     messaging_product: "whatsapp",

@@ -3,10 +3,7 @@ import { processInboundMessageWebhook } from "./inboundMessages";
 import { processStatusUpdateWebhook } from "./statusUpdates";
 
 export const processWebhook = async (payload: WebhookObject) => {
-  console.debug(
-    "[whatsapp/processWebhook]: Processing webhook",
-    JSON.stringify(payload)
-  );
+  console.debug("[whatsapp/processWebhook]");
 
   try {
     // Identify if the webhook is a message or a status update
