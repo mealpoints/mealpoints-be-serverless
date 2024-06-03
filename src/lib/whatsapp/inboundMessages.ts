@@ -1,3 +1,8 @@
+import * as conversationService from "../../services/conversation.service";
+import * as messageService from "../../services/message.service";
+import * as userService from "../../services/user.service";
+import { WebhookTypesEnum } from "../../types/enums";
+import { WebhookObject } from "../../types/message";
 import { processAudioMessage } from "./audioMessage";
 import { processDocumentMessage } from "./documentMessage";
 import { processImageMessage } from "./imageMessage";
@@ -6,12 +11,6 @@ import { processStickerMessage } from "./stickerMessage";
 import { processTextMessage } from "./textMessage";
 import { processUnknownMessage } from "./unknownMessage";
 import { processVideoMessage } from "./videoMessage";
-import * as messageService from "../../services/message.service";
-import * as userService from "../../services/user.service";
-import * as conversationService from "../../services/conversation.service";
-import { IUser } from "../../models/user.model";
-import { WebhookTypesEnum } from "../../types/enums";
-import { WebhookObject } from "../../types/message";
 
 export const categoriseInboundMessageWebhook = (
   payload: WebhookObject

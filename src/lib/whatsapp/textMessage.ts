@@ -1,8 +1,8 @@
 import { IConversation } from "../../models/conversation.model";
 import { IUser } from "../../models/user.model";
-import { WebhookObject } from "../../types/message";
 import * as messageService from "../../services/message.service";
 import { MessageTypesEnum } from "../../types/enums";
+import { WebhookObject } from "../../types/message";
 
 export const processTextMessage = async (
   payload: WebhookObject,

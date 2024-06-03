@@ -1,14 +1,14 @@
 import express, { Request, Response } from "express";
 import serverless from "serverless-http";
 
-import routes from "./routes";
-import ApiResponse from "./utils/ApiResponse";
-import { connectToDatabase } from "./config/database";
 import {
   APIGatewayProxyEvent,
   APIGatewayProxyResultV2,
   Context,
 } from "aws-lambda";
+import { connectToDatabase } from "./config/database";
+import routes from "./routes";
+import ApiResponse from "./utils/ApiResponse";
 
 const app = express();
 

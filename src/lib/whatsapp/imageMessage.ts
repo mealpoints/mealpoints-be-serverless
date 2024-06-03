@@ -1,7 +1,6 @@
 import { WebhookObject } from "../../types/message";
-import { IUser } from "../../models/user.model";
 
-export const processImageMessage = (payload: WebhookObject, user: IUser) => {
+export const processImageMessage = (payload: WebhookObject) => {
   console.debug(
     "[whatsapp.imageMessage/processImageMessage]: Processing image message",
     payload

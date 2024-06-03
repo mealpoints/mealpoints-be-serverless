@@ -1,5 +1,5 @@
-import { WebhookObject } from "../../types/message";
 import * as messageService from "../../services/message.service";
+import { WebhookObject } from "../../types/message";
 
 export const processStatusUpdateWebhook = async (payload: WebhookObject) => {
   console.debug(

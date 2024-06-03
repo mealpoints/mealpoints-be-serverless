@@ -1,7 +1,7 @@
+import { Request, Response } from "express";
 import { processWebhook } from "../lib/whatsapp";
 import { WebhookObject } from "../types/message";
 import ApiResponse from "../utils/ApiResponse";
-import { Request, Response } from "express";
 
 export const readMessage = async (request: Request, response: Response) => {
   try {

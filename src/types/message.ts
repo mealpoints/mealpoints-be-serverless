@@ -1,14 +1,14 @@
 import {
   ConversationTypesEnum,
   CurrencyCodesEnum,
-  StatusEnum,
-  VideoMediaTypesEnum,
-  ReferralSourceTypesEnum,
-  StickerMediaTypesEnum,
-  WebhookTypesEnum,
-  SystemChangeTypesEnum,
-  ImageMediaTypesEnum,
   DocumentMediaTypesEnum,
+  ImageMediaTypesEnum,
+  ReferralSourceTypesEnum,
+  StatusEnum,
+  StickerMediaTypesEnum,
+  SystemChangeTypesEnum,
+  VideoMediaTypesEnum,
+  WebhookTypesEnum,
 } from "./enums";
 
 type PricingObject = {

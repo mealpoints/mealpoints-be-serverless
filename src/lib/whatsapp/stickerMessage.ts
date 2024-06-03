@@ -1,10 +1,6 @@
-import { IUser } from "../../models/user.model";
 import { WebhookObject } from "../../types/message";
 
-export const processStickerMessage = async (
-  payload: WebhookObject,
-  user: IUser
-) => {
+export const processStickerMessage = (payload: WebhookObject) => {
   console.debug(
     "[whatsapp.stickerMessage/processStickerMessage]: Processing sticker message",
     payload
