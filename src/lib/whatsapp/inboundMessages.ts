@@ -54,8 +54,7 @@ export const processInboundMessageWebhook = async (payload: WebhookObject) => {
   const contact = payload.entry[0].changes[0].value.messages[0].from;
 
   // Ensure user exists
-  // TODO: TEMP FIX
-  const user = await userService.ensureUserByContact("+" + contact);
+  const user = await userService.ensureUserByContact(contact);
 
   // Ensure conversation exists
   const conversation = await conversationService.ensureConversation(user.id);
@@ -73,25 +72,25 @@ export const processInboundMessageWebhook = async (payload: WebhookObject) => {
       return processTextMessage(payload, user, conversation);
     }
     case WebhookTypesEnum.Audio: {
-      return processAudioMessage(payload, user);
+      return processAudioMessage(payload);
     }
     case WebhookTypesEnum.Document: {
-      return processDocumentMessage(payload, user);
+      return processDocumentMessage(payload);
     }
     case WebhookTypesEnum.Image: {
-      return processImageMessage(payload, user);
+      return processImageMessage(payload);
     }
     case WebhookTypesEnum.Interactive: {
-      return processInteractiveMessage(payload, user);
+      return processInteractiveMessage(payload);
     }
     case WebhookTypesEnum.Sticker: {
-      return processStickerMessage(payload, user);
+      return processStickerMessage(payload);
     }
     case WebhookTypesEnum.Video: {
-      return processVideoMessage(payload, user);
+      return processVideoMessage(payload);
     }
     default: {
-      return processUnknownMessage(payload, user);
+      return processUnknownMessage(payload);
     }
   }
 };

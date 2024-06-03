@@ -13,7 +13,8 @@
     "deploy:prod": "sls deploy --stage production",
     "dev": "nodemon",
     "lint": "npx eslint \"{src,apps,libs,test}/**/*.ts\" -c .eslintrc.js",
-    "lint:fix": "npx eslint \"{src,apps,libs,test}/**/*.ts\" -c .eslintrc.js --fix"
+    "lint:fix": "npx eslint \"{src,apps,libs,test}/**/*.ts\" -c .eslintrc.js --fix",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.138",
