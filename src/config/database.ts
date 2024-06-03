@@ -15,7 +15,7 @@ export const connectToDatabase = async (): Promise<void> => {
       dbName: process.env.MONGODB_DB,
     });
   } catch (error) {
-    console.error("config/db: Error connecting to database: ", error);
+    console.error("config/db: Error connecting to database:", error);
     throw new Error("Error connecting to database");
   }
 

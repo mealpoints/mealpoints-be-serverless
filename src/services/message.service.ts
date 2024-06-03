@@ -26,7 +26,7 @@ export const createSentMessage = async (
     const message = await SentMessage.create(messageData);
     return message;
   } catch (error) {
-    console.error("[message.service/createSentMessage]: Error: ", error);
+    console.error("[message.service/createSentMessage]: Error:", error);
     throw error;
   }
 };
@@ -52,7 +52,7 @@ export const updateSentMessageStatusByWAID = async (
     return sentMessage;
   } catch (error) {
     console.error(
-      "[message.service/updateSentMessageStatusByWAID]: Error: ",
+      "[message.service/updateSentMessageStatusByWAID]: Error:",
       error
     );
     throw error;
@@ -79,14 +79,14 @@ export const updateSentMessageStatus = async (
 
     return sentMessage;
   } catch (error) {
-    console.error("[message.service/updateSentMessageStatus]: Error: ", error);
+    console.error("[message.service/updateSentMessageStatus]: Error:", error);
     throw error;
   }
 };
 
 export const sendMessage = async (messageData: ISentMessageCreate) => {
   console.debug(
-    "[message.service/sendMessage]:  Sending message: ",
+    "[message.service/sendMessage]:  Sending message:",
     JSON.stringify(messageData)
   );
   try {
@@ -96,25 +96,24 @@ export const sendMessage = async (messageData: ISentMessageCreate) => {
     }
 
     // Send Message via Whatsapp
-    const res = await whatsappHandler
+    const response = await whatsappHandler
       .sendMessage(user.contact, messageData.payload)
-      .catch((err) => {
-        updateSentMessageStatus(sentMessage.id, StatusEnum.Failed);
-        console.error("[message.service/sendMessage]: Error: ", err);
-        throw err;
+      .catch(async (error) => {
+        await updateSentMessageStatus(sentMessage.id, StatusEnum.Failed);
+        console.error("[message.service/sendMessage]: Error:", error);
+        throw error;
       });
-
-    console.log(res.data);
 
     // Store Sent Message
     const sentMessage = await createSentMessage({
       ...messageData,
-      wamid: res.data.messages[0].id,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+      wamid: response.data.messages[0].id,
     });
 
-    return res;
+    return response;
   } catch (error) {
-    console.error("[message.service/sendMessage]: Error: ", error);
+    console.error("[message.service/sendMessage]: Error:", error);
     throw error;
   }
 };

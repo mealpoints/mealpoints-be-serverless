@@ -1,8 +1,8 @@
 import { IUser } from "../../models/user.model";
-import { IWhatsappWebhookPayload } from "../../types/message";
+import { WebhookObject } from "../../types/message";
 
 export const processStickerMessage = async (
-  payload: IWhatsappWebhookPayload,
+  payload: WebhookObject,
   user: IUser
 ) => {
   console.debug(

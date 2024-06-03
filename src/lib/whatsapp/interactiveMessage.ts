@@ -1,8 +1,8 @@
-import { IWhatsappWebhookPayload } from "../../types/message";
+import { WebhookObject } from "../../types/message";
 import { IUser } from "../../models/user.model";
 
 export const processInteractiveMessage = (
-  payload: IWhatsappWebhookPayload,
+  payload: WebhookObject,
   user: IUser
 ) => {
   console.debug(

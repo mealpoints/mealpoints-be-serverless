@@ -3,73 +3,80 @@ import { Response } from "express";
 export default {
   // Custom response
   CustomResponse: (
-    res: Response,
+    response: Response,
     status: number,
     messsage: string
   ): Response => {
-    return res.status(status).json(messsage);
+    return response.status(status).json(messsage);
   },
 
   // 200 Ok
-  Ok: (res: Response, data = {}): Response => {
-    return res.status(200).json(data);
+  Ok: (response: Response, data = {}): Response => {
+    return response.status(200).json(data);
   },
 
   // 201 Ok
-  Created: (res: Response, data = {}): Response => {
-    return res.status(201).json(data);
+  Created: (response: Response, data = {}): Response => {
+    return response.status(201).json(data);
   },
 
   // 204 No Content
-  NoContent: (res: Response): Response => {
-    return res.status(204).json();
+  NoContent: (response: Response): Response => {
+    return response.status(204).json();
   },
 
   // 400 Bad request
-  BadRequest: (res: Response, message = "Bad request"): Response => {
-    return res.status(400).json({ message });
+  BadRequest: (response: Response, message = "Bad request"): Response => {
+    return response.status(400).json({ message });
   },
 
   // 401 Unauthorized
-  Unauthorized: (res: Response, message = "Unauthorized access"): Response => {
-    return res.status(401).json({ message });
+  Unauthorized: (
+    response: Response,
+    message = "Unauthorized access"
+  ): Response => {
+    return response.status(401).json({ message });
   },
 
   // 402 PaymentRequired
-  PaymentRequired: (res: Response, message = "Payment Required"): Response => {
-    return res.status(402).json({ message });
+  PaymentRequired: (
+    response: Response,
+    message = "Payment Required"
+  ): Response => {
+    return response.status(402).json({ message });
   },
 
   // 403 Forbidden
-  Forbidden: (res: Response, message = "Forbidden Access"): Response => {
-    return res.status(403).json({ message });
+  Forbidden: (response: Response, message = "Forbidden Access"): Response => {
+    return response.status(403).json({ message });
   },
 
   // 404 Not found
-  NotFound: (res: Response, message = "Not found"): Response => {
-    return res.status(404).json({ message });
+  NotFound: (response: Response, message = "Not found"): Response => {
+    return response.status(404).json({ message });
   },
 
   // 415 Unsupported media type
   UnsupportedMediaType: (
-    res: Response,
+    response: Response,
     message = "Unsupported media type"
   ): Response => {
-    return res.status(415).json({ message });
+    return response.status(415).json({ message });
   },
 
   // 422 Unprocessable Entity
-  UnprocessableEntity: (res: Response, message: string): Response => {
-    return res.status(422).json({ message });
+  UnprocessableEntity: (response: Response, message: string): Response => {
+    return response.status(422).json({ message });
   },
 
   // 500 Server error
   ServerError: (
-    res: Response,
-    err: any,
+    response: Response,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    error: any,
     message = "Internal server error"
   ): Response => {
-    console.error(err);
-    return res.status(500).json({ message });
+    console.error(error);
+    return response.status(500).json({ message });
   },
 };

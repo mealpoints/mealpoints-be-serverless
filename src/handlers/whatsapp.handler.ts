@@ -1,8 +1,9 @@
+// eslint-disable-next-line import/named
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 
 const BASE_URL = process.env.WHATSAPP_API_BASE_URL;
-const TOKEN = process.env.WHATSAPP_API_TOKEN;
-const INSTANCE_ID = "your_instance_id"; // Replace with your instance ID if needed
+const TOKEN = process.env.WHATSAPP_API_ACCESS_TOKEN;
+const INSTANCE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID; // Replace with your instance ID if needed
 
 interface MessageResponse {
   messaging_product: string;
@@ -26,9 +27,9 @@ interface MessageResponse {
 }
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: process.env.WHATSAPP_API_BASE_URL,
+  baseURL: BASE_URL,
   headers: {
-    Authorization: `Bearer ${process.env.WHATSAPP_API_ACCESS_TOKEN}`,
+    Authorization: `Bearer ${TOKEN}`,
     "Content-Type": "application/json",
   },
 });
@@ -56,8 +57,5 @@ export const sendMessage = (
     },
   };
 
-  return axiosInstance.post(
-    `/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`,
-    data
-  );
+  return axiosInstance.post(`/${INSTANCE_ID}/messages`, data);
 };

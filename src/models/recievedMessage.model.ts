@@ -4,7 +4,7 @@ import { WebhookTypesEnum } from "../types/enums";
 export interface IRecievedMessage extends Document {
   id: string;
   user: string;
-  payload: Object;
+  payload: object;
   conversation: string;
   type: WebhookTypesEnum;
   createdAt: Date;
@@ -12,7 +12,7 @@ export interface IRecievedMessage extends Document {
 
 export interface IRecievedMessageCreate {
   user: string;
-  payload: Object;
+  payload: object;
   conversation: string;
   type: WebhookTypesEnum;
 }

@@ -1,6 +1,6 @@
-import { IWhatsappWebhookPayload } from "../types/message";
+import { WebhookObject } from "../types/message";
 
-const TEXT_MESSAGE: IWhatsappWebhookPayload = {
+const TEXT_MESSAGE: WebhookObject = {
   object: "whatsapp_business_account",
   entry: [
     {
@@ -40,7 +40,7 @@ const TEXT_MESSAGE: IWhatsappWebhookPayload = {
   ],
 };
 
-const REACTION_MESSAGE: IWhatsappWebhookPayload = {
+const REACTION_MESSAGE: WebhookObject = {
   object: "whatsapp_business_account",
   entry: [
     {
@@ -81,7 +81,7 @@ const REACTION_MESSAGE: IWhatsappWebhookPayload = {
   ],
 };
 
-const MEDIA_MESSAGE: IWhatsappWebhookPayload = {
+const MEDIA_MESSAGE: WebhookObject = {
   object: "whatsapp_business_account",
   entry: [
     {
@@ -124,7 +124,7 @@ const MEDIA_MESSAGE: IWhatsappWebhookPayload = {
   ],
 };
 
-const STICKER_MESSAGE: IWhatsappWebhookPayload = {
+const STICKER_MESSAGE: WebhookObject = {
   object: "whatsapp_business_account",
   entry: [
     {
@@ -166,7 +166,7 @@ const STICKER_MESSAGE: IWhatsappWebhookPayload = {
   ],
 };
 
-const UNKNOWN_MESSAGE: IWhatsappWebhookPayload = {
+const UNKNOWN_MESSAGE: WebhookObject = {
   object: "whatsapp_business_account",
   entry: [
     {
@@ -338,7 +338,7 @@ const CONTACT_MESSAGE = {
   ],
 };
 
-const RECIEVED_CALL_FROM_QUICK_REPLY_MESSAGE: IWhatsappWebhookPayload = {
+const RECIEVED_CALL_FROM_QUICK_REPLY_MESSAGE: WebhookObject = {
   object: "whatsapp_business_account",
   entry: [
     {
@@ -383,7 +383,7 @@ const RECIEVED_CALL_FROM_QUICK_REPLY_MESSAGE: IWhatsappWebhookPayload = {
   ],
 };
 
-const RECIEVED_ANSWER_FROM_LIST_MESSAGE: IWhatsappWebhookPayload = {
+const RECIEVED_ANSWER_FROM_LIST_MESSAGE: WebhookObject = {
   object: "whatsapp_business_account",
   entry: [
     {
@@ -428,7 +428,7 @@ const RECIEVED_ANSWER_FROM_LIST_MESSAGE: IWhatsappWebhookPayload = {
   ],
 };
 
-const RECIEVED_ANSWER_TO_REPLY_BUTTON: IWhatsappWebhookPayload = {
+const RECIEVED_ANSWER_TO_REPLY_BUTTON: WebhookObject = {
   object: "whatsapp_business_account",
   entry: [
     {
@@ -473,7 +473,7 @@ const RECIEVED_ANSWER_TO_REPLY_BUTTON: IWhatsappWebhookPayload = {
 };
 
 // Received Message Triggered by Click to WhatsApp Ads
-const RECIEVED_MESSAGE_FROM_CLICK_TO_WHATSAPP_ADS: IWhatsappWebhookPayload = {
+const RECIEVED_MESSAGE_FROM_CLICK_TO_WHATSAPP_ADS: WebhookObject = {
   object: "whatsapp_business_account",
   entry: [
     {
@@ -525,7 +525,7 @@ const RECIEVED_MESSAGE_FROM_CLICK_TO_WHATSAPP_ADS: IWhatsappWebhookPayload = {
   ],
 };
 
-const USER_CHANGED_NUMBER_NOTIFICATION: IWhatsappWebhookPayload = {
+const USER_CHANGED_NUMBER_NOTIFICATION: WebhookObject = {
   object: "whatsapp_business_account",
   entry: [
     {

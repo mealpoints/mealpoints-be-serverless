@@ -1,183 +1,228 @@
-// Common Interfaces
-export interface IMetadata {
-  display_phone_number: string;
-  phone_number_id: string;
-}
+import {
+  ConversationTypesEnum,
+  CurrencyCodesEnum,
+  StatusEnum,
+  VideoMediaTypesEnum,
+  ReferralSourceTypesEnum,
+  StickerMediaTypesEnum,
+  WebhookTypesEnum,
+  SystemChangeTypesEnum,
+  ImageMediaTypesEnum,
+  DocumentMediaTypesEnum,
+} from "./enums";
 
-export interface IProfile {
-  name: string;
-}
+type PricingObject = {
+  category: ConversationTypesEnum;
+  pricing_model: "CBP";
+};
 
-export interface IContact {
-  profile: IProfile;
-  wa_id: string;
-}
+type OriginObject = {
+  type: ConversationTypesEnum;
+};
 
-export interface IText {
-  body: string;
-}
-
-export interface IReaction {
-  message_id: string;
-  emoji: string;
-}
-
-export interface IImage {
-  caption: string;
-  mime_type: string;
-  sha256: string;
+type ConversationObject = {
   id: string;
-}
+  origin: OriginObject;
+  expiration_timestamp: string;
+};
 
-export interface ISticker {
-  mime_type: string;
-  sha256: string;
-  id: string;
-}
-
-export interface IError {
-  code: number;
+type ErrorDataObject = {
   details: string;
+};
+
+type ErrorObject = {
+  code: number;
   title: string;
-}
+  message: string;
+  error_data: ErrorDataObject;
+};
 
-export interface ILocation {
-  latitude: string;
-  longitude: string;
-  name: string;
-  address: string;
-}
+export type StatusesObject = {
+  conversation: ConversationObject;
+  errors: ErrorObject[];
+  id: string;
+  pricing: PricingObject;
+  recipient_id: string;
+  status: StatusEnum;
+  timestamp: string;
+};
 
-export interface IAddress {
-  city: string;
-  country: string;
-  country_code: string;
-  state: string;
-  street: string;
-  type: string;
-  zip: string;
-}
+type AudioObject = {
+  id: string;
+  mime_type: string;
+};
 
-export interface IEmail {
-  email: string;
-  type: string;
-}
-
-export interface IName {
-  formatted_name: string;
-  first_name: string;
-  last_name: string;
-  middle_name: string;
-  suffix: string;
-  prefix: string;
-}
-
-export interface IOrg {
-  company: string;
-  department: string;
-  title: string;
-}
-
-export interface IPhone {
-  phone: string;
-  wa_id: string;
-  type: string;
-}
-
-export interface IURL {
-  url: string;
-  type: string;
-}
-
-export interface IContactDetail {
-  addresses: IAddress[];
-  birthday: string;
-  emails: IEmail[];
-  name: IName;
-  org: IOrg;
-  phones: IPhone[];
-  urls: IURL[];
-}
-
-export interface IButton {
-  text: string;
+type ButtonObject = {
   payload: string;
-}
+  text: string;
+};
 
-export interface IListReply {
-  id: string;
-  title: string;
-  description: string;
-}
-
-export interface IButtonReply {
-  id: string;
-  title: string;
-}
-
-export interface IReferral {
-  source_url: string;
-  source_id: string;
-  source_type: string;
-  headline: string;
-  body: string;
-  media_type: string;
-  image_url: string;
-  video_url: string;
-  thumbnail_url: string;
-  ctwa_clid: string;
-}
-
-export interface ISystem {
-  body: string;
-  new_wa_id: string;
-  type: string;
-}
-
-// Message Types
-export interface IBaseMessage {
+type ConTextObject = {
+  forwarded: boolean;
+  frequently_forwarded: boolean;
   from: string;
   id: string;
-  timestamp: string;
-  type: string;
-  text?: IText;
-  reaction?: IReaction;
-  image?: IImage;
-  sticker?: ISticker;
-  errors?: IError[];
-  location?: ILocation;
-  contacts?: IContactDetail[];
-  button?: IButton;
-  interactive?: {
-    list_reply?: IListReply;
-    button_reply?: IButtonReply;
-    type: string;
+  referred_product: {
+    catalog_id: string;
+    product_retailer_id: string;
   };
-  referral?: IReferral;
-  system?: ISystem;
-  context?: {
-    from: string;
-    id: string;
-  };
-}
+};
 
-export interface IEntryChange {
-  value: {
-    messaging_product: string;
-    metadata: IMetadata;
-    contacts?: IContact[];
-    messages: IBaseMessage[];
-    statuses: any; //TODO: Define this type
-  };
-  field: string;
-}
-
-export interface IWebhookEntry {
+type DocumentObject = {
+  caption: string;
+  filename: string;
+  sha256: string;
+  mime_type: DocumentMediaTypesEnum;
   id: string;
-  changes: IEntryChange[];
-}
+};
 
-export interface IWhatsappWebhookPayload {
-  object: string;
-  entry: IWebhookEntry[];
-}
+type IdentityObject = {
+  acknowledged: string;
+  created_timestamp: string;
+  hash: string;
+};
+
+type ImageObject = {
+  caption: string;
+  sha256: string;
+  id: string;
+  mime_type: ImageMediaTypesEnum;
+};
+
+type ButtonReplyObject = {
+  button_reply: {
+    id: string;
+    title: string;
+  };
+};
+
+type ListReplyObject = {
+  list_reply: {
+    id: string;
+    title: string;
+    description: string;
+  };
+};
+
+type InteractiveObject = {
+  type: ButtonReplyObject | ListReplyObject;
+};
+
+type ProductItemsObject = {
+  product_retailer_id: string;
+  quantity: string;
+  item_price: string;
+  currency: CurrencyCodesEnum;
+};
+
+type Order_Object = {
+  catalog_id: string;
+  text: string;
+  product_items: ProductItemsObject;
+};
+
+type ReferralObject = {
+  source_url: URL;
+  source_type: ReferralSourceTypesEnum;
+  source_id: string;
+  headline: string;
+  body: string;
+  media_type: ImageMediaTypesEnum | VideoMediaTypesEnum;
+  image_url: URL;
+  video_url: URL;
+  thumbnail_url: URL;
+};
+
+type StickerObject = {
+  mime_type: StickerMediaTypesEnum;
+  sha256: string;
+  id: string;
+  animated: boolean;
+};
+
+type SystemObject = {
+  body: string;
+  identity: string;
+  wa_id: string;
+  type: SystemChangeTypesEnum;
+  customer: string;
+};
+
+type TextObject = {
+  body: string;
+};
+
+type VideoObject = {
+  caption: string;
+  filename: string;
+  sha256: string;
+  id: string;
+  mime_type: VideoMediaTypesEnum;
+};
+
+export type MessagesObject = {
+  audio?: AudioObject;
+  button?: ButtonObject;
+  context?: ConTextObject;
+  document?: DocumentObject;
+  errors: ErrorObject[];
+  from: string;
+  id: string;
+  identity?: IdentityObject;
+  image?: ImageObject;
+  interactive?: InteractiveObject;
+  order?: Order_Object;
+  referral: ReferralObject;
+  sticker?: StickerObject;
+  system?: SystemObject;
+  text?: TextObject;
+  timestamp: string;
+  type: WebhookTypesEnum;
+  video?: VideoObject;
+};
+
+type ProfileObject = {
+  name: string;
+};
+
+type ContactObject = {
+  wa_id: string;
+  profile: ProfileObject;
+};
+
+type MetadataObject = {
+  display_phone_number: string;
+  phoneNumberId: string;
+};
+
+export type ValueObject = {
+  messaging_product: "whatsapp";
+  contacts: ContactObject[];
+  errors: ErrorObject[];
+  messages: MessagesObject[];
+  metadata: MetadataObject[];
+  statuses: StatusesObject[];
+};
+
+type ChangesObject = {
+  field: string;
+  value: ValueObject;
+};
+
+type Entry_Object = {
+  id: string;
+  changes: ChangesObject[];
+};
+
+export type WebhookObject = {
+  object: "whatsapp_business_account";
+  entry: Entry_Object[];
+};
+
+export type WebhookSubscribeQuery = {
+  hub: {
+    mode: "subscribe";
+    challenge: string;
+    verify_token: string;
+  };
+};

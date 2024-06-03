@@ -13,6 +13,7 @@ export enum MessageTypesEnum {
   Interactive = "interactive", // for list and reply button messages.
   Location = "location", // for location messages.
   Reaction = "sticker", // for reaction messages.
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   Sticker = "sticker", // for sticker messages.
   Template = "template", // for template messages. Text and media (images and documents) message templates are supported.
   Text = "text", // for text messages.
@@ -107,7 +108,7 @@ export enum DocumentMediaTypesEnum {
   Ppt = "application/vnd.ms-powerpoint",
   Word = "application/msword",
   Excel = "application/vnd.ms-excel",
-  OpenDoc = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  OpenDocument = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   OpenPres = "application/vnd.openxmlformats-officedocument.presentationml.presentation",
   OpenSheet = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 }

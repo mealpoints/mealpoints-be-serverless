@@ -1,9 +1,9 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import serverless from "serverless-http";
 
 import routes from "./routes";
-import APIResponse from "./utils/APIResponse";
-import { connectToDatabase } from "./config/db";
+import ApiResponse from "./utils/ApiResponse";
+import { connectToDatabase } from "./config/database";
 import {
   APIGatewayProxyEvent,
   APIGatewayProxyResultV2,
@@ -21,21 +21,19 @@ app.use("/", routes);
 
 // Error handling
 // 404
-app.use(
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    return APIResponse.NotFound(res);
-  }
-);
+app.use((request: Request, response: Response) => {
+  return ApiResponse.NotFound(response);
+});
 
 // 500
 app.use(
   (
-    err: any,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    error: any,
+    request: Request,
+    response: Response
   ) => {
-    return APIResponse.ServerError(res, err);
+    return ApiResponse.ServerError(response, error);
   }
 );
 

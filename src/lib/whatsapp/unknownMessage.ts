@@ -1,10 +1,7 @@
-import { IWhatsappWebhookPayload } from "../../types/message";
+import { WebhookObject } from "../../types/message";
 import { IUser } from "../../models/user.model";
 
-export const processUnknownMessage = (
-  payload: IWhatsappWebhookPayload,
-  user: IUser
-) => {
+export const processUnknownMessage = (payload: WebhookObject, user: IUser) => {
   console.debug(
     "[whatsapp.unknownMessage/processUnknownMessage]: Processing unknown message",
     payload

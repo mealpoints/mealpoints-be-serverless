@@ -11,38 +11,44 @@ import * as userService from "../../services/user.service";
 import * as conversationService from "../../services/conversation.service";
 import { IUser } from "../../models/user.model";
 import { WebhookTypesEnum } from "../../types/enums";
-import { IWhatsappWebhookPayload } from "../../types/message";
+import { WebhookObject } from "../../types/message";
 
 export const categoriseInboundMessageWebhook = (
-  payload: IWhatsappWebhookPayload
+  payload: WebhookObject
 ): WebhookTypesEnum => {
   switch (payload.entry[0].changes[0].value.messages[0].type) {
-    case WebhookTypesEnum.Text:
+    case WebhookTypesEnum.Text: {
       return WebhookTypesEnum.Text;
-    case WebhookTypesEnum.Audio:
+    }
+    case WebhookTypesEnum.Audio: {
       return WebhookTypesEnum.Audio;
-    case WebhookTypesEnum.Document:
+    }
+    case WebhookTypesEnum.Document: {
       return WebhookTypesEnum.Document;
-    case WebhookTypesEnum.Image:
+    }
+    case WebhookTypesEnum.Image: {
       return WebhookTypesEnum.Image;
-    case WebhookTypesEnum.Interactive:
+    }
+    case WebhookTypesEnum.Interactive: {
       return WebhookTypesEnum.Interactive;
-    case WebhookTypesEnum.Sticker:
+    }
+    case WebhookTypesEnum.Sticker: {
       return WebhookTypesEnum.Sticker;
-    case WebhookTypesEnum.Video:
+    }
+    case WebhookTypesEnum.Video: {
       return WebhookTypesEnum.Video;
-    default:
+    }
+    default: {
       return WebhookTypesEnum.Unknown;
+    }
   }
 };
 
-export const processInboundMessageWebhook = async (
-  payload: IWhatsappWebhookPayload
-) => {
+export const processInboundMessageWebhook = async (payload: WebhookObject) => {
   const webhookType = categoriseInboundMessageWebhook(payload);
 
   console.debug(
-    "[whatsapp.inboundMessages/processInboundMessageWebhook]: Processing message type: ",
+    "[whatsapp.inboundMessages/processInboundMessageWebhook]: Processing message type:",
     webhookType
   );
 
@@ -64,21 +70,29 @@ export const processInboundMessageWebhook = async (
   });
 
   switch (webhookType) {
-    case WebhookTypesEnum.Text:
-      return processTextMessage(payload, user as IUser, conversation);
-    case WebhookTypesEnum.Audio:
-      return processAudioMessage(payload, user as IUser);
-    case WebhookTypesEnum.Document:
-      return processDocumentMessage(payload, user as IUser);
-    case WebhookTypesEnum.Image:
-      return processImageMessage(payload, user as IUser);
-    case WebhookTypesEnum.Interactive:
-      return processInteractiveMessage(payload, user as IUser);
-    case WebhookTypesEnum.Sticker:
-      return processStickerMessage(payload, user as IUser);
-    case WebhookTypesEnum.Video:
-      return processVideoMessage(payload, user as IUser);
-    default:
-      return processUnknownMessage(payload, user as IUser);
+    case WebhookTypesEnum.Text: {
+      return processTextMessage(payload, user, conversation);
+    }
+    case WebhookTypesEnum.Audio: {
+      return processAudioMessage(payload, user);
+    }
+    case WebhookTypesEnum.Document: {
+      return processDocumentMessage(payload, user);
+    }
+    case WebhookTypesEnum.Image: {
+      return processImageMessage(payload, user);
+    }
+    case WebhookTypesEnum.Interactive: {
+      return processInteractiveMessage(payload, user);
+    }
+    case WebhookTypesEnum.Sticker: {
+      return processStickerMessage(payload, user);
+    }
+    case WebhookTypesEnum.Video: {
+      return processVideoMessage(payload, user);
+    }
+    default: {
+      return processUnknownMessage(payload, user);
+    }
   }
 };

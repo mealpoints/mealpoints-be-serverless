@@ -1,8 +1,8 @@
-import { IWhatsappWebhookPayload } from "../../types/message";
+import { WebhookObject } from "../../types/message";
 import { processInboundMessageWebhook } from "./inboundMessages";
 import { processStatusUpdateWebhook } from "./statusUpdates";
 
-export const processWebhook = async (payload: IWhatsappWebhookPayload) => {
+export const processWebhook = async (payload: WebhookObject) => {
   console.debug(
     "[whatsapp/processWebhook]: Processing webhook",
     JSON.stringify(payload)

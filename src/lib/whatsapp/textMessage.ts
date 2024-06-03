@@ -1,11 +1,11 @@
 import { IConversation } from "../../models/conversation.model";
 import { IUser } from "../../models/user.model";
-import { IWhatsappWebhookPayload } from "../../types/message";
+import { WebhookObject } from "../../types/message";
 import * as messageService from "../../services/message.service";
 import { MessageTypesEnum } from "../../types/enums";
 
 export const processTextMessage = async (
-  payload: IWhatsappWebhookPayload,
+  payload: WebhookObject,
   user: IUser,
   conversation: IConversation
 ) => {

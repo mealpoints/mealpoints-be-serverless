@@ -15,7 +15,7 @@ export const ensureUserByContact = async (contact: string): Promise<IUser> => {
     );
     user = await createUser({ contact });
   }
-  return user as IUser;
+  return user;
 };
 
 export const getUsers = async (): Promise<IUser[]> => {
@@ -41,11 +41,11 @@ export const getUserByContact = async (
 export const updateUser = async (
   id: string,
   userData: IUser
-): Promise<IUser | null> => {
+): Promise<IUser | undefined> => {
   console.debug("[user.service/updateUser]: Updating user");
   const user = await User.findById(id).then((user) => {
     if (!user) {
-      return null;
+      return;
     }
     user.set(userData);
     return user.save();
