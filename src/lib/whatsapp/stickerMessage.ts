@@ -5,6 +5,9 @@ export const processStickerMessage = async (
   payload: IWhatsappWebhookPayload,
   user: IUser
 ) => {
-  console.debug("whatsapp.webhook: Processing sticker message", payload);
+  console.debug(
+    "[whatsapp.stickerMessage/processStickerMessage]: Processing sticker message",
+    payload
+  );
   return;
 };

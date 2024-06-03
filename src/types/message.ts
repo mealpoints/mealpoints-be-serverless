@@ -167,6 +167,7 @@ export interface IEntryChange {
     metadata: IMetadata;
     contacts?: IContact[];
     messages: IBaseMessage[];
+    statuses: any; //TODO: Define this type
   };
   field: string;
 }

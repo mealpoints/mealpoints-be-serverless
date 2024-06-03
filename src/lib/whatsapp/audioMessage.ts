@@ -5,6 +5,9 @@ export const processAudioMessage = (
   payload: IWhatsappWebhookPayload,
   user: IUser
 ) => {
-  console.debug("whatsapp.webhook: Processing audio message", payload);
+  console.debug(
+    "[whatsapp.audioMessage/processAudioMessage]: Processing audio message",
+    payload
+  );
   return;
 };

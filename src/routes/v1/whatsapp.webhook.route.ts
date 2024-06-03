@@ -4,5 +4,6 @@ import * as whatsappWebhookController from "../../controllers/whatsapp.webhook.c
 const router = Router();
 
 router.post("/", whatsappWebhookController.readMessage);
+router.get("/", whatsappWebhookController.verifyWebhook);
 
 export default router;

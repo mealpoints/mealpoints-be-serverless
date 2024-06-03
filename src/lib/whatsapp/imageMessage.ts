@@ -5,6 +5,9 @@ export const processImageMessage = (
   payload: IWhatsappWebhookPayload,
   user: IUser
 ) => {
-  console.debug("whatsapp.webhook: Processing image message", payload);
+  console.debug(
+    "[whatsapp.imageMessage/processImageMessage]: Processing image message",
+    payload
+  );
   return;
 };

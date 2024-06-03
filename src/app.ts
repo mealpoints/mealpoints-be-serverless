@@ -12,6 +12,9 @@ import {
 
 const app = express();
 
+// Init
+import "./config/init";
+
 app.use(express.json());
 
 app.use("/", routes);

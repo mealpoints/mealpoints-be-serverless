@@ -5,6 +5,9 @@ export const processDocumentMessage = (
   payload: IWhatsappWebhookPayload,
   user: IUser
 ) => {
-  console.debug("whatsapp.webhook: Processing document message", payload);
+  console.debug(
+    "[whatsapp.documentMessage/processDocumentMessage]: Processing document message",
+    payload
+  );
   return;
 };

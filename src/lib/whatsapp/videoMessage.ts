@@ -5,6 +5,9 @@ export const processVideoMessage = (
   payload: IWhatsappWebhookPayload,
   user: IUser
 ) => {
-  console.debug("whatsapp.webhook: Processing video message", payload);
+  console.debug(
+    "[whatsapp.videoMessage/processVideoMessage]: Processing video message",
+    payload
+  );
   return;
 };
