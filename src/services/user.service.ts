@@ -53,6 +53,6 @@ export const updateUser = async (
 
 export const deleteUser = async (id: string): Promise<IUser | null> => {
   console.debug("[user.service/deleteUser]");
-  const user = await User.findByIdAndDelete(id);
+  const user = await User.findByIdAndUpdate(id, { isActive: false });
   return user;
 };
