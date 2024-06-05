@@ -1,16 +1,17 @@
-import * as openAiHandler from "../../handlers/openai.handler";
+import logger from "../../config/logger";
+import * as openAiHandler from "../../handlers/openAi.handler";
 import { IConversation } from "../../models/conversation.model";
 import { IUser } from "../../models/user.model";
 import * as messageService from "../../services/message.service";
 import { MessageTypesEnum } from "../../types/enums";
 import { WebhookObject } from "../../types/message";
-
+const Logger = logger("lib/whatsapp/interactiveMessage");
 export const processTextMessage = async (
   payload: WebhookObject,
   user: IUser,
   conversation: IConversation
 ) => {
-  console.debug("[whatsapp.textMessage/processTextMessage]");
+  Logger("processTextMessage").debug("");
   const userMessage: string = payload.entry[0].changes[0].value.messages[0].text
     ?.body as string;
 
@@ -31,10 +32,7 @@ ${joke}`,
     });
     return whatsappMessageResponse;
   } catch (error) {
-    console.error(
-      "[whatsapp.textMessage/processTextMessage]: Error processing message",
-      error
-    );
+    Logger("processTextMessage").error(error);
     throw error;
   }
 };

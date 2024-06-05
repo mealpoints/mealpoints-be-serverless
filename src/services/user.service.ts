@@ -1,29 +1,31 @@
+import logger from "../config/logger";
 import User, { IUser, IUserCreate } from "../models/user.model";
+const Logger = logger("user.service");
 
 export const createUser = async (userData: IUserCreate): Promise<IUser> => {
-  console.debug("[user.service/createUser]");
+  Logger("createUser").debug("");
   const user = await User.create(userData);
   return user;
 };
 
 export const ensureUserByContact = async (contact: string): Promise<IUser> => {
-  console.debug("[user.service/ensureUserByContact]");
+  Logger("ensureUserByContact").debug("");
   let user = await getUserByContact(contact);
   if (!user) {
-    console.debug("[user.service/ensureUserByContact]");
+    Logger("ensureUserByContact").debug("");
     user = await createUser({ contact });
   }
   return user;
 };
 
 export const getUsers = async (): Promise<IUser[]> => {
-  console.debug("[user.service/getUsers]");
+  Logger("getUsers").debug("");
   const users = await User.find();
   return users;
 };
 
 export const getUserById = async (id: string): Promise<IUser | null> => {
-  console.debug("[user.service/getUserById]");
+  Logger("getUserById").debug("");
   const user = await User.findById(id);
   return user;
 };
@@ -31,7 +33,7 @@ export const getUserById = async (id: string): Promise<IUser | null> => {
 export const getUserByContact = async (
   contact: string
 ): Promise<IUser | null> => {
-  console.debug("[user.service/getUserByContact]");
+  Logger("getUserByContact").debug("");
   const user = await User.findOne({ contact });
   return user;
 };
@@ -40,7 +42,7 @@ export const updateUser = async (
   id: string,
   userData: IUser
 ): Promise<IUser | undefined> => {
-  console.debug("[user.service/updateUser]");
+  Logger("updateUser").debug("");
   const user = await User.findById(id).then((user) => {
     if (!user) {
       return;
@@ -52,7 +54,7 @@ export const updateUser = async (
 };
 
 export const deleteUser = async (id: string): Promise<IUser | null> => {
-  console.debug("[user.service/deleteUser]");
+  Logger("deleteUser").debug("");
   const user = await User.findByIdAndUpdate(id, { isActive: false });
   return user;
 };

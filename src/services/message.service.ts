@@ -1,3 +1,4 @@
+import logger from "../config/logger";
 import * as whatsappHandler from "../handlers/whatsapp.handler";
 import RecievedMessage, {
   IRecievedMessage,
@@ -9,11 +10,12 @@ import SentMessage, {
 } from "../models/sentMessage.model";
 import { StatusEnum } from "../types/enums";
 import * as userService from "./user.service";
+const Logger = logger("message.service");
 
 export const createRecievedMessage = async (
   messageData: IRecievedMessageCreate
 ): Promise<IRecievedMessage> => {
-  console.debug("[message.service/createRecievedMessage]");
+  Logger("createRecievedMessage").debug("");
   const message = await RecievedMessage.create(messageData);
   return message;
 };
@@ -22,11 +24,11 @@ export const createSentMessage = async (
   messageData: ISentMessageCreate
 ): Promise<ISentMessage> => {
   try {
-    console.debug("[message.service/createSentMessage]");
+    Logger("createSentMessage").debug("");
     const message = await SentMessage.create(messageData);
     return message;
   } catch (error) {
-    console.error("[message.service/createSentMessage]: Error:", error);
+    Logger("createSentMessage").error(error);
     throw error;
   }
 };
@@ -36,7 +38,7 @@ export const updateSentMessageStatusByWAID = async (
   status: StatusEnum
 ): Promise<ISentMessage> => {
   try {
-    console.debug("[message.service/updateSentMessageStatusByWAID]");
+    Logger("updateSentMessageStatusByWAID").debug("");
     const sentMessage = await SentMessage.findOneAndUpdate(
       { wamid },
       { status },
@@ -49,10 +51,7 @@ export const updateSentMessageStatusByWAID = async (
 
     return sentMessage;
   } catch (error) {
-    console.error(
-      "[message.service/updateSentMessageStatusByWAID]: Error:",
-      error
-    );
+    Logger("updateSentMessageStatusByWAID").error(error);
     throw error;
   }
 };
@@ -62,7 +61,7 @@ export const updateSentMessageStatus = async (
   status: StatusEnum
 ): Promise<ISentMessage> => {
   try {
-    console.debug("[message.service/updateSentMessageStatus]");
+    Logger("updateSentMessageStatus").debug("");
     const sentMessage = await SentMessage.findByIdAndUpdate(
       messageId,
       { status },
@@ -75,13 +74,13 @@ export const updateSentMessageStatus = async (
 
     return sentMessage;
   } catch (error) {
-    console.error("[message.service/updateSentMessageStatus]: Error:", error);
+    Logger("updateSentMessageStatus").error(error);
     throw error;
   }
 };
 
 export const sendMessage = async (messageData: ISentMessageCreate) => {
-  console.debug("[message.service/sendMessage]");
+  Logger("sendMessage").debug("");
   try {
     const user = await userService.getUserById(messageData.user);
     if (!user) {
@@ -93,7 +92,7 @@ export const sendMessage = async (messageData: ISentMessageCreate) => {
       .sendMessage(user.contact, messageData.payload)
       .catch(async (error) => {
         await updateSentMessageStatus(sentMessage.id, StatusEnum.Failed);
-        console.error("[message.service/sendMessage]: Error:", error);
+        Logger("sendMessage").error(error);
         throw error;
       });
 
@@ -106,7 +105,7 @@ export const sendMessage = async (messageData: ISentMessageCreate) => {
 
     return response;
   } catch (error) {
-    console.error("[message.service/sendMessage]: Error:", error);
+    Logger("sendMessage").error(error);
     throw error;
   }
 };

@@ -1,3 +1,4 @@
+import logger from "../../config/logger";
 import * as conversationService from "../../services/conversation.service";
 import * as messageService from "../../services/message.service";
 import * as userService from "../../services/user.service";
@@ -11,6 +12,7 @@ import { processStickerMessage } from "./stickerMessage";
 import { processTextMessage } from "./textMessage";
 import { processUnknownMessage } from "./unknownMessage";
 import { processVideoMessage } from "./videoMessage";
+const Logger = logger("lib/whatsapp/inboundMessages");
 
 export const categoriseInboundMessageWebhook = (
   payload: WebhookObject
@@ -45,9 +47,7 @@ export const categoriseInboundMessageWebhook = (
 
 export const processInboundMessageWebhook = async (payload: WebhookObject) => {
   const webhookType = categoriseInboundMessageWebhook(payload);
-
-  console.debug("[whatsapp.inboundMessages/processInboundMessageWebhook]");
-
+  Logger("processInboundMessageWebhook").debug(webhookType);
   const contact = payload.entry[0].changes[0].value.messages[0].from;
 
   // Ensure user exists

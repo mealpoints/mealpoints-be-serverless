@@ -1,9 +1,11 @@
+import logger from "../../config/logger";
 import { WebhookObject } from "../../types/message";
 import { processInboundMessageWebhook } from "./inboundMessages";
 import { processStatusUpdateWebhook } from "./statusUpdates";
+const Logger = logger("lib/whatsapp/processWebhook");
 
 export const processWebhook = async (payload: WebhookObject) => {
-  console.debug("[whatsapp/processWebhook]");
+  Logger("processWebhook").debug("");
 
   try {
     // Identify if the webhook is a message or a status update
@@ -15,6 +17,7 @@ export const processWebhook = async (payload: WebhookObject) => {
       return processStatusUpdateWebhook(payload);
     }
   } catch (error) {
-    console.error("[whatsapp/processWebhook]: Error:", error);
+    Logger("processWebhook").error(error);
+    return;
   }
 };

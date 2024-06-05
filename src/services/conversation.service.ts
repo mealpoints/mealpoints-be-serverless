@@ -1,13 +1,15 @@
+import logger from "../config/logger";
 import Conversation, { IConversation } from "../models/conversation.model";
 import RecievedMessage, {
   IRecievedMessage,
 } from "../models/recievedMessage.model";
 import SentMessage, { ISentMessage } from "../models/sentMessage.model";
+const Logger = logger("conversation.service");
 
 export const createConversation = async (
   userId: string
 ): Promise<IConversation> => {
-  console.debug("[conversation.serensureConversationcreateConversation]");
+  Logger("createConversation").debug("");
   const conversation = await Conversation.create({ user: userId });
   return conversation;
 };
@@ -15,12 +17,10 @@ export const createConversation = async (
 export const ensureConversation = async (
   userId: string
 ): Promise<IConversation> => {
-  console.debug("[conversation.service/ensureConversation]");
+  Logger("ensureConversation").debug("");
   const conversation = await Conversation.findOne({ user: userId });
   if (!conversation) {
-    console.debug(
-      "[conversation.service/ensureConversation]: Conversation not found. Creating one"
-    );
+    Logger("ensureConversation").debug("convesation not found. Creating...");
     return createConversation(userId);
   }
   return conversation;
@@ -29,7 +29,7 @@ export const ensureConversation = async (
 export const getConversation = async (
   conversationId: string
 ): Promise<IConversation | null> => {
-  console.debug("[conversation.service/getConversation]");
+  Logger("getConversation").debug("");
   const conversation = await Conversation.findById(conversationId);
   return conversation;
 };
@@ -37,7 +37,7 @@ export const getConversation = async (
 export const getConversationMessages = async (
   conversationId: string
 ): Promise<(ISentMessage | IRecievedMessage)[]> => {
-  console.debug("[conversation.service/getConversationMessages]");
+  Logger("getConversationMessages").debug("");
   let conversationMessages = [];
 
   const sentMessages = await SentMessage.find({ conversation: conversationId });

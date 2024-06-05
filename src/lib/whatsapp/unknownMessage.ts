@@ -1,9 +1,7 @@
+import logger from "../../config/logger";
 import { WebhookObject } from "../../types/message";
-
+const Logger = logger("lib/whatsapp/interactiveMessage");
 export const processUnknownMessage = (payload: WebhookObject) => {
-  console.debug(
-    "[whatsapp.unknownMessage/processUnknownMessage]: Processing unknown message",
-    payload
-  );
+  Logger("processUnknownMessage").debug(payload);
   return;
 };

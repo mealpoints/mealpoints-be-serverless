@@ -1,5 +1,7 @@
 // eslint-disable-next-line import/named
 import axios, { AxiosInstance, AxiosResponse } from "axios";
+import logger from "../config/logger";
+const Logger = logger("whatsapp.handler");
 
 const BASE_URL = process.env.WHATSAPP_API_BASE_URL;
 const TOKEN = process.env.WHATSAPP_API_ACCESS_TOKEN;
@@ -44,7 +46,7 @@ export const sendMessage = (
   phoneNumber: string,
   message: string
 ): Promise<AxiosResponse> => {
-  console.debug(`[whatsapp.handler/sendMessage]`);
+  Logger("sendMessage").debug("");
 
   const data: MessageResponse = {
     messaging_product: "whatsapp",

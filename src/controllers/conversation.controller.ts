@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
+import logger from "../config/logger";
 import * as conversationService from "../services/conversation.service";
 import ApiResponse from "../utils/ApiResponse";
+const Logger = logger("conversation.controller");
 
 export const getConversation = async (request: Request, response: Response) => {
   const { id } = request.params;
-  console.debug("[conversation.controller/getConversation]");
+  Logger("getConversation").debug("");
 
   const conversation = await conversationService.getConversation(id);
   if (!conversation) {
@@ -19,7 +21,7 @@ export const getConversationMessages = async (
   response: Response
 ) => {
   const { id } = request.params;
-  console.debug("[conversation.controller/getConversationMessages]");
+  Logger("getConversationMessages").debug("");
 
   const conversationMessages =
     await conversationService.getConversationMessages(id);

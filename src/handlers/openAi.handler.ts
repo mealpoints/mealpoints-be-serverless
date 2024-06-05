@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/named
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-
+import logger from "../config/logger";
+const Logger = logger("openAi.handler");
 const BASE_URL = "https://icanhazdadjoke.com";
 
 const axiosInstance: AxiosInstance = axios.create({
@@ -11,6 +12,6 @@ const axiosInstance: AxiosInstance = axios.create({
 });
 
 export const sendQuery = (): Promise<AxiosResponse> => {
-  console.debug(`[openai.handler/sendQuery]`);
+  Logger("sendQuery").debug("");
   return axiosInstance.get(`/slack`);
 };

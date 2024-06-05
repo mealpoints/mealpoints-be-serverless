@@ -1,41 +1,29 @@
-import express, { Request, Response } from "express";
-import serverless from "serverless-http";
-
 import {
   APIGatewayProxyEvent,
   APIGatewayProxyResultV2,
   Context,
 } from "aws-lambda";
+import express from "express";
+import morgan from "morgan";
+import serverless from "serverless-http";
 import { connectToDatabase } from "./config/database";
+import logger from "./config/logger";
+import { errorHandler } from "./middlewares/error";
+import { notFoundHandler } from "./middlewares/notFound";
 import routes from "./routes";
-import ApiResponse from "./utils/ApiResponse";
 
 const app = express();
 
-// Init
-import "./config/init";
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+app.use(morgan("combined", { stream: logger.stream }));
 
 app.use(express.json());
 
 app.use("/", routes);
 
 // Error handling
-// 404
-app.use((request: Request, response: Response) => {
-  return ApiResponse.NotFound(response);
-});
-
-// 500
-app.use(
-  (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    error: any,
-    request: Request,
-    response: Response
-  ) => {
-    return ApiResponse.ServerError(response, error);
-  }
-);
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 const serverlessHandler = serverless(app);
 
