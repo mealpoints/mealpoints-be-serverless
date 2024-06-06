@@ -18,10 +18,11 @@ export const readMessage = async (request: Request, response: Response) => {
 
 export const verifyWebhook = (request: Request, response: Response) => {
   try {
-    Logger("verifyWebhook").debug(JSON.stringify(request.query));
+    Logger("verifyWebhook").debug(JSON.stringify(request.body));
 
     if (
-      request.query["hub.verify_token"] === process.env.WHATSAPP_VERIFY_TOKEN
+      request.query["hub.verify_token"] ===
+      process.env.WHATSAPP_VERIFICATION_KEY
     ) {
       return response.status(200).send(request.query["hub.challenge"]);
     }

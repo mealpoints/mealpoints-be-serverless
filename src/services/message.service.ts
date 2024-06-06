@@ -1,3 +1,4 @@
+import { FilterQuery, UpdateQuery } from "mongoose";
 import logger from "../config/logger";
 import * as whatsappHandler from "../handlers/whatsapp.handler";
 import RecievedMessage, {
@@ -16,21 +17,22 @@ export const createRecievedMessage = async (
   messageData: IRecievedMessageCreate
 ): Promise<IRecievedMessage> => {
   Logger("createRecievedMessage").debug("");
+
+  // If messag with same wamid already exists, return the existing message
+  const existingMessage = await RecievedMessage.findOne({
+    wamid: messageData.wamid,
+  });
+  if (existingMessage) {
+    Logger("createRecievedMessage").debug(
+      "Message already exists. Not saving it"
+    );
+
+    return existingMessage;
+  }
+
+  // Create new message
   const message = await RecievedMessage.create(messageData);
   return message;
-};
-
-export const createSentMessage = async (
-  messageData: ISentMessageCreate
-): Promise<ISentMessage> => {
-  try {
-    Logger("createSentMessage").debug("");
-    const message = await SentMessage.create(messageData);
-    return message;
-  } catch (error) {
-    Logger("createSentMessage").error(error);
-    throw error;
-  }
 };
 
 export const updateSentMessageStatusByWAID = async (
@@ -84,20 +86,18 @@ export const sendMessage = async (messageData: ISentMessageCreate) => {
   try {
     const user = await userService.getUserById(messageData.user);
     if (!user) {
+      Logger("sendMessage").error("User not found");
       throw new Error("User not found");
     }
 
     // Send Message via Whatsapp
-    const response = await whatsappHandler
-      .sendMessage(user.contact, messageData.payload)
-      .catch(async (error) => {
-        await updateSentMessageStatus(sentMessage.id, StatusEnum.Failed);
-        Logger("sendMessage").error(error);
-        throw error;
-      });
+    const response = await whatsappHandler.sendMessage(
+      user.contact,
+      messageData.payload
+    );
 
     // Store Sent Message
-    const sentMessage = await createSentMessage({
+    await createSentMessage({
       ...messageData,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
       wamid: response.data.messages[0].id,
@@ -106,6 +106,41 @@ export const sendMessage = async (messageData: ISentMessageCreate) => {
     return response;
   } catch (error) {
     Logger("sendMessage").error(error);
+    throw error;
+  }
+};
+export const createSentMessage = async (
+  messageData: ISentMessageCreate
+): Promise<ISentMessage> => {
+  try {
+    Logger("createSentMessage").debug("");
+    const message = await SentMessage.create(messageData);
+    return message;
+  } catch (error) {
+    Logger("createSentMessage").error(error);
+    throw error;
+  }
+};
+
+export const updateRecievedMessage = async (
+  filter: FilterQuery<IRecievedMessage>,
+  updates: UpdateQuery<IRecievedMessage>
+): Promise<IRecievedMessage> => {
+  try {
+    Logger("updateRecievedMessageByWAID").debug("");
+    const recievedMessage = await RecievedMessage.findOneAndUpdate(
+      filter,
+      updates,
+      { new: true }
+    );
+
+    if (!recievedMessage) {
+      throw new Error("Recieved message not found");
+    }
+
+    return recievedMessage;
+  } catch (error) {
+    Logger("updateRecievedMessageByWAID").error(error);
     throw error;
   }
 };

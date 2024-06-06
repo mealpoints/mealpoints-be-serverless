@@ -62,6 +62,7 @@ export const processInboundMessageWebhook = async (payload: WebhookObject) => {
     payload,
     type: webhookType,
     conversation: conversation.id,
+    wamid: payload.entry[0].changes[0].value.messages[0].id,
   });
 
   switch (webhookType) {

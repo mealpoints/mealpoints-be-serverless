@@ -8,6 +8,8 @@ export interface ISentMessage extends Document {
   conversation: string;
   type: MessageTypesEnum;
   status: StatusEnum;
+  wamid?: string;
+  media?: string;
   createdAt: Date;
 }
 
@@ -17,6 +19,7 @@ export interface ISentMessageCreate {
   conversation: string;
   type: MessageTypesEnum;
   wamid?: string;
+  media?: string;
 }
 
 const SentMessageSchema: Schema = new Schema({
@@ -33,6 +36,7 @@ const SentMessageSchema: Schema = new Schema({
     default: StatusEnum.Sent,
   },
   wamid: { type: String },
+  media: { type: String },
   type: { type: String, enum: Object.values(MessageTypesEnum), required: true },
   createdAt: { type: Date, default: Date.now },
 });

@@ -29,6 +29,8 @@ module.exports = {
         "@typescript-eslint/no-unsafe-return": "off",
         "unicorn/throw-new-error": "off",
         "@typescript-eslint/no-misused-promises": "off",
+        "unicorn/import-style": "off",
+        "unicorn/prefer-module": "off",
         "unicorn/filename-case": [
             "warn",
             {

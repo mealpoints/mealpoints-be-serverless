@@ -7,6 +7,8 @@ export interface IRecievedMessage extends Document {
   payload: object;
   conversation: string;
   type: WebhookTypesEnum;
+  media?: string;
+  wamid: string;
   createdAt: Date;
 }
 
@@ -14,6 +16,8 @@ export interface IRecievedMessageCreate {
   user: string;
   payload: object;
   conversation: string;
+  wamid: string;
+  media?: string;
   type: WebhookTypesEnum;
 }
 
@@ -25,7 +29,9 @@ const ReceivedMessageSchema: Schema = new Schema({
     ref: "Conversation",
     required: true,
   },
+  media: { type: String },
   type: { type: String, enum: Object.values(WebhookTypesEnum), required: true },
+  wamid: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });
 

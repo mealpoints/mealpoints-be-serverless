@@ -1,16 +1,13 @@
 import { createLogger, format, transports } from "winston";
 
 const customFormat = format.printf(
-  ({ level, message, moduleName, functionName, service }) => {
-    return `${
-      process.env.NODE_ENV === "production" && service
-    } [${moduleName}/${functionName}] ${level}: ${message}`;
+  ({ level, message, moduleName, functionName }) => {
+    return `[${moduleName}/${functionName}] ${level}: ${message}`;
   }
 );
 
 const _logger = createLogger({
   level: process.env.NODE_ENV === "development" ? "debug" : "info",
-  defaultMeta: { service: process.env.APP_NAME },
   format: format.combine(
     format.colorize(),
     format.splat(),
