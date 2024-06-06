@@ -25,6 +25,7 @@ export const uploadImageToS3 = async (
   const upload = new Upload({
     client: s3Client,
     params: {
+      ACL: "public-read",
       Bucket: process.env.AWS_S3_BUCKET as string,
       Key: key,
       Body: fileStream,

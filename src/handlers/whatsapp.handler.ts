@@ -76,7 +76,7 @@ const downloadImage = async (
       responseType: "stream",
     });
     return new Promise((resolve, reject) => {
-      const filePath = path.join(__dirname, `${imageId}.jpg`);
+      const filePath = path.join(`/tmp/${imageId}.jpg`);
       const writer = fs.createWriteStream(filePath);
       response.data.pipe(writer);
       writer.on("finish", () => {
