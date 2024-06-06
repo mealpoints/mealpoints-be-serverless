@@ -70,7 +70,7 @@ const downloadImage = async (
   imageUrl: string,
   imageId: string
 ): Promise<string> => {
-  Logger("downloadImage").debug(imageUrl);
+  Logger("downloadImage").debug("");
   try {
     const response = await axiosInstance.get(imageUrl, {
       responseType: "stream",

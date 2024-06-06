@@ -1,12 +1,17 @@
-import { S3 } from "aws-sdk";
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { S3Client } from "@aws-sdk/client-s3";
+import { Upload } from "@aws-sdk/lib-storage";
 import fs from "node:fs";
 import logger from "../config/logger";
 const Logger = logger("aws.handler");
 
-export const awsS3 = new S3({
-  region: process.env.AWS_REGION,
-  accessKeyId: process.env.AWS_S3_ID,
-  secretAccessKey: process.env.AWS_S3_SECRET,
+const s3Client: S3Client = new S3Client({
+  region: process.env.AWS_REGION as string,
+  credentials: {
+    accessKeyId: process.env.AWS_S3_ID as string,
+    secretAccessKey: process.env.AWS_S3_SECRET as string,
+  },
 });
 
 export const uploadImageToS3 = async (
@@ -15,19 +20,20 @@ export const uploadImageToS3 = async (
 ): Promise<string> => {
   Logger("uploadImageToS3").debug("");
 
-  const s3 = new S3();
   const fileStream = fs.createReadStream(filePath);
 
-  const parameters = {
-    Bucket: process.env.AWS_S3_BUCKET as string,
-    Key: key,
-    Body: fileStream,
-    ACL: "public-read",
-  };
+  const upload = new Upload({
+    client: s3Client,
+    params: {
+      Bucket: process.env.AWS_S3_BUCKET as string,
+      Key: key,
+      Body: fileStream,
+    },
+  });
 
   try {
-    const data = await s3.upload(parameters).promise();
-    return data.Location;
+    await upload.done();
+    return `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
   } catch (error) {
     Logger("uploadImageToS3").error(error);
     throw error;
