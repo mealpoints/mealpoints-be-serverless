@@ -12,8 +12,8 @@ export const processTextMessage = async (
   conversation: IConversation
 ) => {
   Logger("processTextMessage").debug("");
-  const userMessage: string = payload.entry[0].changes[0].value.messages[0].text
-    ?.body as string;
+  const userMessage: string = payload.entry[0].changes[0].value.messages?.[0]
+    .text?.body as string;
 
   try {
     const openAiResponse = await openAiHandler.sendQuery();

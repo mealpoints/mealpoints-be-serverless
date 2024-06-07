@@ -17,7 +17,7 @@ const Logger = logger("lib/whatsapp/inboundMessages");
 export const categoriseInboundMessageWebhook = (
   payload: WebhookObject
 ): WebhookTypesEnum => {
-  switch (payload.entry[0].changes[0].value.messages[0].type) {
+  switch (payload.entry[0].changes[0].value.messages?.[0].type) {
     case WebhookTypesEnum.Text: {
       return WebhookTypesEnum.Text;
     }
@@ -48,7 +48,9 @@ export const categoriseInboundMessageWebhook = (
 export const processInboundMessageWebhook = async (payload: WebhookObject) => {
   const webhookType = categoriseInboundMessageWebhook(payload);
   Logger("processInboundMessageWebhook").debug(webhookType);
-  const contact = payload.entry[0].changes[0].value.messages[0].from;
+
+  const contact = payload.entry[0].changes[0].value.messages?.[0]
+    .from as string;
 
   // Ensure user exists
   const user = await userService.ensureUserByContact(contact);
@@ -62,7 +64,7 @@ export const processInboundMessageWebhook = async (payload: WebhookObject) => {
     payload,
     type: webhookType,
     conversation: conversation.id,
-    wamid: payload.entry[0].changes[0].value.messages[0].id,
+    wamid: payload.entry[0].changes[0].value.messages?.[0].id as string,
   });
 
   switch (webhookType) {

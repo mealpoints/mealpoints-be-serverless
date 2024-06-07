@@ -12,7 +12,7 @@ import { errorHandler } from "./middlewares/error";
 import { notFoundHandler } from "./middlewares/notFound";
 import routes from "./routes";
 
-const app = express();
+export const app = express();
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 app.use(morgan("combined", { stream: logger.stream }));

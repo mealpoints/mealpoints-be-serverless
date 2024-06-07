@@ -38,10 +38,10 @@ type ErrorObject = {
 };
 
 export type StatusesObject = {
-  conversation: ConversationObject;
-  errors: ErrorObject[];
+  conversation?: ConversationObject;
+  errors?: ErrorObject[];
   id: string;
-  pricing: PricingObject;
+  pricing?: PricingObject;
   recipient_id: string;
   status: StatusEnum;
   timestamp: string;
@@ -165,14 +165,14 @@ export type MessagesObject = {
   button?: ButtonObject;
   context?: ConTextObject;
   document?: DocumentObject;
-  errors: ErrorObject[];
+  errors?: ErrorObject[];
   from: string;
   id: string;
   identity?: IdentityObject;
   image?: ImageObject;
   interactive?: InteractiveObject;
   order?: Order_Object;
-  referral: ReferralObject;
+  referral?: ReferralObject;
   sticker?: StickerObject;
   system?: SystemObject;
   text?: TextObject;
@@ -192,16 +192,16 @@ type ContactObject = {
 
 type MetadataObject = {
   display_phone_number: string;
-  phoneNumberId: string;
+  phone_number_id: string;
 };
 
 export type ValueObject = {
   messaging_product: "whatsapp";
-  contacts: ContactObject[];
-  errors: ErrorObject[];
-  messages: MessagesObject[];
-  metadata: MetadataObject[];
-  statuses: StatusesObject[];
+  contacts?: ContactObject[];
+  errors?: ErrorObject[];
+  messages?: MessagesObject[];
+  metadata: MetadataObject;
+  statuses?: StatusesObject[];
 };
 
 type ChangesObject = {

@@ -29,8 +29,13 @@ module.exports = {
         "@typescript-eslint/no-unsafe-return": "off",
         "unicorn/throw-new-error": "off",
         "@typescript-eslint/no-misused-promises": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
         "unicorn/import-style": "off",
         "unicorn/prefer-module": "off",
+        "unicorn/no-useless-undefined": "off",
+        "unicorn/numeric-separators-style": "off",
         "unicorn/filename-case": [
             "warn",
             {

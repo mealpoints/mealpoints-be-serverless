@@ -15,7 +15,7 @@ export const processImageMessage = async (
 ) => {
   Logger("processImageMessage").debug("");
   try {
-    const imageId = payload.entry[0].changes[0].value.messages[0].image
+    const imageId = payload.entry[0].changes[0].value.messages?.[0].image
       ?.id as string;
     const imageFilePath = await whatsappHandler.getImageSentViaMessage(imageId);
 
@@ -26,7 +26,7 @@ export const processImageMessage = async (
 
     await messageService.updateRecievedMessage(
       {
-        wamid: payload.entry[0].changes[0].value.messages[0].id,
+        wamid: payload.entry[0].changes[0].value.messages?.[0].id,
       },
       {
         media: s3Path,

@@ -76,7 +76,6 @@ export default {
     error: any,
     message = "Internal server error"
   ): Response => {
-    console.error(error);
     return response.status(500).json({ message });
   },
 };
