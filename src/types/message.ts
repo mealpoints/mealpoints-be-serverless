@@ -59,10 +59,10 @@ type ButtonObject = {
 
 type ConTextObject = {
   forwarded: boolean;
-  frequently_forwarded: boolean;
-  from: string;
-  id: string;
-  referred_product: {
+  frequently_forwarded?: boolean;
+  from?: string;
+  id?: string;
+  referred_product?: {
     catalog_id: string;
     product_retailer_id: string;
   };
@@ -83,7 +83,7 @@ type IdentityObject = {
 };
 
 type ImageObject = {
-  caption: string;
+  caption?: string;
   sha256: string;
   id: string;
   mime_type: ImageMediaTypesEnum;

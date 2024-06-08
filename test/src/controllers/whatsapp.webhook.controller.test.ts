@@ -1,5 +1,8 @@
 import request from "supertest";
 import { app } from "../../../src/app";
+import { processWebhook } from "../../../src/lib/whatsapp";
+import ApiResponse from "../../../src/utils/ApiResponse";
+import { TEXT_MESSAGE_PAYLOAD } from "../../mocks/whatsapp/textMessage.mock";
 
 const PATH = "/v1/whatsapp-webhook";
 
@@ -37,12 +40,12 @@ describe("Webhook Controllers", () => {
     });
   });
 
-  // describe("readMessage Controller", () => {
-  //   it("should call processWebhook and return Ok response", async () => {
-  //     const response = await request(app).post(PATH).send(TEXT_MESSAGE_PAYLOAD);
-  //     (processWebhook as jest.Mock).mockResolvedValueOnce(undefined);
-  //     expect(processWebhook).toHaveBeenCalledWith(TEXT_MESSAGE_PAYLOAD);
-  //     expect(ApiResponse.Ok).toHaveBeenCalledWith(response, "Message read");
-  //   });
-  // });
+  describe.skip("readMessage Controller", () => {
+    it("should call processWebhook and return Ok response", async () => {
+      const response = await request(app).post(PATH).send(TEXT_MESSAGE_PAYLOAD);
+      (processWebhook as jest.Mock).mockResolvedValueOnce(undefined);
+      expect(processWebhook).toHaveBeenCalledWith(TEXT_MESSAGE_PAYLOAD);
+      expect(ApiResponse.Ok).toHaveBeenCalledWith(response, "Message read");
+    });
+  });
 });

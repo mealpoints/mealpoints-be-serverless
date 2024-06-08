@@ -9,13 +9,14 @@
     "express": "^4.18.2",
     "mongoose": "^8.4.0",
     "morgan": "^1.10.0",
+    "openai": "^4.49.1",
     "serverless-http": "^3.2.0",
     "winston": "^3.13.0"
   },
   "scripts": {
     "deploy:dev": " npm run deploy:pre-deply && sls deploy",
     "deploy:prod": "npm run deploy:pre-deply && sls deploy --stage production",
-    "deploy:pre-deply": "npm run lint && npm run typecheck",
+    "deploy:pre-deply": "npm run lint && npm run typecheck && npm run test",
     "dev": "nodemon",
     "lint": "npx eslint \"{src,apps,libs,test}/**/*.ts\" -c .eslintrc.js",
     "lint:fix": "npx eslint \"{src,apps,libs,test}/**/*.ts\" -c .eslintrc.js --fix",

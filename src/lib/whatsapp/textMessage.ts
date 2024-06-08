@@ -1,5 +1,5 @@
 import logger from "../../config/logger";
-import * as openAiHandler from "../../handlers/openAi.handler";
+import * as openAiHandler from "../../handlers/openai.handler";
 import { IConversation } from "../../models/conversation.model";
 import { IUser } from "../../models/user.model";
 import * as messageService from "../../services/message.service";
