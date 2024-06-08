@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import logger from "../../config/logger";
 import * as awsHandler from "../../handlers/aws.handler";
 import * as whatsappHandler from "../../handlers/whatsapp.handler";
@@ -23,6 +24,20 @@ export const processImageMessage = async (
       `${user.id}/${imageId}`,
       imageFilePath
     );
+
+    // Cleanup the image file
+    fs.unlink(imageFilePath, (error) => {
+      if (error) {
+        Logger("uploadImageToS3").error(
+          `Failed to delete local file: ${imageFilePath}`,
+          error
+        );
+      } else {
+        Logger("uploadImageToS3").debug(
+          `Successfully deleted local file: ${imageFilePath}`
+        );
+      }
+    });
 
     await messageService.updateRecievedMessage(
       {
