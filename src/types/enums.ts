@@ -5,6 +5,15 @@ export enum HttpMethodsEnum {
   Delete = "DELETE",
 }
 
+export enum OpenAIMessageTypesEnum {
+  Text = "text",
+  Image = "image",
+  Audio = "audio",
+  Video = "video",
+  Document = "document",
+  Sticker = "sticker",
+}
+
 export enum MessageTypesEnum {
   Audio = "audio", // for audio messages.
   Contacts = "contacts", // for contact messages.

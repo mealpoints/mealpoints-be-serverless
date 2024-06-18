@@ -6,7 +6,7 @@ import { IConversation } from "../../models/conversation.model";
 import { IUser } from "../../models/user.model";
 import * as messageService from "../../services/message.service";
 import * as openaiService from "../../services/openai.service";
-import { MessageTypesEnum } from "../../types/enums";
+import { MessageTypesEnum, OpenAIMessageTypesEnum } from "../../types/enums";
 import { WebhookObject } from "../../types/message";
 const Logger = logger("lib/whatsapp/imageMessage");
 
@@ -24,9 +24,10 @@ export const processImageMessage = async (
 
     try {
       const openaiResponse = await openaiService.ask(
-        imageFilePath,
+        s3Path,
         user,
-        conversation
+        conversation,
+        { messageType: OpenAIMessageTypesEnum.Image }
       );
       cleanupLocalFile(imageFilePath);
       await updateReceivedMessage(payload, s3Path);
@@ -59,7 +60,7 @@ const uploadImageToS3 = async (
   imageFilePath: string
 ): Promise<string> => {
   return await awsHandler.uploadImageToS3(
-    `${userId}/${imageId}`,
+    `${userId}/${imageId}.jpg`,
     imageFilePath
   );
 };

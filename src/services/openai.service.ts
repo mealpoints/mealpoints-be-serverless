@@ -2,13 +2,19 @@ import logger from "../config/logger";
 import * as openaiHandler from "../handlers/openai.handler";
 import { IConversation } from "../models/conversation.model";
 import { IUser } from "../models/user.model";
+import { OpenAIMessageTypesEnum } from "../types/enums";
 import * as conversationService from "./conversation.service";
 const Logger = logger("services/openai.service");
+
+interface IAskOptions {
+  messageType: OpenAIMessageTypesEnum;
+}
 
 export const ask = async (
   question: string,
   user: IUser,
-  conversation: IConversation
+  conversation: IConversation,
+  options: IAskOptions
 ) => {
   let openaiResponse: {
     result: string;
@@ -17,10 +23,10 @@ export const ask = async (
   };
 
   try {
-    openaiResponse = await openaiHandler.ask(
-      question,
-      conversation.openaiThreadId
-    );
+    openaiResponse = await openaiHandler.ask(question, {
+      preExistingThreadId: conversation.openaiThreadId,
+      messageType: options.messageType,
+    });
   } catch (error) {
     Logger("ask").error(error);
     throw error;

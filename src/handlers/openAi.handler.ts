@@ -2,6 +2,7 @@
 import fs from "node:fs";
 import OpenAI from "openai";
 import logger from "../config/logger";
+import { OpenAIMessageTypesEnum } from "../types/enums";
 const Logger = logger("openai.handler");
 
 const API_KEY = process.env.OPENAI_API_KEY as string;
@@ -11,8 +12,14 @@ const openai = new OpenAI({
   apiKey: API_KEY,
 });
 
-export const ask = async (question: string, preExistingThreadId?: string) => {
+interface IAskOptions {
+  preExistingThreadId?: string;
+  messageType?: OpenAIMessageTypesEnum;
+}
+
+export const ask = async (question: string, options: IAskOptions) => {
   try {
+    const { preExistingThreadId, messageType } = options;
     Logger("ask").debug("");
 
     let openaiThreadId: string = preExistingThreadId || "";
@@ -26,10 +33,26 @@ export const ask = async (question: string, preExistingThreadId?: string) => {
     }
     let result: string = "";
 
-    await openai.beta.threads.messages.create(openaiThreadId, {
-      role: "user",
-      content: question,
-    });
+    if (messageType === OpenAIMessageTypesEnum.Text) {
+      await openai.beta.threads.messages.create(openaiThreadId, {
+        role: "user",
+        content: question,
+      });
+    } else if (messageType === OpenAIMessageTypesEnum.Image) {
+      Logger("ask").debug(question);
+      await openai.beta.threads.messages.create(openaiThreadId, {
+        role: "user",
+        content: [
+          {
+            type: "image_url",
+            image_url: {
+              url: question,
+              detail: "low",
+            },
+          },
+        ],
+      });
+    }
 
     return new Promise<{
       result: string;

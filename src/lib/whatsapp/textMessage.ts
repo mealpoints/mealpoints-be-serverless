@@ -3,7 +3,7 @@ import { IConversation } from "../../models/conversation.model";
 import { IUser } from "../../models/user.model";
 import * as messageService from "../../services/message.service";
 import * as openaiService from "../../services/openai.service";
-import { MessageTypesEnum } from "../../types/enums";
+import { MessageTypesEnum, OpenAIMessageTypesEnum } from "../../types/enums";
 import { WebhookObject } from "../../types/message";
 const Logger = logger("lib/whatsapp/interactiveMessage");
 
@@ -18,7 +18,9 @@ export const processTextMessage = async (
 
   try {
     try {
-      const result = await openaiService.ask(userMessage, user, conversation);
+      const result = await openaiService.ask(userMessage, user, conversation, {
+        messageType: OpenAIMessageTypesEnum.Text,
+      });
       await messageService.sendMessage({
         user: user.id,
         conversation: conversation.id,
