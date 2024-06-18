@@ -20,6 +20,7 @@ export interface ISentMessageCreate {
   type: MessageTypesEnum;
   wamid?: string;
   media?: string;
+  status?: StatusEnum;
 }
 
 const SentMessageSchema: Schema = new Schema({

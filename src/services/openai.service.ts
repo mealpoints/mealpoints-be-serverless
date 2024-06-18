@@ -11,7 +11,7 @@ interface IAskOptions {
 }
 
 export const ask = async (
-  question: string,
+  data: string,
   user: IUser,
   conversation: IConversation,
   options: IAskOptions
@@ -23,7 +23,7 @@ export const ask = async (
   };
 
   try {
-    openaiResponse = await openaiHandler.ask(question, {
+    openaiResponse = await openaiHandler.ask(data, {
       preExistingThreadId: conversation.openaiThreadId,
       messageType: options.messageType,
     });
