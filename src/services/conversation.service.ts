@@ -1,3 +1,4 @@
+import { FilterQuery, UpdateQuery } from "mongoose";
 import logger from "../config/logger";
 import Conversation, { IConversation } from "../models/conversation.model";
 import RecievedMessage, {
@@ -52,4 +53,25 @@ export const getConversationMessages = async (
   });
 
   return conversationMessages;
+};
+
+export const updateConversation = async (
+  filter: FilterQuery<IConversation>,
+  updates: UpdateQuery<IConversation>
+): Promise<IConversation> => {
+  try {
+    Logger("updateConversation").debug("");
+    const conversation = await Conversation.findOneAndUpdate(filter, updates, {
+      new: true,
+    });
+
+    if (!conversation) {
+      throw new Error("Conversation not found");
+    }
+
+    return conversation;
+  } catch (error) {
+    Logger("updateConversation").error(error);
+    throw error;
+  }
 };

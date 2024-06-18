@@ -2,29 +2,56 @@
 import fs from "node:fs";
 import OpenAI from "openai";
 import logger from "../config/logger";
-const Logger = logger("openAi.handler");
+const Logger = logger("openai.handler");
 
 const API_KEY = process.env.OPENAI_API_KEY as string;
+const ASSITANT_ID = process.env.OPENAI_ASSISTANT_ID as string;
 
 const openai = new OpenAI({
   apiKey: API_KEY,
 });
 
-export const generateChat = async (prompt: string) => {
+export const ask = async (question: string, preExistingThreadId?: string) => {
   try {
-    Logger("generateChat").info("");
+    Logger("ask").debug("");
 
-    const gptResponse = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt }],
-    });
-    const message = gptResponse.choices[0].message.content as string;
-    if (!message) {
-      throw new Error("No message generated");
+    let openaiThreadId: string = preExistingThreadId || "";
+    let newThreadCreated = false;
+
+    if (!preExistingThreadId) {
+      Logger("ask").debug("Creating new thread");
+      const thread = await openai.beta.threads.create();
+      openaiThreadId = thread.id;
+      newThreadCreated = true;
     }
-    return message;
+    let result: string = "";
+
+    await openai.beta.threads.messages.create(openaiThreadId, {
+      role: "user",
+      content: question,
+    });
+
+    return new Promise<{
+      result: string;
+      threadId: string;
+      newThreadCreated: boolean;
+    }>((resolve) => {
+      openai.beta.threads.runs
+        .stream(openaiThreadId, {
+          assistant_id: ASSITANT_ID,
+        })
+        .on("textDelta", (textDelta) => {
+          const string_ = textDelta.value || "";
+          if (string_) {
+            result += textDelta.value;
+          }
+        })
+        .on("textDone", () => {
+          resolve({ result, threadId: openaiThreadId, newThreadCreated });
+        });
+    });
   } catch (error) {
-    Logger("generateChat").error(error);
+    Logger("ask").error(error);
     throw error;
   }
 };

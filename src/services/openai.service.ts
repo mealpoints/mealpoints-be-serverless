@@ -1,0 +1,37 @@
+import logger from "../config/logger";
+import * as openaiHandler from "../handlers/openai.handler";
+import { IConversation } from "../models/conversation.model";
+import { IUser } from "../models/user.model";
+import * as conversationService from "./conversation.service";
+const Logger = logger("services/openai.service");
+
+export const ask = async (
+  question: string,
+  user: IUser,
+  conversation: IConversation
+) => {
+  let openaiResponse: {
+    result: string;
+    threadId: string;
+    newThreadCreated: boolean;
+  };
+
+  try {
+    openaiResponse = await openaiHandler.ask(
+      question,
+      conversation.openaiThreadId
+    );
+  } catch (error) {
+    Logger("ask").error(error);
+    throw error;
+  }
+
+  // Add thread id to the conversation if it exist
+  if (openaiResponse.newThreadCreated) {
+    await conversationService.updateConversation(
+      { user: user.id },
+      { openaiThreadId: openaiResponse.threadId }
+    );
+  }
+  return openaiResponse.result;
+};

@@ -1,11 +1,11 @@
 import fs from "node:fs";
 import logger from "../../config/logger";
 import * as awsHandler from "../../handlers/aws.handler";
-import * as openaiHandler from "../../handlers/openai.handler";
 import * as whatsappHandler from "../../handlers/whatsapp.handler";
 import { IConversation } from "../../models/conversation.model";
 import { IUser } from "../../models/user.model";
 import * as messageService from "../../services/message.service";
+import * as openaiService from "../../services/openai.service";
 import { MessageTypesEnum } from "../../types/enums";
 import { WebhookObject } from "../../types/message";
 const Logger = logger("lib/whatsapp/imageMessage");
@@ -23,13 +23,17 @@ export const processImageMessage = async (
     const s3Path = await uploadImageToS3(user.id, imageId, imageFilePath);
 
     try {
-      const openAiResponse = await openaiHandler.uploadImage(imageFilePath);
+      const openaiResponse = await openaiService.ask(
+        imageFilePath,
+        user,
+        conversation
+      );
       cleanupLocalFile(imageFilePath);
       await updateReceivedMessage(payload, s3Path);
       return await sendMessageToWhatsApp(
         user.id,
         conversation.id,
-        openAiResponse
+        openaiResponse
       );
     } catch (error) {
       await handleOpenAIUploadError(user.id, conversation.id, error);
@@ -92,12 +96,12 @@ const updateReceivedMessage = async (
 const sendMessageToWhatsApp = async (
   userId: string,
   conversationId: string,
-  openAiResponse: string
+  openaiResponse: string
 ) => {
   return await messageService.sendMessage({
     user: userId,
     conversation: conversationId,
-    payload: openAiResponse,
+    payload: openaiResponse,
     type: MessageTypesEnum.Text,
   });
 };
