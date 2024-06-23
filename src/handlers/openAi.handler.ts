@@ -1,7 +1,9 @@
 // eslint-disable-next-line import/named
-import fs from "node:fs";
 import OpenAI from "openai";
+import { Run } from "openai/resources/beta/threads/runs/runs";
+import { Thread } from "openai/resources/beta/threads/threads";
 import logger from "../config/logger";
+import { IUser } from "../models/user.model";
 import { OpenAIMessageTypesEnum } from "../types/enums";
 const Logger = logger("openai.handler");
 
@@ -15,92 +17,171 @@ const openai = new OpenAI({
 interface IAskOptions {
   preExistingThreadId?: string;
   messageType?: OpenAIMessageTypesEnum;
+  user: IUser;
 }
 
-export const ask = async (question: string, options: IAskOptions) => {
-  try {
-    const { preExistingThreadId, messageType } = options;
-    Logger("ask").debug("");
+export class OpenAIHandler {
+  data: string;
+  messageType?: OpenAIMessageTypesEnum;
+  threadId: string;
+  newThreadCreated: boolean = false;
+  openaiResponse: string = "";
+  user: IUser;
+  thread?: Thread;
+  run?: Run;
 
-    let openaiThreadId: string = preExistingThreadId || "";
-    let newThreadCreated = false;
+  constructor(data: string, options: IAskOptions) {
+    this.data = data;
+    this.threadId = options.preExistingThreadId || "";
+    this.messageType = options.messageType;
+    this.user = options.user;
+  }
 
-    if (!preExistingThreadId) {
-      Logger("ask").debug("Creating new thread");
+  private async createNewThread() {
+    try {
       const thread = await openai.beta.threads.create();
-      openaiThreadId = thread.id;
-      newThreadCreated = true;
+      this.threadId = thread.id;
+    } catch (error) {
+      Logger("createNewThread").error(error);
+      throw error;
     }
-    let result: string = "";
+  }
 
-    if (messageType === OpenAIMessageTypesEnum.Text) {
-      await openai.beta.threads.messages.create(openaiThreadId, {
+  private async ensureThread() {
+    if (this.threadId) {
+      Logger("checkIfThreadExists").debug("Thread already exists, fecching it");
+      this.thread = await openai.beta.threads.retrieve(this.threadId);
+    } else {
+      Logger("checkIfThreadExists").debug("Creating new thread");
+      await this.createNewThread();
+      this.newThreadCreated = true;
+    }
+  }
+
+  private async createMessageWithText() {
+    Logger("createMessageWithText").debug("Creating message with text content");
+    try {
+      await openai.beta.threads.messages.create(this.threadId, {
         role: "user",
-        content: question,
+        content: [
+          {
+            type: "text",
+            text: this.data,
+          },
+        ],
       });
-    } else if (messageType === OpenAIMessageTypesEnum.Image) {
-      Logger("ask").debug(question);
-      await openai.beta.threads.messages.create(openaiThreadId, {
+    } catch (error) {
+      Logger("createMessageWithText").error(error);
+      throw error;
+    }
+  }
+
+  private async createMessageWithImage() {
+    Logger("createMessageWithImage").debug(
+      "Creating message with image content"
+    );
+    try {
+      await openai.beta.threads.messages.create(this.threadId, {
         role: "user",
         content: [
           {
             type: "image_url",
             image_url: {
-              url: question,
+              url: this.data,
               detail: "low",
             },
           },
         ],
       });
+    } catch (error) {
+      Logger("createMessageWithImage").error(error);
+      throw error;
     }
+  }
 
-    return new Promise<{
-      result: string;
-      threadId: string;
-      newThreadCreated: boolean;
-    }>((resolve) => {
-      openai.beta.threads.runs
-        .stream(openaiThreadId, {
-          assistant_id: ASSITANT_ID,
-        })
-        .on("textDelta", (textDelta) => {
-          const string_ = textDelta.value || "";
-          if (string_) {
-            result += textDelta.value;
+  private async createMessage() {
+    switch (this.messageType) {
+      case OpenAIMessageTypesEnum.Text: {
+        await this.createMessageWithText();
+        break;
+      }
+      case OpenAIMessageTypesEnum.Image: {
+        await this.createMessageWithImage();
+        break;
+      }
+      default: {
+        Logger("ask").error(
+          `The message type ${this.messageType} is not supported.`
+        );
+        break;
+      }
+    }
+  }
+
+  private async createRun() {
+    Logger("createStream").debug("");
+    this.run = await openai.beta.threads.runs.create(this.threadId, {
+      assistant_id: ASSITANT_ID,
+    });
+  }
+
+  private async checkIfRunInProgress() {
+    Logger("checkIfRunInProgress").debug("");
+    return new Promise<void>((resolve, reject) => {
+      try {
+        const interval = setInterval(async () => {
+          const run: Run = await openai.beta.threads.runs.retrieve(
+            this.threadId,
+            this.run?.id as string
+          );
+          Logger("checkIfRunInProgress").debug(`Run status: ${run.status}`);
+          if (run.status === "completed") {
+            clearInterval(interval);
+            resolve();
           }
-        })
-        .on("textDone", () => {
-          resolve({ result, threadId: openaiThreadId, newThreadCreated });
-        });
+        }, 1000);
+      } catch (error) {
+        Logger("checkIfRunInProgress").error(error);
+        reject(error);
+      }
     });
-  } catch (error) {
-    Logger("ask").error(error);
-    throw error;
   }
-};
 
-export const uploadImage = async (filePath: string) => {
-  try {
-    Logger("uploadImage").info("");
-    const image = fs.readFileSync(filePath, { encoding: "base64" });
+  private async getMessages() {
+    Logger("getMessages").debug("");
+    try {
+      const messages = await openai.beta.threads.messages.list(this.threadId, {
+        run_id: this.run?.id,
+      });
 
-    const gptResponse = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "user",
-          content: `Tell what you see in the image: data:image/png;base64,${image}`,
-        },
-      ],
-    });
-
-    const message = gptResponse.choices[0].message.content as string;
-    if (!message) {
-      throw new Error("No message generated");
+      // Here we are assuming that the message type is going to be text as we are not handling images yet.
+      // @ts-expect-error - We are assuming that the first message is going to be text.
+      this.openaiResponse = messages.data[0].content[0].text.value;
+    } catch (error) {
+      Logger("getMessages").error(error);
+      throw error;
     }
-    return message;
-  } catch (error) {
-    Logger("uploadImage").error(error);
-    throw error;
   }
-};
+
+  async ask(): Promise<{
+    result: string;
+    threadId: string;
+    newThreadCreated: boolean;
+  }> {
+    try {
+      await this.ensureThread();
+      await this.createMessage();
+      await this.createRun();
+      await this.checkIfRunInProgress();
+      await this.getMessages();
+      return {
+        result: this.openaiResponse,
+        threadId: this.threadId,
+        newThreadCreated: this.newThreadCreated,
+      };
+    } catch (error) {
+      Logger("ask").error(error);
+      throw error;
+    }
+  }
+}

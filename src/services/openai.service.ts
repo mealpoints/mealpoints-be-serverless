@@ -1,5 +1,5 @@
 import logger from "../config/logger";
-import * as openaiHandler from "../handlers/openai.handler";
+import { OpenAIHandler } from "../handlers/openAI.handler";
 import { IConversation } from "../models/conversation.model";
 import { IUser } from "../models/user.model";
 import { OpenAIMessageTypesEnum } from "../types/enums";
@@ -16,28 +16,30 @@ export const ask = async (
   conversation: IConversation,
   options: IAskOptions
 ) => {
-  let openaiResponse: {
+  let openAIResponse: {
     result: string;
     threadId: string;
     newThreadCreated: boolean;
   };
 
   try {
-    openaiResponse = await openaiHandler.ask(data, {
+    const OpenAIHandlerObject = new OpenAIHandler(data, {
       preExistingThreadId: conversation.openaiThreadId,
       messageType: options.messageType,
+      user,
     });
+
+    openAIResponse = await OpenAIHandlerObject.ask();
   } catch (error) {
     Logger("ask").error(error);
     throw error;
   }
 
-  // Add thread id to the conversation if it exist
-  if (openaiResponse.newThreadCreated) {
+  if (openAIResponse.newThreadCreated) {
     await conversationService.updateConversation(
       { user: user.id },
-      { openaiThreadId: openaiResponse.threadId }
+      { openaiThreadId: openAIResponse.threadId }
     );
   }
-  return openaiResponse.result;
+  return openAIResponse.result;
 };

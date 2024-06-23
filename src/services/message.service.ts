@@ -81,6 +81,32 @@ export const updateSentMessageStatus = async (
   }
 };
 
+export const findRecievedMessage = async (
+  filter: FilterQuery<IRecievedMessage>
+): Promise<IRecievedMessage[] | []> => {
+  try {
+    Logger("findRecievedMessage").debug("");
+    const messages = await RecievedMessage.find(filter);
+    return messages;
+  } catch (error) {
+    Logger("findRecievedMessage").error(error);
+    throw error;
+  }
+};
+
+export const findSentMessage = async (
+  filter: FilterQuery<ISentMessage>
+): Promise<ISentMessage[] | []> => {
+  try {
+    Logger("findSentMessage").debug("");
+    const messages = await SentMessage.find(filter);
+    return messages;
+  } catch (error) {
+    Logger("findSentMessage").error(error);
+    throw error;
+  }
+};
+
 export const sendMessage = async (messageData: ISentMessageCreate) => {
   Logger("sendMessage").debug("");
   try {

@@ -5,7 +5,7 @@ import * as whatsappHandler from "../../handlers/whatsapp.handler";
 import { IConversation } from "../../models/conversation.model";
 import { IUser } from "../../models/user.model";
 import * as messageService from "../../services/message.service";
-import * as openaiService from "../../services/openai.service";
+import * as openAIService from "../../services/openAI.service";
 import { MessageTypesEnum, OpenAIMessageTypesEnum } from "../../types/enums";
 import { WebhookObject } from "../../types/message";
 const Logger = logger("lib/whatsapp/imageMessage");
@@ -23,7 +23,7 @@ export const processImageMessage = async (
     const s3Path = await uploadImageToS3(user.id, imageId, imageFilePath);
 
     try {
-      const openaiResponse = await openaiService.ask(
+      const openaiResponse = await openAIService.ask(
         s3Path,
         user,
         conversation,

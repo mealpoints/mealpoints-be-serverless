@@ -51,12 +51,24 @@ export const processInboundMessageWebhook = async (payload: WebhookObject) => {
 
   const contact = payload.entry[0].changes[0].value.messages?.[0]
     .from as string;
+  const wamid = payload.entry[0].changes[0].value.messages?.[0].id as string;
 
   // Ensure user exists
   const user = await userService.ensureUserByContact(contact);
 
   // Ensure conversation exists
   const conversation = await conversationService.ensureConversation(user.id);
+
+  const existingMessage = await messageService.findRecievedMessage({ wamid });
+
+  if (existingMessage.length > 0) {
+    // TODO: Sometimes the same message is sent twice,
+    // this usually happens because the first time the message was processed unccesdfully
+    Logger("processInboundMessageWebhook").debug(
+      "This message was already processed earlier"
+    );
+    return;
+  }
 
   // Create message
   await messageService.createRecievedMessage({
