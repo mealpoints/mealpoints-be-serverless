@@ -21,6 +21,7 @@ export const processTextMessage = async (
       const result = await openAIService.ask(userMessage, user, conversation, {
         messageType: OpenAIMessageTypesEnum.Text,
       });
+      Logger("processTextMessage").debug(result);
       await messageService.sendMessage({
         user: user.id,
         conversation: conversation.id,

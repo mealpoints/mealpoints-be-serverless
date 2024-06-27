@@ -5,6 +5,7 @@ import { Thread } from "openai/resources/beta/threads/threads";
 import logger from "../config/logger";
 import { IUser } from "../models/user.model";
 import { OpenAIMessageTypesEnum } from "../types/enums";
+import { isValidUrl } from "../utils/url";
 const Logger = logger("openai.handler");
 
 const API_KEY = process.env.OPENAI_API_KEY as string;
@@ -80,6 +81,11 @@ export class OpenAIHandler {
     Logger("createMessageWithImage").debug(
       "Creating message with image content"
     );
+
+    if (!isValidUrl(this.data)) {
+      throw new Error(`The image URL is not valid: ${this.data} `);
+    }
+
     try {
       await openai.beta.threads.messages.create(this.threadId, {
         role: "user",
@@ -135,6 +141,17 @@ export class OpenAIHandler {
             this.run?.id as string
           );
           Logger("checkIfRunInProgress").debug(`Run status: ${run.status}`);
+          if (run.status === "failed") {
+            clearInterval(interval);
+
+            reject(
+              new Error(
+                "Run failed with error: " + JSON.stringify(run.last_error) ||
+                  "Unknown error"
+              )
+            );
+          }
+
           if (run.status === "completed") {
             clearInterval(interval);
             resolve();
