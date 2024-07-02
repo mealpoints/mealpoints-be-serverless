@@ -4,14 +4,9 @@ import * as messageService from "../../services/message.service";
 import * as userService from "../../services/user.service";
 import { WebhookTypesEnum } from "../../types/enums";
 import { WebhookObject } from "../../types/message";
-import { processAudioMessage } from "./audioMessage";
-import { processDocumentMessage } from "./documentMessage";
 import { processImageMessage } from "./imageMessage";
-import { processInteractiveMessage } from "./interactiveMessage";
-import { processStickerMessage } from "./stickerMessage";
 import { processTextMessage } from "./textMessage";
 import { processUnknownMessage } from "./unknownMessage";
-import { processVideoMessage } from "./videoMessage";
 const Logger = logger("lib/whatsapp/inboundMessages");
 
 export const categoriseInboundMessageWebhook = (
@@ -83,26 +78,13 @@ export const processInboundMessageWebhook = async (payload: WebhookObject) => {
     case WebhookTypesEnum.Text: {
       return processTextMessage(payload, user, conversation);
     }
-    case WebhookTypesEnum.Audio: {
-      return processAudioMessage(payload);
-    }
-    case WebhookTypesEnum.Document: {
-      return processDocumentMessage(payload);
-    }
+
     case WebhookTypesEnum.Image: {
       return processImageMessage(payload, user, conversation);
     }
-    case WebhookTypesEnum.Interactive: {
-      return processInteractiveMessage(payload);
-    }
-    case WebhookTypesEnum.Sticker: {
-      return processStickerMessage(payload);
-    }
-    case WebhookTypesEnum.Video: {
-      return processVideoMessage(payload);
-    }
+
     default: {
-      return processUnknownMessage(payload);
+      return processUnknownMessage(payload, user, conversation);
     }
   }
 };

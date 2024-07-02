@@ -143,7 +143,6 @@ export class OpenAIHandler {
           Logger("checkIfRunInProgress").debug(`Run status: ${run.status}`);
           if (run.status === "failed") {
             clearInterval(interval);
-
             reject(
               new Error(
                 "Run failed with error: " + JSON.stringify(run.last_error) ||
@@ -187,9 +186,9 @@ export class OpenAIHandler {
   }> {
     try {
       await this.ensureThread();
-      await this.createMessage();
       await this.createRun();
       await this.checkIfRunInProgress();
+      await this.createMessage();
       await this.getMessages();
       return {
         result: this.openaiResponse,
