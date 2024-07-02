@@ -43,6 +43,9 @@ module.exports = {
                     camelCase: true,
                     pascalCase: true,
                 },
+                ignore: [
+                    /^openAI/i
+                ]
             },
         ],
     },
