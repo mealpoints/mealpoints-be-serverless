@@ -181,14 +181,12 @@ export class OpenAIHandler {
     }
   }
 
-  async ask(): Promise<
-    | {
-        result: string;
-        threadId: string;
-        newThreadCreated: boolean;
-      }
-    | undefined
-  > {
+  // @ts-expect-error - We are not going to return anything from the catch block.
+  async ask(): Promise<{
+    result: string;
+    threadId: string;
+    newThreadCreated: boolean;
+  }> {
     const maxRetries: number = 4;
     let attempt: number = 0;
 

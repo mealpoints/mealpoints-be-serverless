@@ -23,13 +23,13 @@ export const ask = async (
   };
 
   try {
-    const OpenAIHandlerObject = new OpenAIHandler(data, {
+    const openAIHandlerObject = new OpenAIHandler(data, {
       preExistingThreadId: conversation.openaiThreadId,
       messageType: options.messageType,
       user,
     });
 
-    openAIResponse = await OpenAIHandlerObject.ask();
+    openAIResponse = await openAIHandlerObject.ask();
   } catch (error) {
     Logger("ask").error(error);
     throw error;
