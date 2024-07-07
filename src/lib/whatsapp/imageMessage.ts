@@ -31,7 +31,6 @@ export const processImageMessage = async (
       );
       cleanupLocalFile(imageFilePath);
       await updateReceivedMessage(payload, s3Path);
-      Logger("processImageMessage").debug(openaiResponse);
 
       return await sendMessageToWhatsApp(
         user.id,

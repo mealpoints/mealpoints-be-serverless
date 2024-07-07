@@ -168,6 +168,8 @@ export class OpenAIHandler {
     try {
       const messages = await openai.beta.threads.messages.list(this.threadId, {
         run_id: this.run?.id,
+        order: "desc",
+        limit: 1,
       });
 
       // Here we are assuming that the message type is going to be text as we are not handling images yet.
@@ -179,25 +181,40 @@ export class OpenAIHandler {
     }
   }
 
-  async ask(): Promise<{
-    result: string;
-    threadId: string;
-    newThreadCreated: boolean;
-  }> {
-    try {
-      await this.ensureThread();
-      await this.createRun();
-      await this.checkIfRunInProgress();
-      await this.createMessage();
-      await this.getMessages();
-      return {
-        result: this.openaiResponse,
-        threadId: this.threadId,
-        newThreadCreated: this.newThreadCreated,
-      };
-    } catch (error) {
-      Logger("ask").error(error);
-      throw error;
+  async ask(): Promise<
+    | {
+        result: string;
+        threadId: string;
+        newThreadCreated: boolean;
+      }
+    | undefined
+  > {
+    const maxRetries: number = 4;
+    let attempt: number = 0;
+
+    while (attempt < maxRetries) {
+      try {
+        await this.ensureThread();
+        await this.createMessage();
+        await this.createRun();
+        await this.checkIfRunInProgress();
+        await this.getMessages();
+        return {
+          result: this.openaiResponse,
+          threadId: this.threadId,
+          newThreadCreated: this.newThreadCreated,
+        };
+      } catch (error) {
+        attempt++;
+        Logger("ask").error(
+          `Attempt ${attempt} failed: ${JSON.stringify(error)}`
+        );
+        if (attempt >= maxRetries) {
+          Logger("ask").error("All retry attempts failed.");
+          throw error;
+        }
+        Logger("ask").info(`Retrying... (${attempt}/${maxRetries})`);
+      }
     }
   }
 }
