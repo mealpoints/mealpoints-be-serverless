@@ -8,7 +8,16 @@ const Logger = logger("whatsapp.webhook.controller");
 export const readMessage = async (request: Request, response: Response) => {
   try {
     Logger("readMessage").debug(JSON.stringify(request.body));
-    await processWebhook(request.body as WebhookObject);
+
+    const body: WebhookObject = request.body as WebhookObject;
+
+    // Only process messages from the WhatsApp number ID. This makes sure that we don't process messages from other environments.
+    if (
+      body.entry[0].changes[0].value.metadata.phone_number_id ===
+      process.env.WHATSAPP_PHONE_NUMBER_ID
+    ) {
+      await processWebhook(body);
+    }
     return ApiResponse.Ok(response, "Message read");
   } catch (error) {
     Logger("readMessage").error(error);
