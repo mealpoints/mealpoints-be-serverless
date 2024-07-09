@@ -15,7 +15,6 @@ export const processStatusUpdateWebhook = async (payload: WebhookObject) => {
     await messageService.updateSentMessageStatusByWAID(id, status);
   } catch (error) {
     Logger("processStatusUpdateWebhook").error(error);
-    throw error;
   }
   return;
 };
