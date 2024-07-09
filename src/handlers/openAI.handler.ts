@@ -2,6 +2,7 @@
 import OpenAI from "openai";
 import { Run } from "openai/resources/beta/threads/runs/runs";
 import { Thread } from "openai/resources/beta/threads/threads";
+import { OPEN_AI } from "../config/config";
 import logger from "../config/logger";
 import { IUser } from "../models/user.model";
 import { OpenAIMessageTypesEnum } from "../types/enums";
@@ -187,7 +188,7 @@ export class OpenAIHandler {
     threadId: string;
     newThreadCreated: boolean;
   }> {
-    const maxRetries: number = 4;
+    const maxRetries: number = OPEN_AI.max_retries;
     let attempt: number = 0;
 
     while (attempt < maxRetries) {

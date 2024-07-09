@@ -1,3 +1,4 @@
+import { USER_MESSAGES } from "../../config/config";
 import logger from "../../config/logger";
 import { IConversation } from "../../models/conversation.model";
 import { IUser } from "../../models/user.model";
@@ -31,7 +32,7 @@ export const processTextMessage = async (
       await messageService.sendMessage({
         user: user.id,
         conversation: conversation.id,
-        payload: "Sorry, I am unable to process your request at the moment.",
+        payload: USER_MESSAGES.errors.text_not_processed,
         type: MessageTypesEnum.Text,
       });
       Logger("processTextMessage").error(error);

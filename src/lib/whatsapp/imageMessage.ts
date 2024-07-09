@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { USER_MESSAGES } from "../../config/config";
 import logger from "../../config/logger";
 import * as awsHandler from "../../handlers/aws.handler";
 import * as whatsappHandler from "../../handlers/whatsapp.handler";
@@ -117,7 +118,7 @@ const handleOpenAIUploadError = async (
   await messageService.sendMessage({
     user: userId,
     conversation: conversationId,
-    payload: "Failed to process the image.",
+    payload: USER_MESSAGES.errors.image_not_processed,
     type: MessageTypesEnum.Text,
   });
   throw new Error("OpenAI upload image failed");
