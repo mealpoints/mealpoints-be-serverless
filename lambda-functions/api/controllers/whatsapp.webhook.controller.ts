@@ -1,8 +1,10 @@
+import { SendMessageCommand } from "@aws-sdk/client-sqs";
 import { Request, Response } from "express";
-import logger from "../../shared/config/logger";
-import { WebhookObject } from "../../shared/types/message";
-import ApiResponse from "../../shared/utils/ApiResponse";
-import { processWebhook } from "../lib/whatsapp";
+import { QUEUE_MESSAGE_GROUP_IDS } from "../../../shared/config/config";
+import logger from "../../../shared/config/logger";
+import { queue } from "../../../shared/config/queue";
+import { WebhookObject } from "../../../shared/types/message";
+import ApiResponse from "../../../shared/utils/ApiResponse";
 const Logger = logger("whatsapp.webhook.controller");
 
 export const readMessage = async (request: Request, response: Response) => {
@@ -10,13 +12,22 @@ export const readMessage = async (request: Request, response: Response) => {
     Logger("readMessage").debug(JSON.stringify(request.body));
 
     const body: WebhookObject = request.body as WebhookObject;
+    const whatsappMessageId: string = body.entry[0].changes[0].value
+      .messages?.[0].id as string;
+    const phoneNumberId: string =
+      body.entry[0].changes[0].value.metadata.phone_number_id;
 
     // Only process messages from the WhatsApp number ID. This makes sure that we don't process messages from other environments.
-    if (
-      body.entry[0].changes[0].value.metadata.phone_number_id ===
-      process.env.WHATSAPP_PHONE_NUMBER_ID
-    ) {
-      await processWebhook(body);
+    if (phoneNumberId === process.env.WHATSAPP_PHONE_NUMBER_ID) {
+      const message = new SendMessageCommand({
+        QueueUrl: process.env.AWS_SQS_URL as string,
+        MessageBody: JSON.stringify({
+          body,
+        }),
+        MessageGroupId: QUEUE_MESSAGE_GROUP_IDS.whatsapp_messages,
+        MessageDeduplicationId: whatsappMessageId,
+      });
+      await queue.send(message);
     }
     return ApiResponse.Ok(response, "Message read");
   } catch (error) {

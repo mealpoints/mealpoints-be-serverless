@@ -34,8 +34,15 @@ provider:
 
 functions:
   api:
-    handler: ingress/app.handler
+    handler: lambda-functions/api/app.handler
     timeout: 30 # API Gateway has a timeout of 30 seconds
     events:
-      - http: ANY /
-      - http: ANY /{proxy+}
+      - http: ANY /api
+      - http: ANY /api/{proxy+}
+  message-processor:
+    handler: lambda-functions/message-processor/consumer.handler
+    timeout: 300 
+    events:
+      - sqs: ${env:AWS_SQS_ARN}
+   
+ 

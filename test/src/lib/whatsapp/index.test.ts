@@ -1,19 +1,19 @@
-import { processWebhook } from "../../../../ingress/lib/whatsapp";
-import { processInboundMessageWebhook } from "../../../../ingress/lib/whatsapp/inboundMessages";
-import { processStatusUpdateWebhook } from "../../../../ingress/lib/whatsapp/statusUpdates";
+import { processWhatsappWebhook } from "../../../../api/lib/whatsapp";
+import { processInboundMessageWebhook } from "../../../../api/lib/whatsapp/inboundMessages";
+import { processStatusUpdateWebhook } from "../../../../api/lib/whatsapp/statusUpdates";
 import { READ_MESSAGE_UPDATE } from "../../../mocks/whatsapp/readMessageUpdate.mock";
 import { TEXT_MESSAGE_PAYLOAD } from "../../../mocks/whatsapp/textMessage.mock";
 
-jest.mock(".../../../../ingress/lib/whatsapp/inboundMessages");
-jest.mock("../../../../ingress/lib/whatsapp/statusUpdates");
+jest.mock(".../../../../api/lib/whatsapp/inboundMessages");
+jest.mock("../../../../api/lib/whatsapp/statusUpdates");
 
-describe("processWebhook", () => {
+describe("processWhatsappWebhook", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   test("should process inbound message webhook", async () => {
-    await processWebhook(TEXT_MESSAGE_PAYLOAD);
+    await processWhatsappWebhook(TEXT_MESSAGE_PAYLOAD);
 
     expect(processInboundMessageWebhook).toHaveBeenCalledWith(
       TEXT_MESSAGE_PAYLOAD
@@ -22,7 +22,7 @@ describe("processWebhook", () => {
   });
 
   test("should process status update webhook", async () => {
-    await processWebhook(READ_MESSAGE_UPDATE);
+    await processWhatsappWebhook(READ_MESSAGE_UPDATE);
 
     expect(processStatusUpdateWebhook).toHaveBeenCalledWith(
       READ_MESSAGE_UPDATE
@@ -36,7 +36,7 @@ describe("processWebhook", () => {
     };
 
     // @ts-expect-error - Testing error case
-    await processWebhook(payload);
+    await processWhatsappWebhook(payload);
 
     expect(processInboundMessageWebhook).not.toHaveBeenCalled();
     expect(processStatusUpdateWebhook).not.toHaveBeenCalled();

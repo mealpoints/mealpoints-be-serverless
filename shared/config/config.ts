@@ -14,3 +14,7 @@ export const USER_MESSAGES = {
       "Sorry, we only accept food photos and text messages at the moment. The format of the message you sent is not supported. Please stay tuned for further updates.",
   },
 };
+
+export const QUEUE_MESSAGE_GROUP_IDS = {
+  whatsapp_messages: "whatsapp_messages",
+};

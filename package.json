@@ -4,6 +4,7 @@
   "description": "",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.592.0",
+    "@aws-sdk/client-sqs": "^3.613.0",
     "@aws-sdk/lib-storage": "^3.592.0",
     "@imagemagick/magick-wasm": "^0.0.29",
     "axios": "^1.7.2",

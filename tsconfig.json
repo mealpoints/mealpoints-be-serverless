@@ -100,7 +100,7 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
-  "include": ["ingress/**/*", "shared/**/*", "openai/**/*"],
+  "include": ["shared/**/*", "lambda-functions/**/*"],
   "exclude": [
     "bin",
     "coverage",

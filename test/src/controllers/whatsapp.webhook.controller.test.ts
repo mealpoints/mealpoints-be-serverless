@@ -1,13 +1,13 @@
 import request from "supertest";
-import { app } from "../../../ingress/app";
-import { processWebhook } from "../../../ingress/lib/whatsapp";
+import { app } from "../../../api/app";
+import { processWhatsappWebhook } from "../../../api/lib/whatsapp";
 import ApiResponse from "../../../shared/utils/ApiResponse";
 import { TEXT_MESSAGE_PAYLOAD } from "../../mocks/whatsapp/textMessage.mock";
 
 const PATH = "/v1/whatsapp-webhook";
 
-jest.mock("../../../ingress/lib/whatsapp", () => ({
-  processWebhook: jest.fn(),
+jest.mock("../../../api/lib/whatsapp", () => ({
+  processWhatsappWebhook: jest.fn(),
 }));
 
 jest.mock("../../../shared/utils/ApiResponse", () => ({
@@ -41,10 +41,10 @@ describe("Webhook Controllers", () => {
   });
 
   describe.skip("readMessage Controller", () => {
-    it("should call processWebhook and return Ok response", async () => {
+    it("should call processWhatsappWebhook and return Ok response", async () => {
       const response = await request(app).post(PATH).send(TEXT_MESSAGE_PAYLOAD);
-      (processWebhook as jest.Mock).mockResolvedValueOnce(undefined);
-      expect(processWebhook).toHaveBeenCalledWith(TEXT_MESSAGE_PAYLOAD);
+      (processWhatsappWebhook as jest.Mock).mockResolvedValueOnce(undefined);
+      expect(processWhatsappWebhook).toHaveBeenCalledWith(TEXT_MESSAGE_PAYLOAD);
       expect(ApiResponse.Ok).toHaveBeenCalledWith(response, "Message read");
     });
   });

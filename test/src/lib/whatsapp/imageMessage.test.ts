@@ -1,4 +1,4 @@
-import { processImageMessage } from "../../../../ingress/lib/whatsapp/imageMessage";
+import { processImageMessage } from "../../../../api/lib/whatsapp/imageMessage";
 import * as awsHandler from "../../../../shared/handlers/aws.handler";
 import * as whatsappHandler from "../../../../shared/handlers/whatsapp.handler";
 import * as messageService from "../../../../shared/services/message.service";
