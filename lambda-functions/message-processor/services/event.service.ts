@@ -5,7 +5,7 @@ import {
   IDequeuedMessage,
   IMessage,
 } from "../../../shared/types/queueMessages";
-import { processInboundMessageWebhook } from "../lib/whatsapp/inboundMessages";
+import { processWhatsappWebhook } from "../lib/whatsapp";
 
 const Logger = logger("event.service");
 
@@ -36,15 +36,13 @@ export class EventService {
         process.env.AWS_SQS_URL as string,
         messagesToDelete
       );
-
       const errorMessage = `Failing due to ${numberRetriableMessages} unsuccessful and retriable errors.`;
-
       Logger("handler").error(errorMessage);
     }
   }
   private async processMessage(message: IDequeuedMessage) {
     Logger("processMessage").info(JSON.stringify(message));
-    await processInboundMessageWebhook(message.body);
+    await processWhatsappWebhook(message.body);
   }
 
   private mapEventToDequeuedMessages(event: SQSEvent): IDequeuedMessage[] {
