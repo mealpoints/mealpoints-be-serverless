@@ -1,12 +1,12 @@
 import request from "supertest";
-import { app } from "../../../api/app";
-import { processWhatsappWebhook } from "../../../api/lib/whatsapp";
+import { app } from "../../../lambda-functions/api/app";
+import { processWhatsappWebhook } from "../../../lambda-functions/message-processor/lib/whatsapp";
 import ApiResponse from "../../../shared/utils/ApiResponse";
 import { TEXT_MESSAGE_PAYLOAD } from "../../mocks/whatsapp/textMessage.mock";
 
 const PATH = "/v1/whatsapp-webhook";
 
-jest.mock("../../../api/lib/whatsapp", () => ({
+jest.mock("../../../lambda-functions/message-processor/lib/whatsapp", () => ({
   processWhatsappWebhook: jest.fn(),
 }));
 

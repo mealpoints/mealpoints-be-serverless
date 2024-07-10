@@ -1,11 +1,15 @@
-import { processWhatsappWebhook } from "../../../../api/lib/whatsapp";
-import { processInboundMessageWebhook } from "../../../../api/lib/whatsapp/inboundMessages";
-import { processStatusUpdateWebhook } from "../../../../api/lib/whatsapp/statusUpdates";
+import { processWhatsappWebhook } from "../../../../lambda-functions/message-processor/lib/whatsapp";
+import { processInboundMessageWebhook } from "../../../../lambda-functions/message-processor/lib/whatsapp/inboundMessages";
+import { processStatusUpdateWebhook } from "../../../../lambda-functions/message-processor/lib/whatsapp/statusUpdates";
 import { READ_MESSAGE_UPDATE } from "../../../mocks/whatsapp/readMessageUpdate.mock";
 import { TEXT_MESSAGE_PAYLOAD } from "../../../mocks/whatsapp/textMessage.mock";
 
-jest.mock(".../../../../api/lib/whatsapp/inboundMessages");
-jest.mock("../../../../api/lib/whatsapp/statusUpdates");
+jest.mock(
+  "../../../../lambda-functions/message-processor/lib/whatsapp/inboundMessages"
+);
+jest.mock(
+  "../../../../lambda-functions/message-processor/lib/whatsapp/statusUpdates"
+);
 
 describe("processWhatsappWebhook", () => {
   beforeEach(() => {
