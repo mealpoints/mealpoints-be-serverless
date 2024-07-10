@@ -1,11 +1,11 @@
-import { processWebhook } from "../../../../src/lib/whatsapp";
-import { processInboundMessageWebhook } from "../../../../src/lib/whatsapp/inboundMessages";
-import { processStatusUpdateWebhook } from "../../../../src/lib/whatsapp/statusUpdates";
+import { processWebhook } from "../../../../ingress/lib/whatsapp";
+import { processInboundMessageWebhook } from "../../../../ingress/lib/whatsapp/inboundMessages";
+import { processStatusUpdateWebhook } from "../../../../ingress/lib/whatsapp/statusUpdates";
 import { READ_MESSAGE_UPDATE } from "../../../mocks/whatsapp/readMessageUpdate.mock";
 import { TEXT_MESSAGE_PAYLOAD } from "../../../mocks/whatsapp/textMessage.mock";
 
-jest.mock(".../../../../src/lib/whatsapp/inboundMessages");
-jest.mock("../../../../src/lib/whatsapp/statusUpdates");
+jest.mock(".../../../../ingress/lib/whatsapp/inboundMessages");
+jest.mock("../../../../ingress/lib/whatsapp/statusUpdates");
 
 describe("processWebhook", () => {
   beforeEach(() => {

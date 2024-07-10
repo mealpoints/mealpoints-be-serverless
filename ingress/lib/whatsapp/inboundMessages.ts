@@ -1,9 +1,9 @@
-import logger from "../../config/logger";
-import * as conversationService from "../../services/conversation.service";
-import * as messageService from "../../services/message.service";
-import * as userService from "../../services/user.service";
-import { WebhookTypesEnum } from "../../types/enums";
-import { WebhookObject } from "../../types/message";
+import logger from "../../../shared/config/logger";
+import * as conversationService from "../../../shared/services/conversation.service";
+import * as messageService from "../../../shared/services/message.service";
+import * as userService from "../../../shared/services/user.service";
+import { WebhookTypesEnum } from "../../../shared/types/enums";
+import { WebhookObject } from "../../../shared/types/message";
 import { processImageMessage } from "./imageMessage";
 import { processTextMessage } from "./textMessage";
 import { processUnknownMessage } from "./unknownMessage";

@@ -34,7 +34,7 @@ provider:
 
 functions:
   api:
-    handler: src/app.handler
+    handler: ingress/app.handler
     timeout: 30 # API Gateway has a timeout of 30 seconds
     events:
       - http: ANY /

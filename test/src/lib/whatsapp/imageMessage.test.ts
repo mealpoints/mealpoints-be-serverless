@@ -1,14 +1,14 @@
-import * as awsHandler from "../../../../src/handlers/aws.handler";
-import * as whatsappHandler from "../../../../src/handlers/whatsapp.handler";
-import { processImageMessage } from "../../../../src/lib/whatsapp/imageMessage";
-import * as messageService from "../../../../src/services/message.service";
-import { MessageTypesEnum } from "../../../../src/types/enums";
+import { processImageMessage } from "../../../../ingress/lib/whatsapp/imageMessage";
+import * as awsHandler from "../../../../shared/handlers/aws.handler";
+import * as whatsappHandler from "../../../../shared/handlers/whatsapp.handler";
+import * as messageService from "../../../../shared/services/message.service";
+import { MessageTypesEnum } from "../../../../shared/types/enums";
 import { USER } from "../../../mocks/user.mock";
 import { IMAGE_MESSAGE_PAYLOAD } from "../../../mocks/whatsapp/imageMessage.mock";
 
-jest.mock("../../../../src/handlers/aws.handler");
-jest.mock("../../../../src/handlers/whatsapp.handler");
-jest.mock("../../../../src/services/message.service");
+jest.mock("../../../../shared/handlers/aws.handler");
+jest.mock("../../../../shared/handlers/whatsapp.handler");
+jest.mock("../../../../shared/services/message.service");
 
 describe("processImageMessage", () => {
   beforeEach(() => {

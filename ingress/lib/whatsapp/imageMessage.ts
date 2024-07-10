@@ -1,14 +1,17 @@
 import fs from "node:fs";
-import { USER_MESSAGES } from "../../config/config";
-import logger from "../../config/logger";
-import * as awsHandler from "../../handlers/aws.handler";
-import * as whatsappHandler from "../../handlers/whatsapp.handler";
-import { IConversation } from "../../models/conversation.model";
-import { IUser } from "../../models/user.model";
-import * as messageService from "../../services/message.service";
-import * as openAIService from "../../services/openAI.service";
-import { MessageTypesEnum, OpenAIMessageTypesEnum } from "../../types/enums";
-import { WebhookObject } from "../../types/message";
+import { USER_MESSAGES } from "../../../shared/config/config";
+import logger from "../../../shared/config/logger";
+import * as awsHandler from "../../../shared/handlers/aws.handler";
+import * as whatsappHandler from "../../../shared/handlers/whatsapp.handler";
+import { IConversation } from "../../../shared/models/conversation.model";
+import { IUser } from "../../../shared/models/user.model";
+import * as messageService from "../../../shared/services/message.service";
+import * as openAIService from "../../../shared/services/openAI.service";
+import {
+  MessageTypesEnum,
+  OpenAIMessageTypesEnum,
+} from "../../../shared/types/enums";
+import { WebhookObject } from "../../../shared/types/message";
 const Logger = logger("lib/whatsapp/imageMessage");
 
 export const processImageMessage = async (

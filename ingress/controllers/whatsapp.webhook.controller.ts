@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import logger from "../config/logger";
+import logger from "../../shared/config/logger";
+import { WebhookObject } from "../../shared/types/message";
+import ApiResponse from "../../shared/utils/ApiResponse";
 import { processWebhook } from "../lib/whatsapp";
-import { WebhookObject } from "../types/message";
-import ApiResponse from "../utils/ApiResponse";
 const Logger = logger("whatsapp.webhook.controller");
 
 export const readMessage = async (request: Request, response: Response) => {

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import logger from "../config/logger";
-import * as conversationService from "../services/conversation.service";
-import ApiResponse from "../utils/ApiResponse";
+import logger from "../../shared/config/logger";
+import * as conversationService from "../../shared/services/conversation.service";
+import ApiResponse from "../../shared/utils/ApiResponse";
 const Logger = logger("conversation.controller");
 
 export const getConversation = async (request: Request, response: Response) => {

@@ -1,7 +1,7 @@
-import logger from "../../config/logger";
-import * as messageService from "../../services/message.service";
-import { StatusEnum } from "../../types/enums";
-import { WebhookObject } from "../../types/message";
+import logger from "../../../shared/config/logger";
+import * as messageService from "../../../shared/services/message.service";
+import { StatusEnum } from "../../../shared/types/enums";
+import { WebhookObject } from "../../../shared/types/message";
 const Logger = logger("lib/whatsapp/statusUpdates");
 
 export const processStatusUpdateWebhook = async (payload: WebhookObject) => {

@@ -1,8 +1,8 @@
 import {
   ImageMediaTypesEnum,
   WebhookTypesEnum,
-} from "../../../src/types/enums";
-import { WebhookObject } from "../../../src/types/message";
+} from "../../../shared/types/enums";
+import { WebhookObject } from "../../../shared/types/message";
 
 export const IMAGE_MESSAGE_PAYLOAD: WebhookObject = {
   object: "whatsapp_business_account",

@@ -1,5 +1,5 @@
-import logger from "../../config/logger";
-import { WebhookObject } from "../../types/message";
+import logger from "../../../shared/config/logger";
+import { WebhookObject } from "../../../shared/types/message";
 import { processInboundMessageWebhook } from "./inboundMessages";
 import { processStatusUpdateWebhook } from "./statusUpdates";
 const Logger = logger("lib/whatsapp/processWebhook");

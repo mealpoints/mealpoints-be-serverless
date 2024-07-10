@@ -1,11 +1,14 @@
-import { USER_MESSAGES } from "../../config/config";
-import logger from "../../config/logger";
-import { IConversation } from "../../models/conversation.model";
-import { IUser } from "../../models/user.model";
-import * as messageService from "../../services/message.service";
-import * as openAIService from "../../services/openAI.service";
-import { MessageTypesEnum, OpenAIMessageTypesEnum } from "../../types/enums";
-import { WebhookObject } from "../../types/message";
+import { USER_MESSAGES } from "../../../shared/config/config";
+import logger from "../../../shared/config/logger";
+import { IConversation } from "../../../shared/models/conversation.model";
+import { IUser } from "../../../shared/models/user.model";
+import * as messageService from "../../../shared/services/message.service";
+import * as openAIService from "../../../shared/services/openAI.service";
+import {
+  MessageTypesEnum,
+  OpenAIMessageTypesEnum,
+} from "../../../shared/types/enums";
+import { WebhookObject } from "../../../shared/types/message";
 const Logger = logger("lib/whatsapp/interactiveMessage");
 
 export const processTextMessage = async (

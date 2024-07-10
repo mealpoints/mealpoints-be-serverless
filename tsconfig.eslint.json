@@ -7,7 +7,9 @@
   },
   "include": [
     // whatever paths you intend to lint
-    "src/**/*.ts",
+    "ingress/**/*.ts",
+    "shared/**/*.ts",
+    "openai/**/*.ts",
     "test/**/*.ts"
   ]
 }

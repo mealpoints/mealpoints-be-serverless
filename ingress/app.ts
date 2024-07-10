@@ -6,10 +6,10 @@ import {
 import express from "express";
 import morgan from "morgan";
 import serverless from "serverless-http";
-import { connectToDatabase } from "./config/database";
-import logger from "./config/logger";
-import { errorHandler } from "./middlewares/error";
-import { notFoundHandler } from "./middlewares/notFound";
+import { connectToDatabase } from "./../shared/config/database";
+import logger from "./../shared/config/logger";
+import { errorHandler } from "./../shared/middlewares/error";
+import { notFoundHandler } from "./../shared/middlewares/notFound";
 import routes from "./routes";
 
 export const app = express();

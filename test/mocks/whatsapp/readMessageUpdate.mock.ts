@@ -1,5 +1,5 @@
-import { StatusEnum } from "../../../src/types/enums";
-import { WebhookObject } from "../../../src/types/message";
+import { StatusEnum } from "../../../shared/types/enums";
+import { WebhookObject } from "../../../shared/types/message";
 
 export const READ_MESSAGE_UPDATE: WebhookObject = {
   object: "whatsapp_business_account",
