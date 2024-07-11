@@ -12,6 +12,7 @@ import {
   OpenAIMessageTypesEnum,
 } from "../../../../shared/types/enums";
 import { WebhookObject } from "../../../../shared/types/message";
+import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 const Logger = logger("lib/whatsapp/imageMessage");
 
 export const processImageMessage = async (
@@ -20,11 +21,15 @@ export const processImageMessage = async (
   conversation: IConversation
 ) => {
   Logger("processImageMessage").debug("");
+  const { imageId } = new WhatsappData(payload);
 
   try {
-    const imageId = extractImageId(payload);
-    const imageFilePath = await fetchImage(imageId);
-    const s3Path = await uploadImageToS3(user.id, imageId, imageFilePath);
+    const imageFilePath = await fetchImage(imageId as string);
+    const s3Path = await uploadImageToS3(
+      user.id,
+      imageId as string,
+      imageFilePath
+    );
 
     try {
       const openaiResponse = await openAIService.ask(
@@ -49,10 +54,6 @@ export const processImageMessage = async (
     Logger("processImageMessage").error(error);
     throw error;
   }
-};
-
-const extractImageId = (payload: WebhookObject): string => {
-  return payload.entry[0].changes[0].value.messages?.[0].image?.id as string;
 };
 
 const fetchImage = async (imageId: string): Promise<string> => {
@@ -89,9 +90,10 @@ const updateReceivedMessage = async (
   payload: WebhookObject,
   s3Path: string
 ): Promise<void> => {
+  const { whatsappMessageId } = new WhatsappData(payload);
   await messageService.updateRecievedMessage(
     {
-      wamid: payload.entry[0].changes[0].value.messages?.[0].id,
+      wamid: whatsappMessageId as string,
     },
     {
       media: s3Path,

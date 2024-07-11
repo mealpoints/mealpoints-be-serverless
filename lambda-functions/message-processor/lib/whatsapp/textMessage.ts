@@ -9,6 +9,7 @@ import {
   OpenAIMessageTypesEnum,
 } from "../../../../shared/types/enums";
 import { WebhookObject } from "../../../../shared/types/message";
+import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 
 const Logger = logger("lib/whatsapp/textMessage");
 
@@ -18,14 +19,18 @@ export const processTextMessage = async (
   conversation: IConversation
 ) => {
   Logger("processTextMessage").debug("");
-  const userMessage: string = payload.entry[0].changes[0].value.messages?.[0]
-    .text?.body as string;
+  const { userMessage } = new WhatsappData(payload);
 
   try {
     try {
-      const result = await openAIService.ask(userMessage, user, conversation, {
-        messageType: OpenAIMessageTypesEnum.Text,
-      });
+      const result = await openAIService.ask(
+        userMessage as string,
+        user,
+        conversation,
+        {
+          messageType: OpenAIMessageTypesEnum.Text,
+        }
+      );
       await messageService.sendMessage({
         user: user.id,
         conversation: conversation.id,

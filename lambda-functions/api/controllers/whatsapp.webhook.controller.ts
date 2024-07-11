@@ -5,17 +5,18 @@ import { queue } from "../../../shared/config/queue";
 import { SqsQueueService } from "../../../shared/services/queue.service";
 import { WebhookObject } from "../../../shared/types/message";
 import ApiResponse from "../../../shared/utils/ApiResponse";
-import { getWhatsappMessageId } from "../utils/whatsapp";
+import { WhatsappData } from "../../../shared/utils/WhatsappData";
 const Logger = logger("whatsapp.webhook.controller");
+
+const whatsappPhoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID as string;
 
 export const readMessage = async (request: Request, response: Response) => {
   try {
     Logger("readMessage").debug(JSON.stringify(request.body));
 
     const body: WebhookObject = request.body as WebhookObject;
-    const whatsappMessageId: string | undefined = getWhatsappMessageId(body);
-    const phoneNumberId: string =
-      body.entry[0].changes[0].value.metadata.phone_number_id;
+    const whatsappData = new WhatsappData(body);
+    const { whatsappMessageId } = whatsappData;
 
     if (!whatsappMessageId) {
       Logger("readMessage").error(
@@ -25,7 +26,7 @@ export const readMessage = async (request: Request, response: Response) => {
     }
 
     // Only process messages from the WhatsApp number ID. This makes sure that we don't process messages from other environments.
-    if (phoneNumberId === process.env.WHATSAPP_PHONE_NUMBER_ID) {
+    if (whatsappData.isMessageFromWatsappPhoneNumberId(whatsappPhoneNumberId)) {
       const queueService = new SqsQueueService(queue);
       await queueService.enqueueMessage({
         queueUrl: process.env.AWS_SQS_URL as string,

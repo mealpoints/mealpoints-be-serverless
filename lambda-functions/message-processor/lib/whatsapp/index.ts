@@ -1,19 +1,18 @@
 import logger from "../../../../shared/config/logger";
 import { WebhookObject } from "../../../../shared/types/message";
+import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { processInboundMessageWebhook } from "./inboundMessages";
 import { processStatusUpdateWebhook } from "./statusUpdates";
 const Logger = logger("lib/whatsapp/processWhatsappWebhook");
 
 export const processWhatsappWebhook = async (payload: WebhookObject) => {
   Logger("processWhatsappWebhook").debug("");
+  const whatsappData = new WhatsappData(payload);
 
   try {
-    // Identify if the webhook is a message or a status update
-    const isInboundMessage = !!payload.entry[0].changes[0].value.messages;
-    const isStatusUpdate = !!payload.entry[0].changes[0].value.statuses;
-    if (isInboundMessage) {
+    if (whatsappData.isInboundMessage) {
       return processInboundMessageWebhook(payload);
-    } else if (isStatusUpdate) {
+    } else if (whatsappData.isStatusUpdate) {
       return processStatusUpdateWebhook(payload);
     }
   } catch (error) {
