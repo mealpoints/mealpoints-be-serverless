@@ -41,7 +41,6 @@ export class EventService {
     }
   }
   private async processMessage(message: IDequeuedMessage) {
-    Logger("processMessage").info(JSON.stringify(message));
     await processWhatsappWebhook(message.body);
   }
 
