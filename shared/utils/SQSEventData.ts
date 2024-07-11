@@ -5,9 +5,6 @@ export class SQSEventData {
   constructor(private event: SQSEvent) {}
 
   public isMessageGroupId(messageGroupId: string) {
-    return (
-      this.event.Records[0].messageAttributes?.messageGroupId?.stringValue ===
-      messageGroupId
-    );
+    return this.event.Records[0].attributes.MessageGroupId === messageGroupId;
   }
 }
