@@ -23,8 +23,9 @@ export const ask = async (
   };
 
   try {
-    const openAIHandlerObject = new OpenAIHandler(data, {
-      preExistingThreadId: conversation.openaiThreadId,
+    const openAIHandlerObject = new OpenAIHandler({
+      data,
+      conversation,
       messageType: options.messageType,
       user,
     });

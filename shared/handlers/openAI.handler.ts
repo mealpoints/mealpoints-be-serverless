@@ -4,6 +4,7 @@ import { Run } from "openai/resources/beta/threads/runs/runs";
 import { Thread } from "openai/resources/beta/threads/threads";
 import { OPEN_AI } from "../config/config";
 import logger from "../config/logger";
+import { IConversation } from "../models/conversation.model";
 import { IUser } from "../models/user.model";
 import { OpenAIMessageTypesEnum } from "../types/enums";
 import { isValidUrl } from "../utils/url";
@@ -16,9 +17,10 @@ const openai = new OpenAI({
   apiKey: API_KEY,
 });
 
-interface IAskOptions {
-  preExistingThreadId?: string;
-  messageType?: OpenAIMessageTypesEnum;
+interface IOpenAIHandler {
+  data: string;
+  conversation: IConversation;
+  messageType: OpenAIMessageTypesEnum;
   user: IUser;
 }
 
@@ -31,12 +33,14 @@ export class OpenAIHandler {
   user: IUser;
   thread?: Thread;
   run?: Run;
+  conversation: IConversation;
 
-  constructor(data: string, options: IAskOptions) {
-    this.data = data;
-    this.threadId = options.preExistingThreadId || "";
-    this.messageType = options.messageType;
-    this.user = options.user;
+  constructor(properties: IOpenAIHandler) {
+    this.conversation = properties.conversation;
+    this.data = properties.data;
+    this.threadId = this.conversation.openaiThreadId || "";
+    this.messageType = properties.messageType;
+    this.user = properties.user;
   }
 
   private async createNewThread() {
@@ -49,9 +53,12 @@ export class OpenAIHandler {
     }
   }
 
+  // This method makes sure that the thread with the same assistant id exists.
   private async ensureThread() {
-    if (this.threadId) {
-      Logger("checkIfThreadExists").debug("Thread already exists, fecching it");
+    if (this.threadId && this.conversation.openaiAssistantId === ASSITANT_ID) {
+      Logger("checkIfThreadExists").debug(
+        "Thread with the same assistant already exists, fetching it"
+      );
       this.thread = await openai.beta.threads.retrieve(this.threadId);
     } else {
       Logger("checkIfThreadExists").debug("Creating new thread");
