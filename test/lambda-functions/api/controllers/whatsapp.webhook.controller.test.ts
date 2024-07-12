@@ -1,8 +1,8 @@
 import request from "supertest";
-import { app } from "../../../lambda-functions/api/app";
-import { processWhatsappWebhook } from "../../../lambda-functions/message-processor/lib/whatsapp";
-import ApiResponse from "../../../shared/utils/ApiResponse";
-import { TEXT_MESSAGE_PAYLOAD } from "../../mocks/whatsapp/textMessage.mock";
+import { app } from "../../../../lambda-functions/api/app";
+import { processWhatsappWebhook } from "../../../../lambda-functions/message-processor/lib/whatsapp";
+import ApiResponse from "../../../../shared/utils/ApiResponse";
+import { TEXT_MESSAGE_PAYLOAD } from "../../../mocks/whatsapp/textMessage.mock";
 
 const PATH = "/v1/whatsapp-webhook";
 

@@ -45,7 +45,8 @@ module.exports = {
                     pascalCase: true,
                 },
                 ignore: [
-                    /^openAI/i
+                    /^openAI/i,
+                    /^SQSEvent/i,
                 ]
             },
         ],

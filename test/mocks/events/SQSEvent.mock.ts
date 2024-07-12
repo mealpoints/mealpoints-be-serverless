@@ -1,4 +1,3 @@
-// eslint-disable-next-line unicorn/filename-case
 import { SQSEvent } from "aws-lambda";
 
 export const SQS_EVENT: SQSEvent = {
