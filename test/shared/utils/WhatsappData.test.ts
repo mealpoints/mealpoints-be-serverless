@@ -5,10 +5,14 @@ import { READ_MESSAGE_UPDATE } from "../../mocks/whatsapp/readMessageUpdate.mock
 import { TEXT_MESSAGE_PAYLOAD } from "../../mocks/whatsapp/textMessage.mock";
 
 describe("WhatsappData", () => {
-  const whatsappDataText = new WhatsappData(TEXT_MESSAGE_PAYLOAD);
-  const whatsappDataStatus = new WhatsappData(READ_MESSAGE_UPDATE);
-  const whatsappDataImage = new WhatsappData(IMAGE_MESSAGE_PAYLOAD);
-
+  let whatsappDataText: WhatsappData;
+  let whatsappDataStatus: WhatsappData;
+  let whatsappDataImage: WhatsappData;
+  beforeAll(() => {
+    whatsappDataText = new WhatsappData(TEXT_MESSAGE_PAYLOAD);
+    whatsappDataStatus = new WhatsappData(READ_MESSAGE_UPDATE);
+    whatsappDataImage = new WhatsappData(IMAGE_MESSAGE_PAYLOAD);
+  });
   test("should return the correct webhook message type", () => {
     expect(whatsappDataText.webhookMessageType).toBe("inboundMessage");
     expect(whatsappDataStatus.webhookMessageType).toBe("statusUpdate");

@@ -74,7 +74,7 @@ export enum WAConfigEnum {
   WebhookEndpoint = "WEBHOOK_ENDPOINT",
   WebhookVerificationToken = "WEBHOOK_VERIFICATION_TOKEN",
   ListenerPort = "LISTENER_PORT",
-  MaxRetriesAfterWait = "MAX_RETRIES_AFTER_WAIT",
+  MaxRetriesAfterWait = "max_runs_on_a_thread_AFTER_WAIT",
   RequestTimeout = "REQUEST_TIMEOUT",
   Debug = "DEBUG",
 }

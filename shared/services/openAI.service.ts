@@ -10,37 +10,36 @@ interface IAskOptions {
   messageType: OpenAIMessageTypesEnum;
 }
 
+const ASSITANT_ID = process.env.OPENAI_ASSISTANT_ID as string;
+
 export const ask = async (
   data: string,
   user: IUser,
   conversation: IConversation,
   options: IAskOptions
 ) => {
-  let openAIResponse: {
-    result: string;
-    threadId: string;
-    newThreadCreated: boolean;
-  };
-
   try {
-    const openAIHandlerObject = new OpenAIHandler({
+    const openAIHandler = new OpenAIHandler(
       data,
       conversation,
-      messageType: options.messageType,
-      user,
-    });
+      options.messageType
+    );
 
-    openAIResponse = await openAIHandlerObject.ask();
+    const result = await openAIHandler.ask();
+
+    if (openAIHandler.newThreadCreated) {
+      await conversationService.updateConversation(
+        { user: user.id },
+        {
+          openaiThreadId: openAIHandler.threadId,
+          openaiAssistantId: openAIHandler.assistantId,
+        }
+      );
+    }
+
+    return result;
   } catch (error) {
     Logger("ask").error(error);
     throw error;
   }
-
-  if (openAIResponse.newThreadCreated) {
-    await conversationService.updateConversation(
-      { user: user.id },
-      { openaiThreadId: openAIResponse.threadId }
-    );
-  }
-  return openAIResponse.result;
 };

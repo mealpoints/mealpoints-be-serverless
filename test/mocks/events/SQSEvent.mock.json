@@ -1,0 +1,24 @@
+{
+  "Records": [
+    {
+      "messageId": "efb5c75d-38a4-41f0-8026-a29a01ff1eb3",
+      "receiptHandle": "AQEBlXzmj5MkAvo8clJg7dAZYYqlTwd+nuzt0UdR4c4xLMYEDIESX7e+jPHRbk9CV+gS0rZFpyQk44xBiAPFKDA7gur5efARSZH6tl5BPCgi6ygL6mhsTsKeOZ+SnoZz778zBCN1ou1bcGA8PN3X1WPgLkI3SQNvaGPXZGpf4KFQm5MP0m4Wpvu9YtADMnm5GOFxBdtQ5XbIn67bDWKo7FLkLWq+hkg+JMCYjW0R0dcnP8wMNW/zsaKgshaogNzywMT/EBQPoS+RlkOPNmHiMRBPQg==",
+      "body": "{\"body\":{\"object\":\"whatsapp_business_account\",\"entry\":[{\"id\":\"297733343432786\",\"changes\":[{\"value\":{\"messaging_product\":\"whatsapp\",\"metadata\":{\"display_phone_number\":\"15556270022\",\"phone_number_id\":\"338825869319527\"},\"contacts\":[{\"profile\":{\"name\":\"Madhav Sharma\"},\"wa_id\":\"917022629939\"}],\"messages\":[{\"from\":\"917022629939\",\"id\":\"wamid.HBgMOTE3MDIyNjI5OTM5FQIAEhgWM0VCMEFFNTA2OTg3MUE4Q0RDQTZDOAA=\",\"timestamp\":\"1720704620\",\"text\":{\"body\":\"hello\"},\"type\":\"text\"}]},\"field\":\"messages\"}]}]}}",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "AWSTraceHeader": "Root=1-668fde6d-3488fea85ff04fb346134d96;Parent=7ca88b61067710e0;Sampled=0;Lineage=82a6cceb:0",
+        "SentTimestamp": "1720704623630",
+        "SequenceNumber": "18887244457358831616",
+        "MessageGroupId": "whatsapp_messages",
+        "SenderId": "AROA5FTZAFROM3VUQ3K66:mealpoints-be-serverless-dev-api",
+        "MessageDeduplicationId": "wamid.HBgMOTE3MDIyNjI5OTM5FQIAEhgWM0VCMEFFNTA2OTg3MUE4Q0RDQTZDOAA=",
+        "ApproximateFirstReceiveTimestamp": "1720704623630"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "bfb615562dfc4da754217aefef4d965f",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:ap-south-1:905418124380:sqs-dev.fifo",
+      "awsRegion": "ap-south-1"
+    }
+  ]
+}

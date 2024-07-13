@@ -2,6 +2,8 @@
 
 1. Start locally: `nodemon`
 2. deploy: `npm run build && sls deploy` or `npm run deploy`
+3. Invoke function locally: `serverless invoke local --function <function-name> --path <path/to/mock>`
+4. Run ngrok locally: `ngrok http 3000 --domain=mealpoints.ngrok.app`
 
 ## Troubleshooting
 

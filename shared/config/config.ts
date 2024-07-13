@@ -1,5 +1,6 @@
 export const OPEN_AI = {
-  max_retries: 10,
+  max_runs_on_a_thread: 10,
+  max_retries: 2,
 };
 
 export const USER_MESSAGES = {
