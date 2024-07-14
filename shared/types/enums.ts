@@ -537,3 +537,7 @@ export enum CurrencyCodesEnum {
   XRE = "XRE",
   XFU = "XFU",
 }
+
+export enum SettingEnum {
+  OpenAI_AssistantId = "openai_assistant_id",
+}
