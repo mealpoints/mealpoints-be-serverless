@@ -8,10 +8,8 @@ import logger from "./logger";
 
 const Logger = logger("SettingsSingleton");
 
-const ASSISTANT_ID = process.env.OPENAI_ASSISTANT_ID as string;
-
 export const SETTINGS_SEED: ISettingCreate[] = [
-  { key: "openai_assistant_id", value: ASSISTANT_ID },
+  { key: "openai_assistant_id", value: "test" },
 ];
 
 class SettingsSingleton {

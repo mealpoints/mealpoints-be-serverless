@@ -33,7 +33,6 @@ MockOpenAI.prototype.beta = {
 };
 
 describe("OpenAIHandler", () => {
-  const API_KEY = "fake-api-key";
   const ASSISTANT_ID = "fake-assistant-id";
   const prompt = "Hello, OpenAI";
   // @ts-expect-error - We will not be covering all properties
@@ -44,8 +43,6 @@ describe("OpenAIHandler", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    process.env.OPENAI_API_KEY = API_KEY;
-    process.env.OPENAI_ASSISTANT_ID = ASSISTANT_ID;
     MockOpenAI.prototype.beta = {
       threads: {
         create: mockCreateThread,

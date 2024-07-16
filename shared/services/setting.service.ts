@@ -37,7 +37,15 @@ export const updateSetting = async ({ key, value }: ISettingCreate) => {
 export const seedSettings = async () => {
   Logger("seedSettings").debug("");
   try {
-    await Setting.insertMany(SETTINGS_SEED);
+    const bulkOps = SETTINGS_SEED.map((setting) => ({
+      updateOne: {
+        filter: { key: setting.key },
+        update: { $set: setting },
+        upsert: true,
+      },
+    }));
+
+    await Setting.bulkWrite(bulkOps);
   } catch (error) {
     Logger("seedSettings").error(error);
     throw error;
