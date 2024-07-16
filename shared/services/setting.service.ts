@@ -14,6 +14,16 @@ export const getSettings = async () => {
   }
 };
 
+export const getSettingByKey = async (key: string) => {
+  Logger("getSettingByKey").debug("");
+  try {
+    return await Setting.findOne({ key });
+  } catch (error) {
+    Logger("getSettingByKey").error(error);
+    throw error;
+  }
+};
+
 export const createSetting = async ({ key, value }: ISettingCreate) => {
   Logger("createSetting").debug("");
   try {

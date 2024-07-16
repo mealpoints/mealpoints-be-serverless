@@ -24,6 +24,15 @@ export const getSettings = catchAsync(
   }
 );
 
+export const getSettingsByKey = catchAsync(
+  async (request: Request, response: Response) => {
+    Logger("getSettingsByKey").debug(request.params.key);
+    const key = request.params.key;
+    const setting = await settingService.getSettingByKey(key);
+    return ApiResponse.Ok(response, setting?.value);
+  }
+);
+
 export const updateSetting = catchAsync(
   async (request: Request, response: Response) => {
     Logger("updateSetting").debug(request.body);

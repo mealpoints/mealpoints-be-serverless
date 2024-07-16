@@ -18,7 +18,7 @@ export const ask = async (
   options: IAskOptions
 ) => {
   const settings = await SettingsSingleton.getInstance();
-  const assistantId = settings.get("openai_assistant_id") as string;
+  const assistantId = (await settings.get("openai_assistant_id")) as string;
 
   try {
     const openAIHandler = new OpenAIHandler(

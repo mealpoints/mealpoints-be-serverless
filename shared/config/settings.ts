@@ -8,6 +8,8 @@ import logger from "./logger";
 
 const Logger = logger("SettingsSingleton");
 
+const NODE_ENV = process.env.NODE_ENV;
+
 export const SETTINGS_SEED: ISettingCreate[] = [
   { key: "openai_assistant_id", value: "test" },
 ];
@@ -38,8 +40,18 @@ class SettingsSingleton {
     }
   }
 
-  public get(key: SettingKey): SettingValue | undefined {
-    return this.settings.get(key);
+  private async getSetting(key: SettingKey): Promise<SettingValue> {
+    const setting = await settingService.getSettingByKey(key);
+    if (!setting) {
+      throw new Error(`Setting with key ${key} not found`);
+    }
+    return setting.value;
+  }
+
+  public async get(key: SettingKey): Promise<SettingValue | undefined> {
+    return NODE_ENV === "development"
+      ? this.getSetting(key)
+      : this.settings.get(key);
   }
 }
 
