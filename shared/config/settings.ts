@@ -1,6 +1,5 @@
-import { SettingValue } from "../models/setting.model";
+import { SettingKey, SettingValue } from "../models/setting.model";
 import * as settingService from "../services/setting.service";
-import { SettingEnum } from "../types/enums";
 
 class Settings {
   private static instance: Settings;
@@ -27,7 +26,7 @@ class Settings {
     }
   }
 
-  public get(key: SettingEnum): SettingValue | undefined {
+  public get(key: SettingKey): SettingValue | undefined {
     return this.settings.get(key);
   }
 }

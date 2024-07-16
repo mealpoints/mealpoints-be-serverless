@@ -10,7 +10,6 @@ import { isValidUrl } from "../utils/url";
 const Logger = logger("openai.handler");
 
 const API_KEY = process.env.OPENAI_API_KEY as string;
-const ASSISTANT_ID = process.env.OPENAI_ASSISTANT_ID as string;
 
 const openai = new OpenAI({
   apiKey: API_KEY,
@@ -22,17 +21,20 @@ export class OpenAIHandler {
   run!: Run;
 
   private _newThreadCreated: boolean = false;
-  private _assistantId: string;
 
   constructor(
     private prompt: string,
     private conversation: IConversation,
-    private messageType: OpenAIMessageTypesEnum
-  ) {
-    this._assistantId = ASSISTANT_ID;
+    private messageType: OpenAIMessageTypesEnum,
+    public assistantId: string
+  ) {}
+
+  private async initAsk() {
+    await this.ensureThreadWithCurrentAssistant();
   }
 
   private async createNewThread() {
+    Logger("createNewThread").info("Creating new thread");
     try {
       const thread = await openai.beta.threads.create();
       this.thread = thread;
@@ -44,12 +46,12 @@ export class OpenAIHandler {
   }
 
   private async ensureThreadWithCurrentAssistant() {
-    const threadId = this.conversation.openaiThreadId;
-    const assistantId = this.conversation.openaiAssistantId;
+    const threadIdInConversation = this.conversation.openaiThreadId;
+    const assistantIdInCoversation = this.conversation.openaiAssistantId;
 
     // If there is no thread, create a new one.
-    if (!threadId) {
-      Logger("checkIfThreadExists").debug(
+    if (!threadIdInConversation) {
+      Logger("checkIfThreadExists").info(
         "No thread exists, creating new thread"
       );
       await this.createNewThread();
@@ -57,8 +59,8 @@ export class OpenAIHandler {
     }
 
     // If the thread exists but the assistant is different, create a new thread.
-    if (assistantId !== ASSISTANT_ID) {
-      Logger("checkIfThreadExists").debug(
+    if (assistantIdInCoversation !== this.assistantId) {
+      Logger("checkIfThreadExists").info(
         "Thread with the same assistant does not exist, creating new thread"
       );
       await this.createNewThread();
@@ -66,14 +68,14 @@ export class OpenAIHandler {
     }
 
     // If the thread exists with the same assistant, fetch the thread.
-    Logger("checkIfThreadExists").debug(
+    Logger("checkIfThreadExists").info(
       "Thread with the same assistant already exists, fetching it"
     );
-    this.thread = await openai.beta.threads.retrieve(threadId);
+    this.thread = await openai.beta.threads.retrieve(threadIdInConversation);
   }
 
   private async createMessageWithText() {
-    Logger("createMessageWithText").debug("Creating message with text content");
+    Logger("createMessageWithText").info("Creating message with text content");
     try {
       await openai.beta.threads.messages.create(this.thread.id, {
         role: "user",
@@ -91,7 +93,7 @@ export class OpenAIHandler {
   }
 
   private async createMessageWithImage() {
-    Logger("createMessageWithImage").debug(
+    Logger("createMessageWithImage").info(
       "Creating message with image content"
     );
 
@@ -138,10 +140,10 @@ export class OpenAIHandler {
   }
 
   private async createRun() {
-    Logger("createRun").debug("");
+    Logger("createRun").info("");
     try {
       this.run = await openai.beta.threads.runs.create(this.thread.id, {
-        assistant_id: ASSISTANT_ID,
+        assistant_id: this.assistantId,
       });
     } catch (error) {
       Logger("createRun").error(error);
@@ -150,7 +152,7 @@ export class OpenAIHandler {
   }
 
   private async checkIfRunInProgress() {
-    Logger("checkIfRunInProgress").debug("");
+    Logger("checkIfRunInProgress").info("");
     return new Promise<void>((resolve, reject) => {
       try {
         const interval = setInterval(async () => {
@@ -158,7 +160,7 @@ export class OpenAIHandler {
             this.thread.id,
             this.run.id
           );
-          Logger("checkIfRunInProgress").debug(`Run status: ${run.status}`);
+          Logger("checkIfRunInProgress").info(`Run status: ${run.status}`);
           if (run.status === "failed") {
             clearInterval(interval);
             reject(
@@ -182,7 +184,7 @@ export class OpenAIHandler {
   }
 
   private async getMessages() {
-    Logger("getMessages").debug("");
+    Logger("getMessages").info("");
     try {
       const messages = await openai.beta.threads.messages.list(this.thread.id, {
         run_id: this.run.id,
@@ -203,17 +205,12 @@ export class OpenAIHandler {
     return this.thread.id;
   }
 
-  get assistantId(): string {
-    return this._assistantId;
-  }
-
   get newThreadCreated(): boolean {
     return this._newThreadCreated;
   }
 
-  async askOnce(): Promise<string> {
+  private async askOnce(): Promise<string> {
     try {
-      await this.ensureThreadWithCurrentAssistant();
       await this.createMessage();
       await this.createRun();
       await this.checkIfRunInProgress();
@@ -231,10 +228,12 @@ export class OpenAIHandler {
     const maxRetries = OPEN_AI.max_retries;
     let threadRun: number = 0;
     let retryCount: number = 0;
+    await this.initAsk();
 
     while (threadRun < maxRunsOnAThread) {
       try {
-        return await this.askOnce();
+        const result = await this.askOnce();
+        return result;
       } catch (error) {
         threadRun++;
         Logger("ask").error(

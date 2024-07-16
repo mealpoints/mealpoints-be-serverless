@@ -1,0 +1,24 @@
+{
+  "Records": [
+    {
+      "messageId": "9d4b0554-8f7d-4b6e-86a1-48b4055fe919",
+      "receiptHandle": "AQEBWFdY3xfo/aW3RDXs/R1/aEj2d+yaH1TLh9hKZCXYzdWx+OuqWrlAGPToeuc6pXaDCKWeAAMZOTGEio1rhWU43VlIBRE7A283dWunLX6gN8LFCoa23uZmnMGA78rUZ9M52bolu9smDD8UqHLCR65CacNigOyfOsxlsaKYHWYjmPRLWeSTQccF+JU76WWWCKQNPIg30CvHtjgY9WV/Qzh4j9E7uDy6fBWszeIv19sIHeq59BffhcrwGCrond1BGZX9IsUjl1DVvm964DxXDovuSXCUHdbXsojjLpzPgj6UmHU=",
+      "body": "{\"body\":{\"object\":\"whatsapp_business_account\",\"entry\":[{\"id\":\"301114763094796\",\"changes\":[{\"value\":{\"messaging_product\":\"whatsapp\",\"metadata\":{\"display_phone_number\":\"917666705450\",\"phone_number_id\":\"380407825148976\"},\"contacts\":[{\"profile\":{\"name\":\"Aniiket\"},\"wa_id\":\"919930941116\"}],\"messages\":[{\"from\":\"919930941116\",\"id\":\"wamid.HBgMOTE5OTMwOTQxMTE2FQIAEhgUM0EyRDJFOTgxQzFEQTY4NzJEMkEA\",\"timestamp\":\"1720957737\",\"type\":\"image\",\"image\":{\"mime_type\":\"image/jpeg\",\"sha256\":\"Rg1LaeuFKj/iiP88eokPniKH39rKSwMcIvIl2CuMY+s=\",\"id\":\"323480824170554\"}}]},\"field\":\"messages\"}]}]}}",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "AWSTraceHeader": "Root=1-6693bb2d-01f37dc66d4190517bf5ff64;Parent=724683bf6ec70df1;Sampled=0;Lineage=5e986157:0",
+        "SentTimestamp": "1720957743159",
+        "SequenceNumber": "18887309255958255616",
+        "MessageGroupId": "whatsapp_messages",
+        "SenderId": "AROA5FTZAFROBA2P2OGBL:mealpoints-be-serverless-production-api",
+        "MessageDeduplicationId": "wamid.HBgMOTE5OTMwOTQxMTE2FQIAEhgUM0EyRDJFOTgxQzFEQTY4NzJEMkEA",
+        "ApproximateFirstReceiveTimestamp": "1720957743159"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "1322a615009ad26725f8d8c03daf37b6",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:ap-south-1:905418124380:sqs-production.fifo",
+      "awsRegion": "ap-south-1"
+    }
+  ]
+}

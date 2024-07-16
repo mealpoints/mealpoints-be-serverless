@@ -22,10 +22,12 @@ export const ask = async (
     const openAIHandler = new OpenAIHandler(
       data,
       conversation,
-      options.messageType
+      options.messageType,
+      ASSITANT_ID
     );
 
     const result = await openAIHandler.ask();
+    Logger("ask").info("OpenAI response", result);
 
     if (openAIHandler.newThreadCreated) {
       await conversationService.updateConversation(

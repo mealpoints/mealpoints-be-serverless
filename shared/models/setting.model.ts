@@ -1,15 +1,15 @@
 import { Document, Schema, model } from "mongoose";
-import { SettingEnum } from "../types/enums";
 
 export type SettingValue = string | boolean | number;
+export type SettingKey = "openai_assistant_id";
 
 export interface ISetting extends Document {
-  key: SettingEnum;
+  key: SettingKey;
   value: SettingValue;
 }
 
 export interface ISettingCreate extends Partial<ISetting> {
-  key: SettingEnum;
+  key: SettingKey;
   value: SettingValue;
 }
 const settingSchema = new Schema<ISetting>({
