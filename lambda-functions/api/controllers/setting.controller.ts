@@ -12,7 +12,7 @@ export const createSetting = catchAsync(
     Logger("createSetting").debug(request.body);
     const { key, value }: ISetting = request.body;
     await settingService.createSetting({ key, value });
-    response.send(ApiResponse.Ok(response));
+    return ApiResponse.Ok(response);
   }
 );
 
@@ -20,7 +20,7 @@ export const getSettings = catchAsync(
   async (request: Request, response: Response) => {
     Logger("getSettings").debug("");
     const settings = await settingService.getSettings();
-    response.send(ApiResponse.Ok(response, settings));
+    return ApiResponse.Ok(response, settings);
   }
 );
 
@@ -29,6 +29,14 @@ export const updateSetting = catchAsync(
     Logger("updateSetting").debug(request.body);
     const { key, value }: ISetting = request.body;
     await settingService.updateSetting({ key, value });
-    response.send(ApiResponse.Ok(response));
+    return ApiResponse.Ok(response);
+  }
+);
+
+export const seedSettings = catchAsync(
+  async (request: Request, response: Response) => {
+    Logger("seedSettings").debug("");
+    await settingService.seedSettings();
+    return ApiResponse.Ok(response);
   }
 );

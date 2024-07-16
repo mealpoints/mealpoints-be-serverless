@@ -1,28 +1,42 @@
-import { SettingKey, SettingValue } from "../models/setting.model";
+import {
+  ISettingCreate,
+  SettingKey,
+  SettingValue,
+} from "../models/setting.model";
 import * as settingService from "../services/setting.service";
+import logger from "./logger";
 
-class Settings {
-  private static instance: Settings;
+const Logger = logger("SettingsSingleton");
+
+const ASSISTANT_ID = process.env.OPENAI_ASSISTANT_ID as string;
+
+export const SETTINGS_SEED: ISettingCreate[] = [
+  { key: "openai_assistant_id", value: ASSISTANT_ID },
+];
+
+class SettingsSingleton {
+  private static instance: SettingsSingleton;
   private settings: Map<string, SettingValue> = new Map();
 
   private constructor() {}
 
-  public static async getInstance(): Promise<Settings> {
-    if (!Settings.instance) {
-      Settings.instance = new Settings();
-      await Settings.instance.loadSettings();
+  public static async getInstance(): Promise<SettingsSingleton> {
+    if (!SettingsSingleton.instance) {
+      SettingsSingleton.instance = new SettingsSingleton();
+      await SettingsSingleton.instance.loadSettings();
     }
-    return Settings.instance;
+    return SettingsSingleton.instance;
   }
 
   private async loadSettings(): Promise<void> {
     try {
+      Logger("loadSettings").debug("Loading settings");
       const settingsDocuments = await settingService.getSettings();
       settingsDocuments.forEach((document) => {
         this.settings.set(document.key, document.value);
       });
     } catch (error) {
-      console.error("Error loading settings:", error);
+      Logger("loadSettings").error(error);
     }
   }
 
@@ -31,4 +45,4 @@ class Settings {
   }
 }
 
-export default Settings;
+export default SettingsSingleton;

@@ -1,4 +1,5 @@
 import logger from "../config/logger";
+import SettingsSingleton from "../config/settings";
 import { OpenAIHandler } from "../handlers/openAI.handler";
 import { IConversation } from "../models/conversation.model";
 import { IUser } from "../models/user.model";
@@ -10,24 +11,24 @@ interface IAskOptions {
   messageType: OpenAIMessageTypesEnum;
 }
 
-const ASSITANT_ID = process.env.OPENAI_ASSISTANT_ID as string;
-
 export const ask = async (
   data: string,
   user: IUser,
   conversation: IConversation,
   options: IAskOptions
 ) => {
+  const settings = await SettingsSingleton.getInstance();
+  const assistantId = settings.get("openai_assistant_id") as string;
+
   try {
     const openAIHandler = new OpenAIHandler(
       data,
       conversation,
       options.messageType,
-      ASSITANT_ID
+      assistantId
     );
 
     const result = await openAIHandler.ask();
-    Logger("ask").info("OpenAI response", result);
 
     if (openAIHandler.newThreadCreated) {
       await conversationService.updateConversation(
