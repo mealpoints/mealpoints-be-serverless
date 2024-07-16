@@ -39,6 +39,12 @@ functions:
     events:
       - http: ANY /api
       - http: ANY /api/{proxy+}
+  settings:
+    handler: lambda-functions/settings/app.handler
+    timeout: 30 # API Gateway has a timeout of 30 seconds
+    events:
+      - http: ANY /settings
+      - http: ANY /settings/{proxy+}
   message-processor:
     handler: lambda-functions/message-processor/consumer.handler
     timeout: 300 
