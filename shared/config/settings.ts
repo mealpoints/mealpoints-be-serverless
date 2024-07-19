@@ -4,8 +4,6 @@ import logger from "./logger";
 
 const Logger = logger("SettingsSingleton");
 
-const NODE_ENV = process.env.NODE_ENV;
-
 class SettingsSingleton {
   private static instance: SettingsSingleton;
   private settings: Map<string, SettingValue> = new Map();
@@ -40,10 +38,9 @@ class SettingsSingleton {
     return setting.value;
   }
 
-  public async get(key: SettingKey): Promise<SettingValue | undefined> {
-    return NODE_ENV === "development"
-      ? await this.getSetting(key)
-      : this.settings.get(key);
+  // TODO: For some reason, the settings are not being loaded properly. So for now we are getting the setting from the database
+  public async get(key: SettingKey): Promise<SettingValue> {
+    return await this.getSetting(key);
   }
 }
 
