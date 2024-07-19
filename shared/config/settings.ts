@@ -49,8 +49,8 @@ class SettingsSingleton {
   }
 
   public async get(key: SettingKey): Promise<SettingValue | undefined> {
-    return NODE_ENV === "development"
-      ? this.getSetting(key)
+    return NODE_ENV === "development" || NODE_ENV === "test"
+      ? await this.getSetting(key)
       : this.settings.get(key);
   }
 }

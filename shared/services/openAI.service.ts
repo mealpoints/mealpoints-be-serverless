@@ -4,6 +4,7 @@ import { OpenAIHandler } from "../handlers/openAI.handler";
 import { IConversation } from "../models/conversation.model";
 import { IUser } from "../models/user.model";
 import { OpenAIMessageTypesEnum } from "../types/enums";
+import { OpenAIResponse } from "../types/openai";
 import * as conversationService from "./conversation.service";
 const Logger = logger("services/openai.service");
 
@@ -16,19 +17,25 @@ export const ask = async (
   user: IUser,
   conversation: IConversation,
   options: IAskOptions
-) => {
+): Promise<OpenAIResponse> => {
   const settings = await SettingsSingleton.getInstance();
-  const assistantId = (await settings.get("openai_assistant_id")) as string;
+
+  const assistantId = await settings.get("openai_assistant_id");
+
+  if (!assistantId) {
+    throw new Error("OpenAI assistant ID is not set in settings");
+  }
 
   try {
     const openAIHandler = new OpenAIHandler(
       data,
       conversation,
       options.messageType,
-      assistantId
+      assistantId as string
     );
 
     const result = await openAIHandler.ask();
+    const parsedResult = JSON.parse(result);
 
     if (openAIHandler.newThreadCreated) {
       await conversationService.updateConversation(
@@ -40,7 +47,7 @@ export const ask = async (
       );
     }
 
-    return result;
+    return parsedResult;
   } catch (error) {
     Logger("ask").error(error);
     throw error;

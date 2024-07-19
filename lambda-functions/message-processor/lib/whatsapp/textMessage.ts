@@ -10,6 +10,7 @@ import {
 } from "../../../../shared/types/enums";
 import { WebhookObject } from "../../../../shared/types/message";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
+import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
 
 const Logger = logger("lib/whatsapp/textMessage");
 
@@ -31,10 +32,11 @@ export const processTextMessage = async (
           messageType: OpenAIMessageTypesEnum.Text,
         }
       );
+
       await messageService.sendMessage({
         user: user.id,
         conversation: conversation.id,
-        payload: result,
+        payload: convertToHumanReadableMessage(result.message),
         type: MessageTypesEnum.Text,
       });
     } catch (error) {

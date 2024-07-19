@@ -7,12 +7,15 @@ import { IConversation } from "../../../../shared/models/conversation.model";
 import { IUser } from "../../../../shared/models/user.model";
 import * as messageService from "../../../../shared/services/message.service";
 import * as openAIService from "../../../../shared/services/openAI.service";
+import * as userMealService from "../../../../shared/services/userMeal.service";
 import {
   MessageTypesEnum,
   OpenAIMessageTypesEnum,
 } from "../../../../shared/types/enums";
 import { WebhookObject } from "../../../../shared/types/message";
+import { MealData } from "../../../../shared/types/openai";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
+import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
 const Logger = logger("lib/whatsapp/imageMessage");
 
 export const processImageMessage = async (
@@ -40,12 +43,14 @@ export const processImageMessage = async (
       );
       cleanupLocalFile(imageFilePath);
       await updateReceivedMessage(payload, s3Path);
-
-      return await sendMessageToWhatsApp(
+      await sendMessageToWhatsapp(
         user.id,
         conversation.id,
-        openaiResponse
+        convertToHumanReadableMessage(openaiResponse.message)
       );
+      if (openaiResponse.data?.meal_name) {
+        await storeMeal(user, s3Path, openaiResponse.data);
+      }
     } catch (error) {
       await handleOpenAIUploadError(user.id, conversation.id, error);
       throw error;
@@ -58,6 +63,29 @@ export const processImageMessage = async (
 
 const fetchImage = async (imageId: string): Promise<string> => {
   return await whatsappHandler.getImageSentViaMessage(imageId);
+};
+
+const storeMeal = async (user: IUser, s3Path: string, data: MealData) => {
+  await userMealService.createUserMeal({
+    user: user.id,
+    image: s3Path,
+    name: data.meal_name,
+    score: data.score,
+    macros: data.macros,
+  });
+};
+
+const sendMessageToWhatsapp = async (
+  userId: string,
+  conversationId: string,
+  message: string
+): Promise<void> => {
+  await messageService.sendMessage({
+    user: userId,
+    conversation: conversationId,
+    payload: message,
+    type: MessageTypesEnum.Text,
+  });
 };
 
 const uploadImageToS3 = async (
@@ -99,19 +127,6 @@ const updateReceivedMessage = async (
       media: s3Path,
     }
   );
-};
-
-const sendMessageToWhatsApp = async (
-  userId: string,
-  conversationId: string,
-  openaiResponse: string
-) => {
-  return await messageService.sendMessage({
-    user: userId,
-    conversation: conversationId,
-    payload: openaiResponse,
-    type: MessageTypesEnum.Text,
-  });
 };
 
 const handleOpenAIUploadError = async (

@@ -6,8 +6,11 @@ const customFormat = format.printf(
   }
 );
 
+const isDevelopmentORTest =
+  process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
+
 const _logger = createLogger({
-  level: process.env.NODE_ENV === "development" ? "debug" : "info",
+  level: isDevelopmentORTest ? "debug" : "info",
   format: format.combine(
     format.colorize(),
     format.splat(),

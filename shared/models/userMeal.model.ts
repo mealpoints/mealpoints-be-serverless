@@ -1,0 +1,38 @@
+import mongoose, { Schema } from "mongoose";
+import { NutritionalData } from "../types/openai";
+
+export interface IUserMeal extends Document {
+  id: string;
+  user: string;
+  image: string;
+  name: string;
+  score: {
+    value: number;
+    total: number;
+  };
+  macros: NutritionalData;
+  createdAt: Date;
+}
+
+export interface IUserMealCreate {
+  user: string;
+  image: string;
+  name: string;
+  score: {
+    value: number;
+    total: number;
+  };
+  macros: NutritionalData;
+}
+
+const UserMealSchema: Schema = new Schema({
+  user: { type: Schema.Types.ObjectId, ref: "User" },
+  name: { type: String },
+  image: { type: String },
+  score: { type: Object },
+  macros: { type: Object },
+  createdAt: { type: Date, default: Date.now },
+});
+
+const UserMeal = mongoose.model<IUserMeal>("UserMeal", UserMealSchema);
+export default UserMeal;
