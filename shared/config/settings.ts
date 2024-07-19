@@ -48,10 +48,9 @@ class SettingsSingleton {
     return setting.value;
   }
 
-  public async get(key: SettingKey): Promise<SettingValue | undefined> {
-    return NODE_ENV === "development" || NODE_ENV === "test"
-      ? await this.getSetting(key)
-      : this.settings.get(key);
+  // TODO: For some reason, the settings are not being loaded properly. So for now we are getting the setting from the database
+  public async get(key: SettingKey): Promise<SettingValue> {
+    return await this.getSetting(key);
   }
 }
 
