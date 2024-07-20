@@ -28,15 +28,17 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
+    "globalSetup": "<rootDir>/test/globalSetup.test.ts",
+    "setupFilesAfterEnv": [
+      "<rootDir>/test/setupJest.ts"
+    ],
     "transform": {
       "node_modules/variables/.+\\.(j|t)sx?$": "ts-jest"
     },
     "transformIgnorePatterns": [
       "node_modules/(?!variables/.*)"
     ],
-    "setupFiles": [
-      "<rootDir>/test/setup.ts"
-    ]
+    "resetModules": false
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.138",

@@ -13,7 +13,7 @@ export const processUnknownMessage = async (
   conversation: IConversation
 ) => {
   Logger("processUnknownMessage").debug(payload);
-  await messageService.sendMessage({
+  await messageService.sendTextMessage({
     user: user.id,
     conversation: conversation.id,
     payload: USER_MESSAGES.info.feature_not_supported,

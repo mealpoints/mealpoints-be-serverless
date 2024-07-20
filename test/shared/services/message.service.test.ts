@@ -1,13 +1,18 @@
+import logger from "../../../shared/config/logger";
 import * as messageService from "../../../shared/services/message.service";
 import { MessageTypesEnum } from "../../../shared/types/enums";
-import { CONVERSATION } from "../../mocks/conversation.mock";
-import { USER } from "../../mocks/user.mock";
+import { DataService } from "../../test_utils/DataService";
+const Logger = logger("test/shared/services/message.service.test");
 
 describe("Message Service", () => {
-  it("shold send Interactive Message", async () => {
+  it("should send Interactive Message", async () => {
+    const dataService = DataService.getInstance();
+    const userId = dataService.getUser().id;
+    const conversationId = dataService.getConversation().id;
+
     const response = await messageService.sendInteractiveMessage({
-      user: USER.id,
-      conversation: CONVERSATION.id,
+      user: userId,
+      conversation: conversationId,
       type: MessageTypesEnum.Interactive,
       interactive: {
         header: "Your report is ready",
@@ -19,8 +24,23 @@ describe("Message Service", () => {
         },
       },
     });
-    console.log(response.data);
 
+    Logger("sendInteractiveMessage").debug(response.data);
+    expect(response).toBeDefined();
+  });
+
+  it("should send Text Message", async () => {
+    const dataService = DataService.getInstance();
+    const userId = dataService.getUser().id;
+    const conversationId = dataService.getConversation().id;
+    const response = await messageService.sendTextMessage({
+      user: userId,
+      conversation: conversationId,
+      type: MessageTypesEnum.Text,
+      payload: "Hello, how can I help you?",
+    });
+
+    Logger("sendTextMessage").debug(response.data);
     expect(response).toBeDefined();
   });
 });

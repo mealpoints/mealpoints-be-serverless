@@ -33,14 +33,14 @@ export const processTextMessage = async (
         }
       );
 
-      await messageService.sendMessage({
+      await messageService.sendTextMessage({
         user: user.id,
         conversation: conversation.id,
         payload: convertToHumanReadableMessage(result.message),
         type: MessageTypesEnum.Text,
       });
     } catch (error) {
-      await messageService.sendMessage({
+      await messageService.sendTextMessage({
         user: user.id,
         conversation: conversation.id,
         payload: USER_MESSAGES.errors.text_not_processed,

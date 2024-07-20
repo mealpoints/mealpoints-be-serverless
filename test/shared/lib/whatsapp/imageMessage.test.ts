@@ -23,7 +23,7 @@ describe("processImageMessage", () => {
     );
     (awsHandler.uploadImageToS3 as jest.Mock).mockResolvedValue("test-s3-path");
     (messageService.updateRecievedMessage as jest.Mock).mockResolvedValue({});
-    (messageService.sendMessage as jest.Mock).mockResolvedValue({});
+    (messageService.sendTextMessage as jest.Mock).mockResolvedValue({});
 
     // @ts-expect-error - we don't need to pass all the properties of the user object
     await processImageMessage(IMAGE_MESSAGE_PAYLOAD, USER, conversation);
@@ -42,7 +42,7 @@ describe("processImageMessage", () => {
       },
       { media: "test-s3-path" }
     );
-    expect(messageService.sendMessage).toHaveBeenCalledWith({
+    expect(messageService.sendTextMessage).toHaveBeenCalledWith({
       user: USER.id,
       conversation: "test-conversation-id",
       payload: `This is stuff about the image message.`,

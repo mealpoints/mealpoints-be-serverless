@@ -80,7 +80,7 @@ const sendMessageToWhatsapp = async (
   conversationId: string,
   message: string
 ): Promise<void> => {
-  await messageService.sendMessage({
+  await messageService.sendTextMessage({
     user: userId,
     conversation: conversationId,
     payload: message,
@@ -135,7 +135,7 @@ const handleOpenAIUploadError = async (
   error: unknown
 ): Promise<void> => {
   Logger("openaiHandler.uploadImage").error(error);
-  await messageService.sendMessage({
+  await messageService.sendTextMessage({
     user: userId,
     conversation: conversationId,
     payload: USER_MESSAGES.errors.image_not_processed,

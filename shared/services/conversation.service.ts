@@ -35,6 +35,19 @@ export const getConversation = async (
   return conversation;
 };
 
+export const getConversationByUserId = async (
+  userId: string
+): Promise<IConversation | null> => {
+  try {
+    Logger("getConversationByUserId").debug("");
+    const conversation = await Conversation.findOne({ user: userId });
+    return conversation;
+  } catch (error) {
+    Logger("getConversationByUserId").error(error);
+    throw error;
+  }
+};
+
 export const getConversationMessages = async (
   conversationId: string
 ): Promise<(ISentMessage | IRecievedMessage)[]> => {

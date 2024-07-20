@@ -108,12 +108,12 @@ export const findSentMessage = async (
   }
 };
 
-export const sendMessage = async (messageData: ISentMessageCreate) => {
-  Logger("sendMessage").debug("");
+export const sendTextMessage = async (messageData: ISentMessageCreate) => {
+  Logger("sendTextMessage").debug("");
   try {
     const user = await userService.getUserById(messageData.user);
     if (!user) {
-      Logger("sendMessage").error("User not found");
+      Logger("sendTextMessage").error("User not found");
       throw new Error("User not found");
     }
 
@@ -132,7 +132,7 @@ export const sendMessage = async (messageData: ISentMessageCreate) => {
 
     return response;
   } catch (error) {
-    Logger("sendMessage").error(error);
+    Logger("sendTextMessage").error(error);
     throw error;
   }
 };
