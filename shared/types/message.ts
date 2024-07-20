@@ -226,3 +226,49 @@ export type WebhookSubscribeQuery = {
     verify_token: string;
   };
 };
+
+export type InteractiveMessageRequestBody = {
+  messaging_product: "whatsapp";
+  recipient_type: "individual";
+  to: string;
+  type: "interactive";
+  interactive: InteractiveMessageRequestBody_Interactive;
+};
+
+export type InteractiveMessageRequestBody_Interactive = {
+  type: "cta_url";
+  header?: InteractiveMessageRequestBody_Header;
+  body?: InteractiveMessageRequestBody_Body;
+  footer?: InteractiveMessageRequestBody_Footer;
+  action: InteractiveMessageRequestBody_Action;
+};
+
+export type InteractiveMessageRequestBody_Header = {
+  type: "text";
+  text: string;
+};
+
+export type InteractiveMessageRequestBody_Body = {
+  text: string;
+};
+
+export type InteractiveMessageRequestBody_Footer = {
+  text: string;
+};
+
+export type InteractiveMessageRequestBody_Action = {
+  name: "cta_url";
+  parameters: InteractiveMessageRequestBody_ActionParameters;
+};
+
+export type InteractiveMessageRequestBody_ActionParameters = {
+  display_text: string;
+  url: string;
+};
+
+export type InteractiveMessageBodyOptions = {
+  header?: string;
+  body?: string;
+  footer?: string;
+  action: { displayText: string; url: string };
+};

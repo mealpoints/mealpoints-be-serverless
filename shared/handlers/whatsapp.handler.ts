@@ -7,13 +7,17 @@ import axios, { AxiosInstance, AxiosResponse } from "axios";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import logger from "../config/logger";
+import {
+  InteractiveMessageBodyOptions,
+  InteractiveMessageRequestBody,
+} from "../types/message";
 const Logger = logger("whatsapp.handler");
 
 const BASE_URL = process.env.WHATSAPP_API_BASE_URL;
 const TOKEN = process.env.WHATSAPP_API_ACCESS_TOKEN;
 const INSTANCE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
-interface MessageResponse {
+interface ITextMessageRequestBody {
   messaging_product: string;
   to: string;
   type: string;
@@ -48,13 +52,13 @@ const axiosInstance: AxiosInstance = axios.create({
  * @param {string} message - The message to send
  * @returns {Promise<AxiosResponse>} - Axios response promise
  */
-export const sendMessage = (
+export const sendMessage = async (
   phoneNumber: string,
   message: string
 ): Promise<AxiosResponse> => {
   Logger("sendMessage").debug("");
 
-  const data: MessageResponse = {
+  const data: ITextMessageRequestBody = {
     messaging_product: "whatsapp",
     to: phoneNumber,
     type: "text",
@@ -63,7 +67,52 @@ export const sendMessage = (
     },
   };
 
-  return axiosInstance.post(`/${INSTANCE_ID}/messages`, data);
+  return await axiosInstance.post(`/${INSTANCE_ID}/messages`, data);
+};
+
+export const sendInteractiveMessage = async (
+  phoneNumber: string,
+  data: InteractiveMessageBodyOptions
+): Promise<AxiosResponse> => {
+  Logger("sendInteractiveMessage").debug("");
+
+  const body: InteractiveMessageRequestBody = {
+    recipient_type: "individual",
+    messaging_product: "whatsapp",
+    to: phoneNumber,
+    type: "interactive",
+    interactive: {
+      type: "cta_url",
+      action: {
+        name: "cta_url",
+        parameters: {
+          display_text: data.action.displayText,
+          url: data.action.url,
+        },
+      },
+    },
+  };
+
+  if (data.header) {
+    body.interactive.header = {
+      type: "text",
+      text: data.header,
+    };
+  }
+
+  if (data.body) {
+    body.interactive.body = {
+      text: data.body,
+    };
+  }
+
+  if (data.footer) {
+    body.interactive.footer = {
+      text: data.footer,
+    };
+  }
+
+  return await axiosInstance.post(`/${INSTANCE_ID}/messages`, body);
 };
 
 const downloadImage = async (

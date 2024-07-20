@@ -10,6 +10,7 @@ import SentMessage, {
   ISentMessageCreate,
 } from "../models/sentMessage.model";
 import { StatusEnum } from "../types/enums";
+import { InteractiveMessageBodyOptions } from "../types/message";
 import * as userService from "./user.service";
 const Logger = logger("message.service");
 
@@ -119,7 +120,7 @@ export const sendMessage = async (messageData: ISentMessageCreate) => {
     // Send Message via Whatsapp
     const response = await whatsappHandler.sendMessage(
       user.contact,
-      messageData.payload
+      messageData.payload as string
     );
 
     // Store Sent Message
@@ -135,6 +136,37 @@ export const sendMessage = async (messageData: ISentMessageCreate) => {
     throw error;
   }
 };
+
+export const sendInteractiveMessage = async (
+  messageData: ISentMessageCreate
+) => {
+  Logger("sendInteractiveMessage").debug("");
+  try {
+    const user = await userService.getUserById(messageData.user);
+    if (!user) {
+      Logger("sendMessage").error("User not found");
+      throw new Error("User not found");
+    }
+
+    const response = await whatsappHandler.sendInteractiveMessage(
+      user.contact,
+      messageData.interactive as InteractiveMessageBodyOptions
+    );
+
+    // Store Sent Message
+    await createSentMessage({
+      ...messageData,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+      wamid: response.data.messages[0].id,
+    });
+
+    return response;
+  } catch (error) {
+    Logger("sendInteractiveMessage").error(error);
+    throw error;
+  }
+};
+
 export const createSentMessage = async (
   messageData: ISentMessageCreate
 ): Promise<ISentMessage> => {
