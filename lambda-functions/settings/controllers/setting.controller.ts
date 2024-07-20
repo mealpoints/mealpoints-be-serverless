@@ -41,11 +41,3 @@ export const updateSetting = catchAsync(
     return ApiResponse.Ok(response);
   }
 );
-
-export const seedSettings = catchAsync(
-  async (request: Request, response: Response) => {
-    Logger("seedSettings").debug("");
-    await settingService.seedSettings();
-    return ApiResponse.Ok(response);
-  }
-);

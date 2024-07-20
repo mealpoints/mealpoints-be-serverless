@@ -1,5 +1,4 @@
 import logger from "../config/logger";
-import { SETTINGS_SEED } from "../config/settings";
 import Setting, { ISettingCreate } from "../models/setting.model";
 
 const Logger = logger("shared/setting.service");
@@ -40,24 +39,6 @@ export const updateSetting = async ({ key, value }: ISettingCreate) => {
     await Setting.findOneAndUpdate({ key }, { value }).exec();
   } catch (error) {
     Logger("updateSetting").error(error);
-    throw error;
-  }
-};
-
-export const seedSettings = async () => {
-  Logger("seedSettings").debug("");
-  try {
-    const bulkOps = SETTINGS_SEED.map((setting) => ({
-      updateOne: {
-        filter: { key: setting.key },
-        update: { $set: setting },
-        upsert: true,
-      },
-    }));
-
-    await Setting.bulkWrite(bulkOps);
-  } catch (error) {
-    Logger("seedSettings").error(error);
     throw error;
   }
 };

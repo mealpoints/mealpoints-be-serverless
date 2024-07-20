@@ -1,16 +1,10 @@
-import {
-  ISettingCreate,
-  SettingKey,
-  SettingValue,
-} from "../models/setting.model";
+import { SettingKey, SettingValue } from "../models/setting.model";
 import * as settingService from "../services/setting.service";
 import logger from "./logger";
 
 const Logger = logger("SettingsSingleton");
 
-export const SETTINGS_SEED: ISettingCreate[] = [
-  { key: "openai_assistant_id", value: "test" },
-];
+const NODE_ENV = process.env.NODE_ENV;
 
 class SettingsSingleton {
   private static instance: SettingsSingleton;
@@ -46,9 +40,10 @@ class SettingsSingleton {
     return setting.value;
   }
 
-  // TODO: For some reason, the settings are not being loaded properly. So for now we are getting the setting from the database
-  public async get(key: SettingKey): Promise<SettingValue> {
-    return await this.getSetting(key);
+  public async get(key: SettingKey): Promise<SettingValue | undefined> {
+    return NODE_ENV === "development"
+      ? await this.getSetting(key)
+      : this.settings.get(key);
   }
 }
 
