@@ -1,12 +1,13 @@
 import * as messageService from "../../../shared/services/message.service";
 import { MessageTypesEnum } from "../../../shared/types/enums";
+import { CONVERSATION } from "../../mocks/conversation.mock";
+import { USER } from "../../mocks/user.mock";
 
 describe("Message Service", () => {
   it("shold send Interactive Message", async () => {
     const response = await messageService.sendInteractiveMessage({
-      user: "66903c69fc2f6a42f733b5d4",
-      payload: "test",
-      conversation: "66903c69fc2f6a42f733b5d7",
+      user: USER.id,
+      conversation: CONVERSATION.id,
       type: MessageTypesEnum.Interactive,
       interactive: {
         header: "Your report is ready",
