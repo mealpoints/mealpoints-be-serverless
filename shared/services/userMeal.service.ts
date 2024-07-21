@@ -1,5 +1,6 @@
 import logger from "../config/logger";
 import UserMeal, { IUserMeal, IUserMealCreate } from "../models/userMeal.model";
+import { PaginateOptions, PaginateResult } from "../utils/mongoosePlugins";
 const Logger = logger("userMeal.service");
 
 export const createUserMeal = async (
@@ -16,11 +17,12 @@ export const createUserMeal = async (
 };
 
 export const getUserMealsByUserId = async (
-  userId: string
-): Promise<IUserMeal[]> => {
+  userId: string,
+  options: PaginateOptions
+): Promise<PaginateResult<IUserMeal>> => {
   try {
     Logger("getUserMealsByUserId").debug("");
-    const userMeals = await UserMeal.find({ user: userId });
+    const userMeals = await UserMeal.paginate({ user: userId }, options);
     return userMeals;
   } catch (error) {
     Logger("getUserMealsByUserId").error(error);

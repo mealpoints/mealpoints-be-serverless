@@ -1,5 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 import { NutritionalData } from "../types/openai";
+import { PaginateModel, paginatePlugin } from "../utils/mongoosePlugins";
 
 export interface IUserMeal extends Document {
   id: string;
@@ -34,5 +35,10 @@ const UserMealSchema: Schema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-const UserMeal = mongoose.model<IUserMeal>("UserMeal", UserMealSchema);
+UserMealSchema.plugin(paginatePlugin);
+
+const UserMeal = mongoose.model<IUserMeal, PaginateModel<IUserMeal>>(
+  "UserMeal",
+  UserMealSchema
+);
 export default UserMeal;
