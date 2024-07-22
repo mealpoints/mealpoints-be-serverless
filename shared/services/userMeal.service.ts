@@ -1,5 +1,7 @@
 import logger from "../config/logger";
 import UserMeal, { IUserMeal, IUserMealCreate } from "../models/userMeal.model";
+import { ReportPeriod } from "../types/report";
+import { DateUtils } from "../utils/DateUtils";
 import { PaginateOptions, PaginateResult } from "../utils/mongoosePlugins";
 const Logger = logger("userMeal.service");
 
@@ -26,6 +28,37 @@ export const getUserMealsByUserId = async (
     return userMeals;
   } catch (error) {
     Logger("getUserMealsByUserId").error(error);
+    throw error;
+  }
+};
+
+export const getPeriodicUserMealsByUserId = async (
+  userId: string,
+  period: ReportPeriod
+): Promise<IUserMeal[]> => {
+  const subtractionPeriod = () => {
+    switch (period) {
+      case "daily": {
+        return new DateUtils().subtractDays(1).toDate();
+      }
+      case "weekly": {
+        return new DateUtils().subtractWeeks(1).toDate();
+      }
+      case "monthly": {
+        return new DateUtils().subtractMonths(1).toDate();
+      }
+    }
+  };
+
+  try {
+    Logger("getPeriodicUserMealsByUserId").debug("");
+    const userMeals = await UserMeal.find({
+      user: userId,
+      createdAt: { $gte: subtractionPeriod() },
+    });
+    return userMeals;
+  } catch (error) {
+    Logger("getPeriodicUserMealsByUserId").error(error);
     throw error;
   }
 };
