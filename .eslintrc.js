@@ -27,6 +27,7 @@ module.exports = {
     rules: {
         "import/no-unresolved": "off",
         "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/unbound-method": "off",
         "unicorn/throw-new-error": "off",
         "@typescript-eslint/no-misused-promises": "off",
         "@typescript-eslint/no-unsafe-assignment": "off",
