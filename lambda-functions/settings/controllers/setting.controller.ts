@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import logger from "../../../shared/config/logger";
-import { ISetting } from "../../../shared/models/setting.model";
+import { ISetting, SettingValue } from "../../../shared/models/setting.model";
 import * as settingService from "../../../shared/services/setting.service";
 import ApiResponse from "../../../shared/utils/ApiResponse";
 import { catchAsync } from "../../../shared/utils/catchAsync";
@@ -11,8 +11,8 @@ export const createSetting = catchAsync(
   async (request: Request, response: Response) => {
     Logger("createSetting").debug(request.body);
     const { key, value }: ISetting = request.body;
-    await settingService.createSetting({ key, value });
-    return ApiResponse.Ok(response);
+    const setting = await settingService.createSetting({ key, value });
+    return ApiResponse.Ok<typeof setting>(response, setting);
   }
 );
 
@@ -20,7 +20,7 @@ export const getSettings = catchAsync(
   async (request: Request, response: Response) => {
     Logger("getSettings").debug("");
     const settings = await settingService.getSettings();
-    return ApiResponse.Ok(response, settings);
+    return ApiResponse.Ok<typeof settings>(response, settings);
   }
 );
 
@@ -29,7 +29,7 @@ export const getSettingsByKey = catchAsync(
     Logger("getSettingsByKey").debug(request.params.key);
     const key = request.params.key;
     const setting = await settingService.getSettingByKey(key);
-    return ApiResponse.Ok(response, setting?.value);
+    return ApiResponse.Ok<SettingValue>(response, setting?.value);
   }
 );
 
@@ -38,6 +38,6 @@ export const updateSetting = catchAsync(
     Logger("updateSetting").debug(request.body);
     const { key, value }: ISetting = request.body;
     await settingService.updateSetting({ key, value });
-    return ApiResponse.Ok(response);
+    return ApiResponse.NoContent(response);
   }
 );

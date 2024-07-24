@@ -6,7 +6,7 @@ import * as userMealService from "./userMeal.service";
 const Logger = logger("report.service");
 
 export const getReport = async (userId: string, period: ReportPeriod) => {
-  Logger("weeklyReport").debug("");
+  Logger("getReport").debug("");
   const userMeals = await userMealService.getPeriodicUserMealsByUserId(
     userId,
     period
@@ -45,6 +45,7 @@ export const getReport = async (userId: string, period: ReportPeriod) => {
       maxScore: scoreData.maxScore,
     },
     sumOfMacros,
+    totalMeals: userMeals.length,
     userMeals,
   };
 };

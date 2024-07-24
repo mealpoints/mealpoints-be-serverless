@@ -6,12 +6,13 @@ import { SqsQueueService } from "../../../shared/services/queue.service";
 import { WebhookObject } from "../../../shared/types/message";
 import ApiResponse from "../../../shared/utils/ApiResponse";
 import { WhatsappData } from "../../../shared/utils/WhatsappData";
+import { catchAsync } from "../../../shared/utils/catchAsync";
 const Logger = logger("whatsapp.webhook.controller");
 
 const whatsappVerificationKey = process.env.WHATSAPP_VERIFICATION_KEY as string;
 
-export const readMessage = async (request: Request, response: Response) => {
-  try {
+export const readMessage = catchAsync(
+  async (request: Request, response: Response) => {
     Logger("readMessage").debug(JSON.stringify(request.body));
 
     const body: WebhookObject = request.body as WebhookObject;
@@ -22,7 +23,7 @@ export const readMessage = async (request: Request, response: Response) => {
       Logger("readMessage").error(
         "No WhatsApp message ID found in the webhook payload"
       );
-      return ApiResponse.Ok(response);
+      return ApiResponse.NoContent(response);
     }
 
     const queueService = new SqsQueueService(queue);
@@ -33,23 +34,19 @@ export const readMessage = async (request: Request, response: Response) => {
       messageDeduplicationId: whatsappMessageId,
     });
 
-    return ApiResponse.Ok(response);
-  } catch (error) {
-    Logger("readMessage").error(error);
-    return ApiResponse.ServerError(response, error);
+    return ApiResponse.NoContent(response);
   }
-};
+);
 
-export const verifyWebhook = (request: Request, response: Response) => {
-  try {
+export const verifyWebhook = catchAsync(
+  (request: Request, response: Response) => {
     Logger("verifyWebhook").debug(JSON.stringify(request.body));
+    const verificationToken = request.query["hub.verify_token"] as string;
+    const hubChallenge = request.query["hub.challenge"] as string;
 
-    if (request.query["hub.verify_token"] !== whatsappVerificationKey) {
-      return response.status(403).send("Invalid verify token");
+    if (verificationToken !== whatsappVerificationKey) {
+      return ApiResponse.Forbidden(response, "Invalid verification token");
     }
-
-    return response.status(200).send(request.query["hub.challenge"]);
-  } catch (error) {
-    Logger("verifyWebhook").error(error);
+    return ApiResponse.CustomResponse(response, 200, hubChallenge);
   }
-};
+);

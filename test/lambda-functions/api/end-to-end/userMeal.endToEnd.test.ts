@@ -5,7 +5,7 @@ import { DataService } from "../../../test_utils/DataService";
 const PATH = "/api/v1/user-meal";
 const temporaryAuth = "flbadmaash";
 
-describe("UserMeal Controllers", () => {
+describe("UserMeal End To End", () => {
   describe("getUserMealsByUserId", () => {
     it("should return paginated usermeals", async () => {
       const userId = DataService.getInstance().getUser().id;

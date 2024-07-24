@@ -11,5 +11,5 @@ export const getUserMealsByUserId = async (
   const options = extractPaginationOptions(request.query);
 
   const userMeals = await userMealService.getUserMealsByUserId(userId, options);
-  return ApiResponse.Ok(response, userMeals);
+  return ApiResponse.Ok<typeof userMeals>(response, userMeals);
 };

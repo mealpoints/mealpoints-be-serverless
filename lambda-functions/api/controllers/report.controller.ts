@@ -9,15 +9,19 @@ import { catchAsync } from "../../../shared/utils/catchAsync";
 const Logger = logger("report.controller");
 
 interface ICreateReportRequest extends Request {
-  query: {
-    period: ReportPeriod;
+  params: {
     userId: string;
   };
+  query: {
+    period: ReportPeriod;
+  };
 }
+
 export const createReport = catchAsync(
   async (request: ICreateReportRequest, response: Response) => {
     Logger("createReport").debug("");
-    const { period, userId } = request.query;
+    const { period } = request.query;
+    const { userId } = request.params;
 
     const user = await userService.getUserById(userId);
     if (!user) {
@@ -26,6 +30,6 @@ export const createReport = catchAsync(
 
     const report = await reportService.getReport(userId, period);
 
-    return ApiResponse.Ok(response, report);
+    return ApiResponse.Ok<typeof report>(response, report);
   }
 );

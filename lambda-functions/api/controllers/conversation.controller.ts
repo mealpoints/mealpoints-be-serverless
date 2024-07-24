@@ -13,7 +13,7 @@ export const getConversation = async (request: Request, response: Response) => {
     return ApiResponse.NotFound(response, "Conversation not found");
   }
 
-  return ApiResponse.Ok(response, conversation);
+  return ApiResponse.Ok<typeof conversation>(response, conversation);
 };
 
 export const getConversationMessages = async (
@@ -26,5 +26,8 @@ export const getConversationMessages = async (
   const conversationMessages =
     await conversationService.getConversationMessages(id);
 
-  return ApiResponse.Ok(response, conversationMessages);
+  return ApiResponse.Ok<typeof conversationMessages>(
+    response,
+    conversationMessages
+  );
 };
