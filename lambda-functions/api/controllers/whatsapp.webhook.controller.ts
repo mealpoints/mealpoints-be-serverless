@@ -47,6 +47,7 @@ export const verifyWebhook = catchAsync(
     if (verificationToken !== whatsappVerificationKey) {
       return ApiResponse.Forbidden(response, "Invalid verification token");
     }
+
     return ApiResponse.CustomResponse(response, 200, hubChallenge);
   }
 );

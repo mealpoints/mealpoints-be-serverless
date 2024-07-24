@@ -6,9 +6,13 @@ class ApiResponse {
   static CustomResponse(
     response: Response,
     status: number,
-    message: string
+    message: string,
+    type: "json" | "text" = "text"
   ): Response {
-    return response.status(status).json(message);
+    if (type === "json") {
+      return response.status(status).json(message);
+    }
+    return response.status(status).send(message);
   }
 
   // 200 Ok
