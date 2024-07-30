@@ -10,6 +10,9 @@ export const getUserMealsByUserId = async (
   const userId = request.params.id;
   const options = extractPaginationOptions(request.query);
 
-  const userMeals = await userMealService.getUserMealsByUserId(userId, options);
+  const userMeals = await userMealService.getUserMealsByUserId(userId, {
+    ...options,
+    sort: { createdAt: -1 },
+  });
   return ApiResponse.Ok<typeof userMeals>(response, userMeals);
 };
