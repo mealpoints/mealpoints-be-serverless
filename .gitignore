@@ -2,6 +2,7 @@ node_modules
 .serverless
 .env
 .env.production
+.env.test
 src/examples
 .build
 .tests
