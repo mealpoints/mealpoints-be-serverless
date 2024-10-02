@@ -9,6 +9,8 @@ export const USER_MESSAGES = {
       "Sorry, I was unable to process the image. Please try again in some time.",
     text_not_processed:
       "Sorry, I was unable to process your message. Please try again in some time.",
+    rate_limit_exceeded:
+      "You have exceeded the limit of messages per day. Please try again tomorrow.",
   },
   info: {
     feature_not_supported:
@@ -19,3 +21,5 @@ export const USER_MESSAGES = {
 export const QUEUE_MESSAGE_GROUP_IDS = {
   whatsapp_messages: "whatsapp_messages",
 };
+
+export const MESSAGE_LIMIT_PER_DAY = 10;

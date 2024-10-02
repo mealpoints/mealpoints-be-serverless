@@ -5,6 +5,7 @@ import * as userService from "../../../../shared/services/user.service";
 import { WebhookTypesEnum } from "../../../../shared/types/enums";
 import { WebhookObject } from "../../../../shared/types/message";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
+import { isUserRateLimited } from "../rate-limiter";
 import { processImageMessage } from "./imageMessage";
 import { processTextMessage } from "./textMessage";
 import { processUnknownMessage } from "./unknownMessage";
@@ -30,6 +31,11 @@ export const processInboundMessageWebhook = async (payload: WebhookObject) => {
     Logger("processInboundMessageWebhook").debug(
       "This message was already processed earlier"
     );
+    return;
+  }
+
+  // Ensure user had not exceeded the limit of messages per day
+  if (await isUserRateLimited(user.id)) {
     return;
   }
 
