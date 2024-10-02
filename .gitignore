@@ -1,6 +1,5 @@
 node_modules
 .serverless
-.env.*
 .env
 .env.production
 .env.test

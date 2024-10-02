@@ -40,7 +40,7 @@ export class HistoryService {
     private async processUser(user: IUser) {
         const summaryInterval = user.summaryInterval ?? 72;
 
-        const messages = await getMessagesInIntervalPerUser(user._id, summaryInterval);
+        const messages = await getMessagesInIntervalPerUser(user.id, summaryInterval);
         if (messages.length > 0) {
             this.usersToSendSummary.push({
                 user,
