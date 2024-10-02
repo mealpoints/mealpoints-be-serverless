@@ -1,3 +1,4 @@
+import { subHours } from "date-fns";
 import logger from "../config/logger";
 import User, { IUser, IUserCreate } from "../models/user.model";
 const Logger = logger("user.service");
@@ -36,6 +37,14 @@ export const getUserByContact = async (
   Logger("getUserByContact").debug("");
   const user = await User.findOne({ contact });
   return user;
+};
+
+export const getUsersByLastSummarySentAt = async (interval: number): Promise<IUser[]> => {
+  Logger("getUsersByLastSummarySentAt").debug("");
+  const thresholdDate = subHours(new Date(), interval);
+  return await User.find({
+    lastSummarySentAt: { $lt: thresholdDate },
+  });
 };
 
 export const updateUser = async (

@@ -50,5 +50,11 @@ functions:
     timeout: 300 
     events:
       - sqs: ${env:AWS_SQS_ARN}
-   
+  history-processor:
+    handler: lambda-functions/history-processor/app.handler
+    timeout: 300
+    events:
+      - schedule:
+          rate: rate(30 minutes)
+          enabled: true
  
