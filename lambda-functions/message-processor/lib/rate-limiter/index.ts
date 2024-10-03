@@ -1,10 +1,16 @@
 import * as config from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
+import { IConversation } from "../../../../shared/models/conversation.model";
+import { IUser } from "../../../../shared/models/user.model";
 import * as messageService from "../../../../shared/services/message.service";
+import { MessageTypesEnum } from "../../../../shared/types/enums";
 import { DateUtils } from "../../../../shared/utils/DateUtils";
 const Logger = logger("rate-limiter");
 
-export const isUserRateLimited = async (userId: string) => {
+export const isUserRateLimited = async (
+  user: IUser,
+  conversation: IConversation
+) => {
   try {
     Logger("isUserRateLimited").debug("");
 
@@ -17,14 +23,14 @@ export const isUserRateLimited = async (userId: string) => {
     }
 
     // Check if the user is exempt from rate limiting
-    if (config.RATE_LIMITER.exempt_users.includes(userId)) {
+    if (config.RATE_LIMITER.exempt_users.includes(user.id)) {
       Logger("isUserRateLimited").debug("User is exempt from rate limiting");
       return false;
     }
 
     // Get the number of messages sent by the user in the last 24 hours
     const messageCount = await messageService.messageCountByUserPerPeriod(
-      userId,
+      user.id,
       new DateUtils().subtractDays(1).toDate(),
       new Date()
     );
@@ -33,6 +39,14 @@ export const isUserRateLimited = async (userId: string) => {
       Logger("isUserRateLimited").debug(
         "User has exceeded the limit of messages per day"
       );
+
+      await messageService.sendTextMessage({
+        user: user.id,
+        conversation: conversation.id,
+        payload: config.USER_MESSAGES.errors.rate_limit_exceeded,
+        type: MessageTypesEnum.Text,
+      });
+
       return true;
     }
 

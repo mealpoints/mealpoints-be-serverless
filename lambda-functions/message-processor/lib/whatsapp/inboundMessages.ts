@@ -1,12 +1,8 @@
-import * as config from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
 import * as conversationService from "../../../../shared/services/conversation.service";
 import * as messageService from "../../../../shared/services/message.service";
 import * as userService from "../../../../shared/services/user.service";
-import {
-  MessageTypesEnum,
-  WebhookTypesEnum,
-} from "../../../../shared/types/enums";
+import { WebhookTypesEnum } from "../../../../shared/types/enums";
 import { WebhookObject } from "../../../../shared/types/message";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { isUserRateLimited } from "../rate-limiter";
@@ -43,15 +39,7 @@ export const processInboundMessageWebhook = async (payload: WebhookObject) => {
     }
 
     // Ensure user had not exceeded the limit of messages per day
-    if (await isUserRateLimited(user.id)) {
-      await messageService.sendTextMessage({
-        user: user.id,
-        conversation: conversation.id,
-        payload: config.USER_MESSAGES.errors.rate_limit_exceeded,
-        type: MessageTypesEnum.Text,
-      });
-      return;
-    }
+    if (await isUserRateLimited(user, conversation)) return;
 
     // Create message
     await messageService.createRecievedMessage({
