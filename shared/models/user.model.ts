@@ -20,7 +20,6 @@ export interface IUserCreate extends Partial<IUser> {
 const userSchema = new Schema<IUser>({
   firstName: { type: String },
   lastName: { type: String },
-  fullName: { type: String },
   contact: { type: String, required: true, unique: true },
   email: { type: String },
   isActive: { type: Boolean, default: true },
@@ -35,6 +34,10 @@ userSchema.index({ contact: 1 });
 userSchema.pre<IUser>("save", function (next) {
   this.updatedAt = new Date();
   next();
+});
+
+userSchema.virtual("fullName").get(function (this: IUser) {
+  return `${this.firstName} ${this.lastName}`.trim();
 });
 
 // Create and export the model
