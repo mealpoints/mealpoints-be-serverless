@@ -1,10 +1,10 @@
-import { processImageMessage } from "../../../../lambda-functions/message-processor/lib/whatsapp/imageMessage";
-import * as awsHandler from "../../../../shared/handlers/aws.handler";
-import * as whatsappHandler from "../../../../shared/handlers/whatsapp.handler";
-import * as messageService from "../../../../shared/services/message.service";
-import { MessageTypesEnum } from "../../../../shared/types/enums";
-import { USER } from "../../../mocks/user.mock";
-import { IMAGE_MESSAGE_PAYLOAD } from "../../../mocks/whatsapp/imageMessage.mock";
+import { processImageMessage } from "../../../../../lambda-functions/message-processor/lib/whatsapp/imageMessage";
+import * as awsHandler from "../../../../../shared/handlers/aws.handler";
+import * as whatsappHandler from "../../../../../shared/handlers/whatsapp.handler";
+import * as messageService from "../../../../../shared/services/message.service";
+import { MessageTypesEnum } from "../../../../../shared/types/enums";
+import { USER } from "../../../../mocks/user.mock";
+import { IMAGE_MESSAGE_PAYLOAD } from "../../../../mocks/whatsapp/imageMessage.mock";
 
 jest.mock("../../../../shared/handlers/aws.handler");
 jest.mock("../../../../shared/handlers/whatsapp.handler");

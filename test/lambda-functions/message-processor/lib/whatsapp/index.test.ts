@@ -1,8 +1,8 @@
-import { processWhatsappWebhook } from "../../../../lambda-functions/message-processor/lib/whatsapp";
-import { processInboundMessageWebhook } from "../../../../lambda-functions/message-processor/lib/whatsapp/inboundMessages";
-import { processStatusUpdateWebhook } from "../../../../lambda-functions/message-processor/lib/whatsapp/statusUpdates";
-import { READ_MESSAGE_UPDATE } from "../../../mocks/whatsapp/readMessageUpdate.mock";
-import { TEXT_MESSAGE_PAYLOAD } from "../../../mocks/whatsapp/textMessage.mock";
+import { processWhatsappWebhook } from "../../../../../lambda-functions/message-processor/lib/whatsapp";
+import { processInboundMessageWebhook } from "../../../../../lambda-functions/message-processor/lib/whatsapp/inboundMessages";
+import { processStatusUpdateWebhook } from "../../../../../lambda-functions/message-processor/lib/whatsapp/statusUpdates";
+import { READ_MESSAGE_UPDATE } from "../../../../mocks/whatsapp/readMessageUpdate.mock";
+import { TEXT_MESSAGE_PAYLOAD } from "../../../../mocks/whatsapp/textMessage.mock";
 
 jest.mock(
   "../../../../lambda-functions/message-processor/lib/whatsapp/inboundMessages"
