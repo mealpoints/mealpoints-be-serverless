@@ -29,6 +29,11 @@ export enum MessageTypesEnum {
   Video = "video", // for video messages
 }
 
+export enum userEngagementAlertTypesEnum {
+  Summary = "summary",
+  Reminder = "reminder",
+}
+
 export enum ParametersTypesEnum {
   Currency = "currency",
   DateTime = "date_time",

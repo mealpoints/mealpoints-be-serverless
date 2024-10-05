@@ -19,3 +19,8 @@ export const USER_MESSAGES = {
 export const QUEUE_MESSAGE_GROUP_IDS = {
   whatsapp_messages: "whatsapp_messages",
 };
+
+export const USER_ENGAGEMENT_ALERT = {
+  interval_in_days: 3,
+  max_reminders: 3,
+}

@@ -11,9 +11,6 @@ export interface IUser extends Document {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
-  lastSummarySentAt?: Date;
-  remainingSummaries?: number;
-  summaryInterval?: number; //in days
 }
 
 export interface IUserCreate extends Partial<IUser> {
@@ -29,9 +26,6 @@ const userSchema = new Schema<IUser>({
   isActive: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
-  lastSummarySentAt: { type: Date },
-  remainingSummaries: { type: Number, default: 3 },
-  summaryInterval: { type: Number, default: 72 },
 });
 
 // Create an index on the contact key
