@@ -1,6 +1,6 @@
 import { USER_ENGAGEMENT_ALERT } from '../../../shared/config/config';
 import logger from '../../../shared/config/logger';
-import UserEngagementAlert from '../../../shared/models/userEngagement.model';
+import UserEngagementAlert from '../../../shared/models/userEngagementAlert.model';
 import UserMeal from '../../../shared/models/userMeal.model';
 import { userEngagementAlertTypesEnum } from '../../../shared/types/enums';
 import User, { IUser } from './../../../shared/models/user.model';

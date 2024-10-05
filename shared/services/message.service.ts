@@ -1,4 +1,3 @@
-import { subHours } from "date-fns";
 import { FilterQuery, UpdateQuery } from "mongoose";
 import logger from "../config/logger";
 import * as whatsappHandler from "../handlers/whatsapp.handler";
@@ -203,24 +202,3 @@ export const updateRecievedMessage = async (
     throw error;
   }
 };
-
-export const getMessagesInIntervalPerUser = async (
-  userId: string,
-  interval: number
-): Promise<IRecievedMessage[]> => {
-  try {
-    Logger("getMessagesByUserInInterval").debug("");
-    const thresholdDate = subHours(new Date(), interval);
-
-    const messages = await RecievedMessage.find({
-      user: userId,
-      createdAt: {
-        $gte: thresholdDate,
-      },
-    });
-    return messages;
-  } catch (error) {
-    Logger("getMessagesByUserInInterval").error(error);
-    throw error;
-  }
-}
