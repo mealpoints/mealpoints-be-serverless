@@ -202,3 +202,22 @@ export const updateRecievedMessage = async (
     throw error;
   }
 };
+
+export const messageCountByUserPerPeriod = async (
+  userId: string,
+  startDate: Date,
+  endDate: Date
+) => {
+  try {
+    Logger("messageCountByUserPerPeriod").debug("");
+    const messages = await RecievedMessage.find({
+      user: userId,
+      createdAt: { $gte: startDate, $lte: endDate },
+    });
+
+    return messages.length;
+  } catch (error) {
+    Logger("messageCountByUserPerPeriod").error(error);
+    throw error;
+  }
+};
