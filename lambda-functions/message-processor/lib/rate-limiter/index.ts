@@ -14,12 +14,6 @@ export const isUserRateLimited = async (
   try {
     Logger("isUserRateLimited").info("");
 
-    // Temp
-    if (user.id === "669894d022bb39f6e0d6a3cd") {
-      Logger("isUserRateLimited").info("This user is blacklisted");
-      return true;
-    }
-
     // Ratelimit only in PROD
     if (process.env.NODE_ENV !== "production") {
       Logger("isUserRateLimited").info(
