@@ -1,7 +1,7 @@
 import { Document, Schema, model } from "mongoose";
 
-export type SettingValue = string | boolean | number;
-export type SettingKey = "openai_assistant_id";
+export type SettingValue = string | boolean | number | string[] | number[];
+export type SettingKey = "openai_assistant_id" | "blacklist";
 
 export interface ISetting extends Document {
   key: SettingKey;

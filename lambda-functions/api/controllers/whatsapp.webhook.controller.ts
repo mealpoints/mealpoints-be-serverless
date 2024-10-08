@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { QUEUE_MESSAGE_GROUP_IDS } from "../../../shared/config/config";
 import logger from "../../../shared/config/logger";
 import { queue } from "../../../shared/config/queue";
+import { isContactBlacklisted } from "../../../shared/libs/blacklist";
 import { SqsQueueService } from "../../../shared/services/queue.service";
 import { WebhookObject } from "../../../shared/types/message";
 import ApiResponse from "../../../shared/utils/ApiResponse";
@@ -18,10 +19,17 @@ export const readMessage = catchAsync(
     const body: WebhookObject = request.body as WebhookObject;
     const whatsappData = new WhatsappData(body);
 
-    const { whatsappMessageId } = whatsappData;
+    const { whatsappMessageId, contact } = whatsappData;
     if (!whatsappMessageId) {
       Logger("readMessage").error(
         "No WhatsApp message ID found in the webhook payload"
+      );
+      return ApiResponse.NoContent(response);
+    }
+
+    if (contact && (await isContactBlacklisted(contact))) {
+      Logger("readMessage").info(
+        `Contact ${whatsappData.contact} is blacklisted`
       );
       return ApiResponse.NoContent(response);
     }
