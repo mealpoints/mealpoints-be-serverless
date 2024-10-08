@@ -17,14 +17,14 @@ const Logger = logger("message.service");
 export const createRecievedMessage = async (
   messageData: IRecievedMessageCreate
 ): Promise<IRecievedMessage> => {
-  Logger("createRecievedMessage").debug("");
+  Logger("createRecievedMessage").info("");
 
   // If messag with same wamid already exists, return the existing message
   const existingMessage = await RecievedMessage.findOne({
     wamid: messageData.wamid,
   });
   if (existingMessage) {
-    Logger("createRecievedMessage").debug(
+    Logger("createRecievedMessage").info(
       "Message already exists. Not saving it"
     );
 
@@ -41,7 +41,7 @@ export const updateSentMessageStatusByWAID = async (
   status: StatusEnum
 ): Promise<ISentMessage> => {
   try {
-    Logger("updateSentMessageStatusByWAID").debug("");
+    Logger("updateSentMessageStatusByWAID").info("");
     const sentMessage = await SentMessage.findOneAndUpdate(
       { wamid },
       { status },
@@ -64,7 +64,7 @@ export const updateSentMessageStatus = async (
   status: StatusEnum
 ): Promise<ISentMessage> => {
   try {
-    Logger("updateSentMessageStatus").debug("");
+    Logger("updateSentMessageStatus").info("");
     const sentMessage = await SentMessage.findByIdAndUpdate(
       messageId,
       { status },
@@ -86,7 +86,7 @@ export const findRecievedMessage = async (
   filter: FilterQuery<IRecievedMessage>
 ): Promise<IRecievedMessage[] | []> => {
   try {
-    Logger("findRecievedMessage").debug("");
+    Logger("findRecievedMessage").info("");
     const messages = await RecievedMessage.find(filter);
     return messages;
   } catch (error) {
@@ -99,7 +99,7 @@ export const findSentMessage = async (
   filter: FilterQuery<ISentMessage>
 ): Promise<ISentMessage[] | []> => {
   try {
-    Logger("findSentMessage").debug("");
+    Logger("findSentMessage").info("");
     const messages = await SentMessage.find(filter);
     return messages;
   } catch (error) {
@@ -109,7 +109,7 @@ export const findSentMessage = async (
 };
 
 export const sendTextMessage = async (messageData: ISentMessageCreate) => {
-  Logger("sendTextMessage").debug("");
+  Logger("sendTextMessage").info("");
   try {
     const user = await userService.getUserById(messageData.user);
     if (!user) {
@@ -140,7 +140,7 @@ export const sendTextMessage = async (messageData: ISentMessageCreate) => {
 export const sendInteractiveMessage = async (
   messageData: ISentMessageCreate
 ) => {
-  Logger("sendInteractiveMessage").debug("");
+  Logger("sendInteractiveMessage").info("");
   try {
     const user = await userService.getUserById(messageData.user);
     if (!user) {
@@ -171,7 +171,7 @@ export const createSentMessage = async (
   messageData: ISentMessageCreate
 ): Promise<ISentMessage> => {
   try {
-    Logger("createSentMessage").debug("");
+    Logger("createSentMessage").info("");
     const message = await SentMessage.create(messageData);
     return message;
   } catch (error) {
@@ -185,7 +185,7 @@ export const updateRecievedMessage = async (
   updates: UpdateQuery<IRecievedMessage>
 ): Promise<IRecievedMessage> => {
   try {
-    Logger("updateRecievedMessageByWAID").debug("");
+    Logger("updateRecievedMessageByWAID").info("");
     const recievedMessage = await RecievedMessage.findOneAndUpdate(
       filter,
       updates,
@@ -209,7 +209,7 @@ export const messageCountByUserPerPeriod = async (
   endDate: Date
 ) => {
   try {
-    Logger("messageCountByUserPerPeriod").debug("");
+    Logger("messageCountByUserPerPeriod").info("");
     const messages = await RecievedMessage.find({
       user: userId,
       createdAt: { $gte: startDate, $lte: endDate },

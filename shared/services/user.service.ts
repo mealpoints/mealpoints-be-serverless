@@ -3,29 +3,29 @@ import User, { IUser, IUserCreate } from "../models/user.model";
 const Logger = logger("user.service");
 
 export const createUser = async (userData: IUserCreate): Promise<IUser> => {
-  Logger("createUser").debug("");
+  Logger("createUser").info("");
   const user = await User.create(userData);
   return user;
 };
 
 export const ensureUserByContact = async (contact: string): Promise<IUser> => {
-  Logger("ensureUserByContact").debug("");
+  Logger("ensureUserByContact").info("");
   let user = await getUserByContact(contact);
   if (!user) {
-    Logger("ensureUserByContact").debug("");
+    Logger("ensureUserByContact").info("");
     user = await createUser({ contact });
   }
   return user;
 };
 
 export const getUsers = async (): Promise<IUser[]> => {
-  Logger("getUsers").debug("");
+  Logger("getUsers").info("");
   const users = await User.find();
   return users;
 };
 
 export const getUserById = async (id: string): Promise<IUser | null> => {
-  Logger("getUserById").debug("");
+  Logger("getUserById").info("");
   const user = await User.findById(id);
   return user;
 };
@@ -33,7 +33,7 @@ export const getUserById = async (id: string): Promise<IUser | null> => {
 export const getUserByContact = async (
   contact: string
 ): Promise<IUser | null> => {
-  Logger("getUserByContact").debug("");
+  Logger("getUserByContact").info("");
   const user = await User.findOne({ contact });
   return user;
 };
@@ -42,7 +42,7 @@ export const updateUser = async (
   id: string,
   userData: IUser
 ): Promise<IUser | undefined> => {
-  Logger("updateUser").debug("");
+  Logger("updateUser").info("");
   const user = await User.findById(id).then((user) => {
     if (!user) {
       return;
@@ -54,7 +54,7 @@ export const updateUser = async (
 };
 
 export const deleteUser = async (id: string): Promise<IUser | null> => {
-  Logger("deleteUser").debug("");
+  Logger("deleteUser").info("");
   const user = await User.findByIdAndUpdate(id, { isActive: false });
   return user;
 };

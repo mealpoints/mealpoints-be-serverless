@@ -20,7 +20,7 @@ class SettingsSingleton {
 
   private async loadSettings(): Promise<void> {
     try {
-      Logger("loadSettings").debug("Loading settings");
+      Logger("loadSettings").info("Loading settings");
       const settingsDocuments = await settingService.getSettings();
       settingsDocuments.forEach((document) => {
         this.settings.set(document.key, document.value);

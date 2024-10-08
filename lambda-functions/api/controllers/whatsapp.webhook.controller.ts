@@ -13,7 +13,7 @@ const whatsappVerificationKey = process.env.WHATSAPP_VERIFICATION_KEY as string;
 
 export const readMessage = catchAsync(
   async (request: Request, response: Response) => {
-    Logger("readMessage").debug(JSON.stringify(request.body));
+    Logger("readMessage").info(JSON.stringify(request.body));
 
     const body: WebhookObject = request.body as WebhookObject;
     const whatsappData = new WhatsappData(body);
@@ -40,7 +40,7 @@ export const readMessage = catchAsync(
 
 export const verifyWebhook = catchAsync(
   (request: Request, response: Response) => {
-    Logger("verifyWebhook").debug(JSON.stringify(request.body));
+    Logger("verifyWebhook").info(JSON.stringify(request.body));
     const verificationToken = request.query["hub.verify_token"] as string;
     const hubChallenge = request.query["hub.challenge"] as string;
 

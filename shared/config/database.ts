@@ -4,16 +4,14 @@ let isConnected: boolean;
 
 export const connectToDatabase = async (): Promise<void> => {
   if (isConnected) {
-    console.debug(
+    console.info(
       "[config/database/connectToDatabase]: Database is already connected"
     );
     return;
   }
 
   try {
-    console.debug(
-      "[config/database/connectToDatabase]: Connecting to database"
-    );
+    console.info("[config/database/connectToDatabase]: Connecting to database");
     await mongoose.connect(process.env.MONGODB_URI as string, {
       serverSelectionTimeoutMS: 5000,
       dbName: process.env.MONGODB_DB,

@@ -19,7 +19,7 @@ export class DataService {
   // Public method to get the singleton instance
   public static getInstance(): DataService {
     if (!DataService.instance) {
-      Logger("getInstance").debug("Creating new instance of DataService");
+      Logger("getInstance").info("Creating new instance of DataService");
       DataService.instance = new DataService();
     }
     return DataService.instance;
@@ -42,7 +42,7 @@ export class DataService {
       const user = await userService.getUserByContact(contact);
       if (user) {
         this.user = user;
-        Logger("fetchUserById").debug(
+        Logger("fetchUserById").info(
           `User with contact number ${contact} fetched successfully.`
         );
       } else {
@@ -63,7 +63,7 @@ export class DataService {
 
       if (conversation) {
         this.conversation = conversation;
-        Logger("fetchConversationsByUserId").debug(
+        Logger("fetchConversationsByUserId").info(
           `Conversations for user with id ${userId} fetched successfully.`
         );
       } else {
@@ -80,7 +80,7 @@ export class DataService {
     try {
       // Fetch settings from the database
       this.settings = await settingService.getSettings();
-      Logger("fetchSettings").debug("Settings fetched successfully.");
+      Logger("fetchSettings").info("Settings fetched successfully.");
     } catch (error) {
       Logger("fetchSettings").error(error);
       throw error;

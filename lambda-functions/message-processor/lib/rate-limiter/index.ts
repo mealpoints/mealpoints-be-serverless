@@ -12,11 +12,17 @@ export const isUserRateLimited = async (
   conversation: IConversation
 ) => {
   try {
-    Logger("isUserRateLimited").debug("");
+    Logger("isUserRateLimited").info("");
+
+    // Temp
+    if (user.id === "669894d022bb39f6e0d6a3cd") {
+      Logger("isUserRateLimited").info("This user is blacklisted");
+      return true;
+    }
 
     // Ratelimit only in PROD
-    if (process.env.NODE_ENV === "production") {
-      Logger("isUserRateLimited").debug(
+    if (process.env.NODE_ENV !== "production") {
+      Logger("isUserRateLimited").info(
         "Rate limiting is disabled in non-prod environments"
       );
       return false;
@@ -24,7 +30,7 @@ export const isUserRateLimited = async (
 
     // Check if the user is exempt from rate limiting
     if (config.RATE_LIMITER.exempt_users.includes(user.id)) {
-      Logger("isUserRateLimited").debug("User is exempt from rate limiting");
+      Logger("isUserRateLimited").info("User is exempt from rate limiting");
       return false;
     }
 
@@ -36,7 +42,7 @@ export const isUserRateLimited = async (
     );
 
     if (messageCount >= config.RATE_LIMITER.message_limit_per_day) {
-      Logger("isUserRateLimited").debug(
+      Logger("isUserRateLimited").info(
         "User has exceeded the limit of messages per day"
       );
 

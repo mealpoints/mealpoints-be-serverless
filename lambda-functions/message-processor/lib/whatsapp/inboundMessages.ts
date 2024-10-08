@@ -18,7 +18,7 @@ export const processInboundMessageWebhook = async (payload: WebhookObject) => {
       payload
     );
 
-    Logger("processInboundMessageWebhook").debug(webhookType);
+    Logger("processInboundMessageWebhook").info(webhookType);
 
     // Ensure user exists
     const user = await userService.ensureUserByContact(contact as string);
@@ -32,7 +32,7 @@ export const processInboundMessageWebhook = async (payload: WebhookObject) => {
 
     if (existingMessage.length > 0) {
       // Sometimes the same message is sent twice, this usually happens because the first time the message was processed unccesdfully
-      Logger("processInboundMessageWebhook").debug(
+      Logger("processInboundMessageWebhook").info(
         "This message was already processed earlier"
       );
       return;
