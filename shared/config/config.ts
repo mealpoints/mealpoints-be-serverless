@@ -21,8 +21,3 @@ export const USER_MESSAGES = {
 export const QUEUE_MESSAGE_GROUP_IDS = {
   whatsapp_messages: "whatsapp_messages",
 };
-
-export const RATE_LIMITER = {
-  message_limit_per_day: 10,
-  exempt_users: ["66903c69fc2f6a42f733b5d4"],
-};

@@ -1,7 +1,10 @@
 import { Document, Schema, model } from "mongoose";
 
 export type SettingValue = string | boolean | number | string[] | number[];
-export type SettingKey = "openai_assistant_id" | "blacklist";
+export type SettingKey =
+  | "openai_assistant_id"
+  | "blacklist"
+  | "rate-limit.message-limit-per-day";
 
 export interface ISetting extends Document {
   key: SettingKey;
