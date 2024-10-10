@@ -1,6 +1,6 @@
 import logger from "../../shared/config/logger";
 import { IConversation } from "../../shared/models/conversation.model";
-import { ISetting } from "../../shared/models/setting.model";
+import { ISetting, SettingValue } from "../../shared/models/setting.model";
 import { IUser } from "../../shared/models/user.model";
 import * as conversationService from "../../shared/services/conversation.service";
 import * as settingService from "../../shared/services/setting.service";
@@ -11,7 +11,7 @@ export class DataService {
   private static instance: DataService;
   private user: IUser | undefined = undefined;
   private conversation: IConversation | undefined = undefined;
-  private settings: ISetting[] | undefined = undefined;
+  private settings: Map<string, SettingValue> = new Map();
 
   // Private constructor to prevent direct instantiation
   private constructor() {}
@@ -79,8 +79,12 @@ export class DataService {
   public async fetchSettings(): Promise<void> {
     try {
       // Fetch settings from the database
-      this.settings = await settingService.getSettings();
-      Logger("fetchSettings").debug("Settings fetched successfully.");
+      const settingsArray = await settingService.getSettings();
+      settingsArray.forEach((setting: ISetting) => {
+        this.settings.set(setting.key, setting.value);
+      });
+
+      Logger("fetchSettings").info("Settings fetched successfully.");
     } catch (error) {
       Logger("fetchSettings").error(error);
       throw error;
@@ -98,7 +102,7 @@ export class DataService {
   }
 
   // Get the stored settings
-  public getSettings(): ISetting[] {
-    return this.settings as ISetting[];
+  public getSettings() {
+    return this.settings;
   }
 }

@@ -6,7 +6,7 @@ const Logger = logger("SettingsSingleton");
 
 class SettingsSingleton {
   private static instance: SettingsSingleton;
-  private settings: Map<string, SettingValue> = new Map();
+  private settings: Map<SettingKey, SettingValue> = new Map();
 
   private constructor() {}
 
@@ -30,17 +30,8 @@ class SettingsSingleton {
     }
   }
 
-  private async getSetting(key: SettingKey): Promise<SettingValue> {
-    const setting = await settingService.getSettingByKey(key);
-    if (!setting) {
-      throw new Error(`Setting with key ${key} not found`);
-    }
-    return setting.value;
-  }
-
-  // TODO: For some reason, the settings are not being loaded properly. So for now we are getting the setting from the database
-  public async get(key: SettingKey): Promise<SettingValue> {
-    return await this.getSetting(key);
+  public get(key: SettingKey) {
+    return this.settings.get(key);
   }
 }
 
