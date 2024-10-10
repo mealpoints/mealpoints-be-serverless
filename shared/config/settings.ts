@@ -33,6 +33,12 @@ class SettingsSingleton {
   public get(key: SettingKey) {
     return this.settings.get(key);
   }
+
+  public static async refreshSettings(): Promise<void> {
+    if (SettingsSingleton.instance) {
+      await SettingsSingleton.instance.loadSettings();
+    }
+  }
 }
 
 export default SettingsSingleton;

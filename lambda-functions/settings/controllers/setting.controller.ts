@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import logger from "../../../shared/config/logger";
+import SettingsSingleton from "../../../shared/config/settings";
 import { ISetting, SettingValue } from "../../../shared/models/setting.model";
 import * as settingService from "../../../shared/services/setting.service";
 import ApiResponse from "../../../shared/utils/ApiResponse";
@@ -38,6 +39,14 @@ export const updateSetting = catchAsync(
     Logger("updateSetting").info(request.body);
     const { key, value }: ISetting = request.body;
     await settingService.updateSetting({ key, value });
+    return ApiResponse.NoContent(response);
+  }
+);
+
+export const refreshSettingsSingelton = catchAsync(
+  async (request: Request, response: Response) => {
+    Logger("refreshSettingsSingelton").info("");
+    await SettingsSingleton.refreshSettings();
     return ApiResponse.NoContent(response);
   }
 );
