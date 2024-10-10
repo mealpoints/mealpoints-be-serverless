@@ -14,7 +14,8 @@
 
 Settings are only updated once per lambda instance. This is so that we do not need to make multiple API calls for them. But this introduces another problem, if the settings are updated while the instance is running, we might get stale settings or worst-case not get the settings at all. This can cause the APP to crash.
 
-There are two solutions for this
+There are the following solutions for this
 
 1. Always have a fallback when consuming settings.
 2. Create a mechanism to reload the data in the settings Singleton.
+3. Cache with Expiry Time
