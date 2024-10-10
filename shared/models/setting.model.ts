@@ -4,7 +4,9 @@ export type SettingValue = string | boolean | number | string[] | number[];
 export type SettingKey =
   | "openai_assistant_id"
   | "blacklist"
-  | "rate-limit.message-limit-per-day";
+  | "rate-limit.message-limit-per-day"
+  | "open-ai.max-runs-on-a-thread"
+  | "open-ai.max-retries";
 
 export interface ISetting extends Document {
   key: SettingKey;
