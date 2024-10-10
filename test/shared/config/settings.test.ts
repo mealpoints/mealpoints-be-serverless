@@ -1,7 +1,9 @@
 import SettingsSingleton from "../../../shared/config/settings";
-import * as settingService from "../../../shared/services/setting.service";
+import { DataService } from "../../test_utils/DataService";
 
 describe("Settings", () => {
+  const dataServiceSettings = DataService.getInstance().getSettings();
+
   it("should return an instance of SettingsSingleton", async () => {
     const settings = await SettingsSingleton.getInstance();
     expect(settings).toBeInstanceOf(SettingsSingleton);
@@ -9,10 +11,10 @@ describe("Settings", () => {
 
   it("should return the value of the setting", async () => {
     const settings = await SettingsSingleton.getInstance();
-    const setting = await settings.get("openai_assistant_id");
-    const assistantIdInDatabase = await settingService.getSettingByKey(
+    const setting = settings.get("openai_assistant_id");
+    const assistantIdInDatabase = dataServiceSettings.get(
       "openai_assistant_id"
     );
-    expect(setting).toBe(assistantIdInDatabase?.value);
+    expect(setting).toBe(assistantIdInDatabase);
   });
 });

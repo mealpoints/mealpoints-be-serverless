@@ -14,7 +14,7 @@ export const getSettings = async () => {
 };
 
 export const getSettingByKey = async (key: string) => {
-  Logger("getSettingByKey").info("");
+  Logger("getSettingByKey").info(key);
   try {
     return await Setting.findOne({ key });
   } catch (error) {

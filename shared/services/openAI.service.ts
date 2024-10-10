@@ -20,7 +20,7 @@ export const ask = async (
 ): Promise<OpenAIResponse> => {
   const settings = await SettingsSingleton.getInstance();
 
-  const assistantId = await settings.get("openai_assistant_id");
+  const assistantId = settings.get("openai_assistant_id");
 
   if (!assistantId) {
     throw new Error("OpenAI assistant ID is not set in settings");

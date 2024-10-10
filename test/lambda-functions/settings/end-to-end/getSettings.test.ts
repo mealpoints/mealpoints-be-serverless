@@ -16,16 +16,18 @@ describe("Setting End To End", () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toBeDefined();
-      expect(response.body.length).toBe(dataService.getSettings().length);
+      expect(response.body.length).toBe(dataService.getSettings().size);
     });
   });
 
   it("should return a setting by id", async () => {
     const response = await request(app)
-      .get(`${PATH}/${dataService.getSettings()[0].key}`)
+      .get(`${PATH}/openai_assistant_id`)
       .set({ Authorization: temporaryAuth });
 
     expect(response.status).toBe(200);
-    expect(response.body).toBe(dataService.getSettings()[0].value);
+    expect(response.body).toBe(
+      dataService.getSettings().get("openai_assistant_id") as string
+    );
   });
 });
