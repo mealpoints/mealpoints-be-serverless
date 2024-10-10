@@ -7,12 +7,20 @@ const Logger = logger("SettingsSingleton");
 class SettingsSingleton {
   private static instance: SettingsSingleton;
   private settings: Map<SettingKey, SettingValue> = new Map();
+  private lastLoadTime: number = 0;
+  private readonly settingsExpiryTime: number = 2 * 60 * 1000; // 2 minutes
 
   private constructor() {}
+
+  private isCacheExpired(): boolean {
+    return Date.now() - this.lastLoadTime > this.settingsExpiryTime;
+  }
 
   public static async getInstance(): Promise<SettingsSingleton> {
     if (!SettingsSingleton.instance) {
       SettingsSingleton.instance = new SettingsSingleton();
+      await SettingsSingleton.instance.loadSettings();
+    } else if (SettingsSingleton.instance.isCacheExpired()) {
       await SettingsSingleton.instance.loadSettings();
     }
     return SettingsSingleton.instance;
@@ -32,12 +40,6 @@ class SettingsSingleton {
 
   public get(key: SettingKey) {
     return this.settings.get(key);
-  }
-
-  public static async refreshSettings(): Promise<void> {
-    if (SettingsSingleton.instance) {
-      await SettingsSingleton.instance.loadSettings();
-    }
   }
 }
 

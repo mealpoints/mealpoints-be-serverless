@@ -5,11 +5,6 @@ import * as settingController from "../../controllers/setting.controller";
 const router = Router();
 
 router.post("/", temporaryAuth, settingController.createSetting);
-router.post(
-  "/refresh",
-  temporaryAuth,
-  settingController.refreshSettingsSingelton
-);
 router.get("/", temporaryAuth, settingController.getSettings);
 router.get("/:key", temporaryAuth, settingController.getSettingsByKey);
 router.put("/", temporaryAuth, settingController.updateSetting);
