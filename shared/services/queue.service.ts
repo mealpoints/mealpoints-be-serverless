@@ -32,7 +32,7 @@ export class SqsQueueService {
       MessageDeduplicationId: messageDeduplicationId,
     });
     const result = await this.sqsClient.send(message);
-    Logger("enqueueMessage").debug(
+    Logger("enqueueMessage").info(
       `Message queued with id: ${result.MessageId}`
     );
     return {

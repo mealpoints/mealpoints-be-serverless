@@ -1,6 +1,6 @@
 export const OPEN_AI = {
-  max_runs_on_a_thread: 10,
-  max_retries: 2,
+  max_runs_on_a_thread: 3,
+  max_retries: 3,
 };
 
 export const USER_MESSAGES = {
@@ -9,6 +9,8 @@ export const USER_MESSAGES = {
       "Sorry, I was unable to process the image. Please try again in some time.",
     text_not_processed:
       "Sorry, I was unable to process your message. Please try again in some time.",
+    rate_limit_exceeded:
+      "You have reached the daily message limit. Please try again tomorrow.",
   },
   info: {
     feature_not_supported:
@@ -18,4 +20,9 @@ export const USER_MESSAGES = {
 
 export const QUEUE_MESSAGE_GROUP_IDS = {
   whatsapp_messages: "whatsapp_messages",
+};
+
+export const RATE_LIMITER = {
+  message_limit_per_day: 10,
+  exempt_users: ["66903c69fc2f6a42f733b5d4"],
 };

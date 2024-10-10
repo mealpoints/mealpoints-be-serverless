@@ -9,7 +9,7 @@ const Logger = logger("setting.controller");
 
 export const createSetting = catchAsync(
   async (request: Request, response: Response) => {
-    Logger("createSetting").debug(request.body);
+    Logger("createSetting").info(request.body);
     const { key, value }: ISetting = request.body;
     const setting = await settingService.createSetting({ key, value });
     return ApiResponse.Ok<typeof setting>(response, setting);
@@ -18,7 +18,7 @@ export const createSetting = catchAsync(
 
 export const getSettings = catchAsync(
   async (request: Request, response: Response) => {
-    Logger("getSettings").debug("");
+    Logger("getSettings").info("");
     const settings = await settingService.getSettings();
     return ApiResponse.Ok<typeof settings>(response, settings);
   }
@@ -26,7 +26,7 @@ export const getSettings = catchAsync(
 
 export const getSettingsByKey = catchAsync(
   async (request: Request, response: Response) => {
-    Logger("getSettingsByKey").debug(request.params.key);
+    Logger("getSettingsByKey").info(request.params.key);
     const key = request.params.key;
     const setting = await settingService.getSettingByKey(key);
     return ApiResponse.Ok<SettingValue>(response, setting?.value);
@@ -35,7 +35,7 @@ export const getSettingsByKey = catchAsync(
 
 export const updateSetting = catchAsync(
   async (request: Request, response: Response) => {
-    Logger("updateSetting").debug(request.body);
+    Logger("updateSetting").info(request.body);
     const { key, value }: ISetting = request.body;
     await settingService.updateSetting({ key, value });
     return ApiResponse.NoContent(response);

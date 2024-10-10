@@ -6,7 +6,7 @@ import * as userMealService from "./userMeal.service";
 const Logger = logger("report.service");
 
 export const getReport = async (userId: string, period: ReportPeriod) => {
-  Logger("getReport").debug("");
+  Logger("getReport").info("");
   const userMeals = await userMealService.getPeriodicUserMealsByUserId(
     userId,
     period

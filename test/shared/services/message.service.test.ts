@@ -25,7 +25,7 @@ describe("Message Service", () => {
       },
     });
 
-    Logger("sendInteractiveMessage").debug(response.data);
+    Logger("sendInteractiveMessage").info(response.data);
     expect(response).toBeDefined();
   });
 
@@ -40,7 +40,7 @@ describe("Message Service", () => {
       payload: "Hello, how can I help you?",
     });
 
-    Logger("sendTextMessage").debug(response.data);
+    Logger("sendTextMessage").info(response.data);
     expect(response).toBeDefined();
   });
 });

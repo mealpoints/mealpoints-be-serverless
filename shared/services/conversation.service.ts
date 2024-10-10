@@ -10,7 +10,7 @@ const Logger = logger("conversation.service");
 export const createConversation = async (
   userId: string
 ): Promise<IConversation> => {
-  Logger("createConversation").debug("");
+  Logger("createConversation").info("");
   const conversation = await Conversation.create({ user: userId });
   return conversation;
 };
@@ -18,10 +18,10 @@ export const createConversation = async (
 export const ensureConversation = async (
   userId: string
 ): Promise<IConversation> => {
-  Logger("ensureConversation").debug("");
+  Logger("ensureConversation").info("");
   const conversation = await Conversation.findOne({ user: userId });
   if (!conversation) {
-    Logger("ensureConversation").debug("convesation not found. Creating...");
+    Logger("ensureConversation").info("convesation not found. Creating...");
     return createConversation(userId);
   }
   return conversation;
@@ -30,7 +30,7 @@ export const ensureConversation = async (
 export const getConversation = async (
   conversationId: string
 ): Promise<IConversation | null> => {
-  Logger("getConversation").debug("");
+  Logger("getConversation").info("");
   const conversation = await Conversation.findById(conversationId);
   return conversation;
 };
@@ -39,7 +39,7 @@ export const getConversationByUserId = async (
   userId: string
 ): Promise<IConversation | null> => {
   try {
-    Logger("getConversationByUserId").debug("");
+    Logger("getConversationByUserId").info("");
     const conversation = await Conversation.findOne({ user: userId });
     return conversation;
   } catch (error) {
@@ -51,7 +51,7 @@ export const getConversationByUserId = async (
 export const getConversationMessages = async (
   conversationId: string
 ): Promise<(ISentMessage | IRecievedMessage)[]> => {
-  Logger("getConversationMessages").debug("");
+  Logger("getConversationMessages").info("");
   let conversationMessages = [];
 
   const sentMessages = await SentMessage.find({ conversation: conversationId });
@@ -73,7 +73,7 @@ export const updateConversation = async (
   updates: UpdateQuery<IConversation>
 ): Promise<IConversation> => {
   try {
-    Logger("updateConversation").debug("");
+    Logger("updateConversation").info("");
     const conversation = await Conversation.findOneAndUpdate(filter, updates, {
       new: true,
     });

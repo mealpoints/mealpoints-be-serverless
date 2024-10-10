@@ -56,7 +56,7 @@ export const sendMessage = async (
   phoneNumber: string,
   message: string
 ): Promise<AxiosResponse> => {
-  Logger("sendMessage").debug("");
+  Logger("sendMessage").info("");
 
   const data: ITextMessageRequestBody = {
     messaging_product: "whatsapp",
@@ -74,7 +74,7 @@ export const sendInteractiveMessage = async (
   phoneNumber: string,
   data: InteractiveMessageBodyOptions
 ): Promise<AxiosResponse> => {
-  Logger("sendInteractiveMessage").debug("");
+  Logger("sendInteractiveMessage").info("");
 
   const body: InteractiveMessageRequestBody = {
     recipient_type: "individual",
@@ -119,7 +119,7 @@ const downloadImage = async (
   imageUrl: string,
   imageId: string
 ): Promise<string> => {
-  Logger("downloadImage").debug("");
+  Logger("downloadImage").info("");
   try {
     const response = await axiosInstance.get(imageUrl, {
       responseType: "stream",
@@ -129,7 +129,7 @@ const downloadImage = async (
       const writer = fs.createWriteStream(filePath);
       response.data.pipe(writer);
       writer.on("finish", () => {
-        Logger("downloadImage").debug(`Image downloaded successfully`);
+        Logger("downloadImage").info(`Image downloaded successfully`);
         resolve(filePath);
       });
       writer.on("error", (error) => {
@@ -144,11 +144,11 @@ const downloadImage = async (
 };
 
 export const getImageSentViaMessage = async (imageId: string) => {
-  Logger("getImageSentViaMessage").debug(imageId);
+  Logger("getImageSentViaMessage").info(imageId);
   try {
     const response = await axiosInstance.get(`/${imageId}`);
 
-    Logger("getImageSentViaMessage").debug("");
+    Logger("getImageSentViaMessage").info("");
     const filePath = await downloadImage(response.data.url, imageId);
     return filePath;
   } catch (error) {

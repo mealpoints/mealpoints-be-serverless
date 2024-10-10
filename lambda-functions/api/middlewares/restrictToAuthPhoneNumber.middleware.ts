@@ -18,7 +18,7 @@ export const restrictToAuthPhoneNumbers = (
   // Only process messages from the WhatsApp number ID.
   // This makes sure that we don't process messages from other environments.
   if (!whatsappData.isMessageFromWatsappPhoneNumberId(whatsappPhoneNumberId)) {
-    Logger("restrictToAuthPhoneNumbers").debug(
+    Logger("restrictToAuthPhoneNumbers").info(
       "Message is not from the authenthorized WhatsApp phone number"
     );
     return ApiResponse.Ok(response);

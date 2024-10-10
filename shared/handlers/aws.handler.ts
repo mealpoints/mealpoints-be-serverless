@@ -18,7 +18,7 @@ export const uploadImageToS3 = async (
   key: string,
   filePath: string
 ): Promise<string> => {
-  Logger("uploadImageToS3").debug("");
+  Logger("uploadImageToS3").info("");
 
   const fileStream = fs.createReadStream(filePath);
 
