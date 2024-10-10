@@ -18,9 +18,11 @@ class SettingsSingleton {
 
   public static async getInstance(): Promise<SettingsSingleton> {
     if (!SettingsSingleton.instance) {
+      Logger("getInstance").info("Creating new instance of SettingsSingleton");
       SettingsSingleton.instance = new SettingsSingleton();
       await SettingsSingleton.instance.loadSettings();
     } else if (SettingsSingleton.instance.isCacheExpired()) {
+      Logger("getInstance").info("Settings cache expired, reloading settings");
       await SettingsSingleton.instance.loadSettings();
     }
     return SettingsSingleton.instance;
@@ -33,6 +35,7 @@ class SettingsSingleton {
       settingsDocuments.forEach((document) => {
         this.settings.set(document.key, document.value);
       });
+      this.lastLoadTime = Date.now();
     } catch (error) {
       Logger("loadSettings").error(error);
     }
