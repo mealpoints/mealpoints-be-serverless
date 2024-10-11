@@ -1,8 +1,3 @@
-export const OPEN_AI = {
-  max_runs_on_a_thread: 3,
-  max_retries: 3,
-};
-
 export const USER_MESSAGES = {
   errors: {
     image_not_processed:
