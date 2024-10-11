@@ -1,10 +1,10 @@
 import * as internalAlerts from "../../../../shared/libs/internal-alerts";
 
 describe("InternalAlerts", () => {
-  it("should send internal alert", () => {
+  it("should send internal alert", async () => {
     const message = "message";
-    const severity = "info";
-    internalAlerts.sendInternalAlert({ message, severity });
+    const severity = "minor";
+    await internalAlerts.sendInternalAlert({ message, severity });
     setTimeout(() => {}, 2000);
   });
 });
