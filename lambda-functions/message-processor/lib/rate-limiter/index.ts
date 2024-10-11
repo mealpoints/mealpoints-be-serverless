@@ -1,6 +1,7 @@
 import * as config from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
+import * as internalAlerts from "../../../../shared/libs/internal-alerts";
 import { IConversation } from "../../../../shared/models/conversation.model";
 import { IUser } from "../../../../shared/models/user.model";
 import * as messageService from "../../../../shared/services/message.service";
@@ -34,6 +35,14 @@ export const isUserRateLimited = async (
       Logger("isUserRateLimited").info(
         "User has exceeded the limit of messages per day"
       );
+
+      await internalAlerts.sendInternalAlert({
+        message: `
+        ${user.contact} has been rate-limited. 
+        Message count: ${messageCount} / ${messageLimit}
+        `,
+        severity: "minor",
+      });
 
       await messageService.sendTextMessage({
         user: user.id,

@@ -2,7 +2,7 @@
 
 [] Write tests for blacklist and Rate limiter
 [x] Fix Settings
-[] Move Config to settings
+[x] Move Config to settings
 [] Create a mechanism to automatically blacklist contact numbers.
 [] Setup Redis or any other inmemory DB
 [] Create an Alerting Mechanism.
@@ -10,7 +10,7 @@
 
 ## Issues
 
-### The settings singleton can get stale if the Lambda has been running while a settings has been updated or added.
+### [Resolved] The settings singleton can get stale if the Lambda has been running while a settings has been updated or added.
 
 Settings are only updated once per lambda instance. This is so that we do not need to make multiple API calls for them. But this introduces another problem, if the settings are updated while the instance is running, we might get stale settings or worst-case not get the settings at all. This can cause the APP to crash.
 
