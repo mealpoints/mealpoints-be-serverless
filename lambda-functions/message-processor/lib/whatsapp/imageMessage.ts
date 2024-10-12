@@ -12,14 +12,14 @@ import {
   MessageTypesEnum,
   OpenAIMessageTypesEnum,
 } from "../../../../shared/types/enums";
-import { WebhookObject } from "../../../../shared/types/message";
+import { WhastappWebhookObject } from "../../../../shared/types/message";
 import { MealData } from "../../../../shared/types/openai";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
 const Logger = logger("lib/whatsapp/imageMessage");
 
 export const processImageMessage = async (
-  payload: WebhookObject,
+  payload: WhastappWebhookObject,
   user: IUser,
   conversation: IConversation
 ) => {
@@ -115,7 +115,7 @@ const cleanupLocalFile = (filePath: string) => {
 };
 
 const updateReceivedMessage = async (
-  payload: WebhookObject,
+  payload: WhastappWebhookObject,
   s3Path: string
 ): Promise<void> => {
   const { whatsappMessageId } = new WhatsappData(payload);

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import logger from "../../../shared/config/logger";
-import { WebhookObject } from "../../../shared/types/message";
+import { WhastappWebhookObject } from "../../../shared/types/message";
 import ApiResponse from "../../../shared/utils/ApiResponse";
 import { WhatsappData } from "../../../shared/utils/WhatsappData";
 
@@ -12,7 +12,7 @@ export const restrictToAuthPhoneNumbers = (
   response: Response,
   next: NextFunction
 ) => {
-  const body: WebhookObject = request.body as WebhookObject;
+  const body: WhastappWebhookObject = request.body as WhastappWebhookObject;
   const whatsappData = new WhatsappData(body);
 
   // Only process messages from the WhatsApp number ID.

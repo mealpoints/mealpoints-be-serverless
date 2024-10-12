@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { restrictToAuthPhoneNumbers } from "../../../../lambda-functions/api/middlewares/restrictToAuthPhoneNumber.middleware";
-import { WebhookObject } from "../../../../shared/types/message";
+import { WhastappWebhookObject } from "../../../../shared/types/message";
 import ApiResponse from "../../../../shared/utils/ApiResponse";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 
@@ -37,7 +37,7 @@ describe("RestrictToAuthPhoneNumber Middleware", () => {
       };
     });
 
-    request.body = {} as WebhookObject;
+    request.body = {} as WhastappWebhookObject;
 
     restrictToAuthPhoneNumbers(request as Request, response as Response, next);
 
@@ -52,7 +52,7 @@ describe("RestrictToAuthPhoneNumber Middleware", () => {
       };
     });
 
-    request.body = {} as WebhookObject;
+    request.body = {} as WhastappWebhookObject;
 
     restrictToAuthPhoneNumbers(request as Request, response as Response, next);
 

@@ -7,4 +7,8 @@ export class SQSEventData {
   public isMessageGroupId(messageGroupId: string) {
     return this.event.Records[0].attributes.MessageGroupId === messageGroupId;
   }
+
+  get messageGroupId() {
+    return this.event.Records[0].attributes.MessageGroupId;
+  }
 }
