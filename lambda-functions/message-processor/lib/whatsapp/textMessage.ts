@@ -8,14 +8,14 @@ import {
   MessageTypesEnum,
   OpenAIMessageTypesEnum,
 } from "../../../../shared/types/enums";
-import { WebhookObject } from "../../../../shared/types/message";
+import { WhastappWebhookObject } from "../../../../shared/types/message";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
 
 const Logger = logger("lib/whatsapp/textMessage");
 
 export const processTextMessage = async (
-  payload: WebhookObject,
+  payload: WhastappWebhookObject,
   user: IUser,
   conversation: IConversation
 ) => {

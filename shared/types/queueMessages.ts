@@ -1,7 +1,7 @@
-import { WebhookObject } from "./message";
+import { WhastappWebhookObject } from "./message";
 
 export interface IMessage {
-  body: WebhookObject;
+  body: WhastappWebhookObject;
 }
 
 export interface IDequeuedMessage extends IMessage {

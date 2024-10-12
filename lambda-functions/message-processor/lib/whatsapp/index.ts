@@ -1,11 +1,13 @@
 import logger from "../../../../shared/config/logger";
-import { WebhookObject } from "../../../../shared/types/message";
+import { WhastappWebhookObject } from "../../../../shared/types/message";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { processInboundMessageWebhook } from "./inboundMessages";
 import { processStatusUpdateWebhook } from "./statusUpdates";
 const Logger = logger("lib/whatsapp/processWhatsappWebhook");
 
-export const processWhatsappWebhook = async (payload: WebhookObject) => {
+export const processWhatsappWebhook = async (
+  payload: WhastappWebhookObject
+) => {
   Logger("processWhatsappWebhook").info("");
   const whatsappData = new WhatsappData(payload);
 

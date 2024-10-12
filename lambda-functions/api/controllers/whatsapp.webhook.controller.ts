@@ -4,7 +4,7 @@ import logger from "../../../shared/config/logger";
 import { queue } from "../../../shared/config/queue";
 import { isContactBlacklisted } from "../../../shared/libs/blacklist";
 import { SqsQueueService } from "../../../shared/services/queue.service";
-import { WebhookObject } from "../../../shared/types/message";
+import { WhastappWebhookObject } from "../../../shared/types/message";
 import ApiResponse from "../../../shared/utils/ApiResponse";
 import { WhatsappData } from "../../../shared/utils/WhatsappData";
 import { catchAsync } from "../../../shared/utils/catchAsync";
@@ -16,7 +16,7 @@ export const readMessage = catchAsync(
   async (request: Request, response: Response) => {
     Logger("readMessage").info(JSON.stringify(request.body));
 
-    const body: WebhookObject = request.body as WebhookObject;
+    const body: WhastappWebhookObject = request.body as WhastappWebhookObject;
     const whatsappData = new WhatsappData(body);
 
     const { whatsappMessageId, contact } = whatsappData;

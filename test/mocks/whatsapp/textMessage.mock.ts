@@ -1,7 +1,7 @@
 import { WebhookTypesEnum } from "../../../shared/types/enums";
-import { WebhookObject } from "../../../shared/types/message";
+import { WhastappWebhookObject } from "../../../shared/types/message";
 
-export const TEXT_MESSAGE_PAYLOAD: WebhookObject = {
+export const TEXT_MESSAGE_PAYLOAD: WhastappWebhookObject = {
   object: "whatsapp_business_account",
   entry: [
     {

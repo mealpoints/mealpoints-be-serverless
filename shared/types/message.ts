@@ -214,7 +214,7 @@ type Entry_Object = {
   changes: ChangesObject[];
 };
 
-export type WebhookObject = {
+export type WhastappWebhookObject = {
   object: "whatsapp_business_account";
   entry: Entry_Object[];
 };

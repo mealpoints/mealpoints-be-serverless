@@ -1,57 +1,49 @@
-import { SQSEvent, SQSRecord } from "aws-lambda";
+import { SQSEvent } from "aws-lambda";
 import logger from "../../../shared/config/logger";
 import { SqsQueueService } from "../../../shared/services/queue.service";
-import {
-  IDequeuedMessage,
-  IMessage,
-} from "../../../shared/types/queueMessages";
-import { processWhatsappWebhook } from "../lib/whatsapp";
+import { IDequeuedMessage } from "../../../shared/types/queueMessages";
 
 const Logger = logger("event.service");
 
-export class EventService {
-  constructor(private readonly queueService: SqsQueueService) {}
+export class EventService<T> {
+  constructor(
+    private queueService: SqsQueueService,
+    private processMessageFunction: (messageBody: T) => Promise<void> // Injected function
+  ) {}
 
   async handle(event: SQSEvent) {
-    // Get parsed messages from the event
     const dequeuedMessages = this.mapEventToDequeuedMessages(event);
     const messagesToDelete: IDequeuedMessage[] = [];
 
-    const promises = dequeuedMessages.map(async (message: IDequeuedMessage) => {
+    const promises = dequeuedMessages.map(async (message) => {
       try {
-        await this.processMessage(message);
+        await this.processMessageFunction(message.body as T);
         messagesToDelete.push(message);
       } catch (error) {
         Logger("handler").error(error);
       }
     });
-    // await until all messages have been processed
+
     await Promise.all(promises);
 
-    // Delete successful messages manually if other processings failed
-    const numberRetriableMessages =
-      dequeuedMessages.length - messagesToDelete.length;
-    if (numberRetriableMessages > 0) {
+    const failedMessages = dequeuedMessages.length - messagesToDelete.length;
+    if (failedMessages > 0) {
       await this.queueService.deleteMessages(
-        process.env.AWS_SQS_URL as string,
+        process.env.AWS_SQS_URL!,
         messagesToDelete
       );
-      const errorMessage = `Failing due to ${numberRetriableMessages} unsuccessful and retriable errors.`;
-      Logger("handler").error(errorMessage);
+
+      Logger("handler").error(
+        `Failing due to ${failedMessages} unsuccessful messages.`
+      );
     }
-  }
-  private async processMessage(message: IDequeuedMessage) {
-    await processWhatsappWebhook(message.body);
   }
 
   private mapEventToDequeuedMessages(event: SQSEvent): IDequeuedMessage[] {
-    return event.Records.map((record: SQSRecord) => {
-      const message: IMessage = JSON.parse(record.body);
-      return {
-        id: record.messageId,
-        receiptHandle: record.receiptHandle,
-        ...message,
-      };
-    });
+    return event.Records.map((record) => ({
+      id: record.messageId,
+      receiptHandle: record.receiptHandle,
+      ...JSON.parse(record.body),
+    }));
   }
 }
