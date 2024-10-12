@@ -17,7 +17,7 @@ SettingsSingleton.getInstance = jest
 
 describe("OpenAI Service", () => {
   beforeEach(() => {
-    const expectedAssistantId = process.env.OPENAI_ASSISTANT_ID;
+    const expectedAssistantId = process.env.openai.assistant.mealpoints - core;
     mockSettingsInstance.get.mockResolvedValue(expectedAssistantId);
   });
 
