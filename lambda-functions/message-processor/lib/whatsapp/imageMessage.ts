@@ -23,7 +23,7 @@ export const processImageMessage = async (
   user: IUser,
   conversation: IConversation
 ) => {
-  Logger("processImageMessage").debug("");
+  Logger("processImageMessage").info("");
   const { imageId } = new WhatsappData(payload);
 
   try {
@@ -107,7 +107,7 @@ const cleanupLocalFile = (filePath: string) => {
         error
       );
     } else {
-      Logger("cleanupLocalFile").debug(
+      Logger("cleanupLocalFile").info(
         `Successfully deleted local file: ${filePath}`
       );
     }

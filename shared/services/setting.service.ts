@@ -4,7 +4,7 @@ import Setting, { ISettingCreate } from "../models/setting.model";
 const Logger = logger("shared/setting.service");
 
 export const getSettings = async () => {
-  Logger("getSettings").debug("");
+  Logger("getSettings").info("");
   try {
     return await Setting.find();
   } catch (error) {
@@ -14,7 +14,7 @@ export const getSettings = async () => {
 };
 
 export const getSettingByKey = async (key: string) => {
-  Logger("getSettingByKey").debug("");
+  Logger("getSettingByKey").info(key);
   try {
     return await Setting.findOne({ key });
   } catch (error) {
@@ -24,7 +24,7 @@ export const getSettingByKey = async (key: string) => {
 };
 
 export const createSetting = async ({ key, value }: ISettingCreate) => {
-  Logger("createSetting").debug("");
+  Logger("createSetting").info("");
   try {
     return await Setting.create({ key, value });
   } catch (error) {
@@ -34,7 +34,7 @@ export const createSetting = async ({ key, value }: ISettingCreate) => {
 };
 
 export const updateSetting = async ({ key, value }: ISettingCreate) => {
-  Logger("updateSetting").debug("");
+  Logger("updateSetting").info("");
   try {
     await Setting.findOneAndUpdate({ key }, { value }).exec();
   } catch (error) {
@@ -44,7 +44,7 @@ export const updateSetting = async ({ key, value }: ISettingCreate) => {
 };
 
 export const deleteSetting = async (key: string) => {
-  Logger("deleteSetting").debug("");
+  Logger("deleteSetting").info("");
   try {
     await Setting.findOneAndDelete({ key }).exec();
   } catch (error) {

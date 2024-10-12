@@ -12,7 +12,7 @@ export const processUnknownMessage = async (
   user: IUser,
   conversation: IConversation
 ) => {
-  Logger("processUnknownMessage").debug(payload);
+  Logger("processUnknownMessage").info(payload);
   await messageService.sendTextMessage({
     user: user.id,
     conversation: conversation.id,

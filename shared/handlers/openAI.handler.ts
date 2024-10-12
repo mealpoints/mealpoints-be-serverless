@@ -2,8 +2,8 @@
 import OpenAI from "openai";
 import { Run } from "openai/resources/beta/threads/runs/runs";
 import { Thread } from "openai/resources/beta/threads/threads";
-import { OPEN_AI } from "../config/config";
 import logger from "../config/logger";
+import SettingsSingleton from "../config/settings";
 import { IConversation } from "../models/conversation.model";
 import { OpenAIMessageTypesEnum } from "../types/enums";
 import { isValidUrl } from "../utils/url";
@@ -224,8 +224,13 @@ export class OpenAIHandler {
 
   // @ts-expect-error - We are not going to return anything from the catch block.
   async ask(): Promise<string> {
-    const maxRunsOnAThread: number = OPEN_AI.max_runs_on_a_thread;
-    const maxRetries = OPEN_AI.max_retries;
+    // Get Settings
+    const settings = await SettingsSingleton.getInstance();
+    const maxRunsOnAThread: number = settings.get(
+      "open-ai.max-runs-on-a-thread"
+    ) as number;
+    const maxRetries = settings.get("open-ai.max-retries") as number;
+
     let threadRun: number = 0;
     let retryCount: number = 0;
     await this.initAsk();

@@ -19,7 +19,7 @@ interface ICreateReportRequest extends Request {
 
 export const createReport = catchAsync(
   async (request: ICreateReportRequest, response: Response) => {
-    Logger("createReport").debug("");
+    Logger("createReport").info("");
     const { period } = request.query;
     const { userId } = request.params;
 

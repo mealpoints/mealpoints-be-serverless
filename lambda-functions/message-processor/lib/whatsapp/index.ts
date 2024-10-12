@@ -6,7 +6,7 @@ import { processStatusUpdateWebhook } from "./statusUpdates";
 const Logger = logger("lib/whatsapp/processWhatsappWebhook");
 
 export const processWhatsappWebhook = async (payload: WebhookObject) => {
-  Logger("processWhatsappWebhook").debug("");
+  Logger("processWhatsappWebhook").info("");
   const whatsappData = new WhatsappData(payload);
 
   try {

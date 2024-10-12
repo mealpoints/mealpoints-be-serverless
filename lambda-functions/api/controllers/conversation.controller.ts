@@ -6,7 +6,7 @@ const Logger = logger("conversation.controller");
 
 export const getConversation = async (request: Request, response: Response) => {
   const { id } = request.params;
-  Logger("getConversation").debug("");
+  Logger("getConversation").info("");
 
   const conversation = await conversationService.getConversation(id);
   if (!conversation) {
@@ -21,7 +21,7 @@ export const getConversationMessages = async (
   response: Response
 ) => {
   const { id } = request.params;
-  Logger("getConversationMessages").debug("");
+  Logger("getConversationMessages").info("");
 
   const conversationMessages =
     await conversationService.getConversationMessages(id);

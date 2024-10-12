@@ -19,7 +19,7 @@ export const processTextMessage = async (
   user: IUser,
   conversation: IConversation
 ) => {
-  Logger("processTextMessage").debug("");
+  Logger("processTextMessage").info("");
   const { userMessage } = new WhatsappData(payload);
 
   try {

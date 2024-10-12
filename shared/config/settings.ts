@@ -4,17 +4,25 @@ import logger from "./logger";
 
 const Logger = logger("SettingsSingleton");
 
-const NODE_ENV = process.env.NODE_ENV;
-
 class SettingsSingleton {
   private static instance: SettingsSingleton;
-  private settings: Map<string, SettingValue> = new Map();
+  private settings: Map<SettingKey, SettingValue> = new Map();
+  private lastLoadTime: number = 0;
+  private readonly settingsExpiryTime: number = 2 * 60 * 1000; // 2 minutes
 
   private constructor() {}
 
+  private isCacheExpired(): boolean {
+    return Date.now() - this.lastLoadTime > this.settingsExpiryTime;
+  }
+
   public static async getInstance(): Promise<SettingsSingleton> {
     if (!SettingsSingleton.instance) {
+      Logger("getInstance").info("Creating new instance of SettingsSingleton");
       SettingsSingleton.instance = new SettingsSingleton();
+      await SettingsSingleton.instance.loadSettings();
+    } else if (SettingsSingleton.instance.isCacheExpired()) {
+      Logger("getInstance").info("Settings cache expired, reloading settings");
       await SettingsSingleton.instance.loadSettings();
     }
     return SettingsSingleton.instance;
@@ -22,28 +30,19 @@ class SettingsSingleton {
 
   private async loadSettings(): Promise<void> {
     try {
-      Logger("loadSettings").debug("Loading settings");
+      Logger("loadSettings").info("Loading settings");
       const settingsDocuments = await settingService.getSettings();
       settingsDocuments.forEach((document) => {
         this.settings.set(document.key, document.value);
       });
+      this.lastLoadTime = Date.now();
     } catch (error) {
       Logger("loadSettings").error(error);
     }
   }
 
-  private async getSetting(key: SettingKey): Promise<SettingValue> {
-    const setting = await settingService.getSettingByKey(key);
-    if (!setting) {
-      throw new Error(`Setting with key ${key} not found`);
-    }
-    return setting.value;
-  }
-
-  public async get(key: SettingKey): Promise<SettingValue | undefined> {
-    return NODE_ENV === "development"
-      ? await this.getSetting(key)
-      : this.settings.get(key);
+  public get(key: SettingKey) {
+    return this.settings.get(key);
   }
 }
 

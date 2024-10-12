@@ -9,7 +9,7 @@ export const createUserMeal = async (
   userMeal: IUserMealCreate
 ): Promise<IUserMeal> => {
   try {
-    Logger("createUserMeal").debug("");
+    Logger("createUserMeal").info("");
     const newUserMeal = await UserMeal.create(userMeal);
     return newUserMeal;
   } catch (error) {
@@ -23,7 +23,7 @@ export const getUserMealsByUserId = async (
   options: PaginateOptions
 ): Promise<PaginateResult<IUserMeal>> => {
   try {
-    Logger("getUserMealsByUserId").debug("");
+    Logger("getUserMealsByUserId").info("");
     const userMeals = await UserMeal.paginate({ user: userId }, options);
     return userMeals;
   } catch (error) {
@@ -51,7 +51,7 @@ export const getPeriodicUserMealsByUserId = async (
   };
 
   try {
-    Logger("getPeriodicUserMealsByUserId").debug("");
+    Logger("getPeriodicUserMealsByUserId").info("");
     const userMeals = await UserMeal.find({
       user: userId,
       createdAt: { $gte: subtractionPeriod() },
@@ -67,7 +67,7 @@ export const getUserMealById = async (
   id: string
 ): Promise<IUserMeal | null> => {
   try {
-    Logger("getUserMealById").debug("");
+    Logger("getUserMealById").info("");
     const userMeal = await UserMeal.findById(id);
 
     return userMeal;
