@@ -29,7 +29,7 @@ export enum MessageTypesEnum {
   Video = "video", // for video messages
 }
 
-export enum userEngagementAlertTypesEnum {
+export enum userEngagementMessageTypesEnum {
   Summary = "summary",
   Reminder = "reminder",
 }

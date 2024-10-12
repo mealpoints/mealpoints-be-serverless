@@ -1,14 +1,15 @@
 import { USER_ENGAGEMENT_ALERT } from '../../../shared/config/config';
 import logger from '../../../shared/config/logger';
-import UserEngagementAlert from '../../../shared/models/userEngagementAlert.model';
+import UserEngagementMessage from '../../../shared/models/userEngagementMessage.model';
 import UserMeal from '../../../shared/models/userMeal.model';
-import { userEngagementAlertTypesEnum } from '../../../shared/types/enums';
+import { userEngagementMessageTypesEnum } from '../../../shared/types/enums';
 import User, { IUser } from './../../../shared/models/user.model';
 const Logger = logger('lib/categorizeUsers');
 
 export const categorizeUsers = async (usersWithoutEngagementAlerts: IUser[], dateMinusEngagementInterval: Date) => {
     Logger("categorizeUsers").debug("Categorizing users");
 
+    // TODO: a single aggregation function to return both usersToSendSummary and usersToSendReminders
     const usersToSendSummary = await getUsersToSendSummary(usersWithoutEngagementAlerts, dateMinusEngagementInterval);
     const usersToSendReminders = await getUsersToSendReminders(usersWithoutEngagementAlerts, dateMinusEngagementInterval);
 
@@ -65,7 +66,7 @@ async function getUsersToSendReminders(usersWithoutEngagementAlerts: IUser[], da
         },
         {
             $lookup: {
-                from: UserEngagementAlert.collection.name,
+                from: UserEngagementMessage.collection.name,
                 localField: "_id",
                 foreignField: "user",
                 as: "alerts"
@@ -79,7 +80,7 @@ async function getUsersToSendReminders(usersWithoutEngagementAlerts: IUser[], da
                         as: "alert",
                         cond: {
                             $and: [
-                                { $eq: ["$$alert.type", userEngagementAlertTypesEnum.Reminder] },
+                                { $eq: ["$$alert.type", userEngagementMessageTypesEnum.Reminder] },
                                 { $gte: ["$$alert.createdAt", "$lastMealDate"] }
                             ]
                         }

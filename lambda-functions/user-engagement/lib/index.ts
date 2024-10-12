@@ -1,6 +1,6 @@
 import { USER_ENGAGEMENT_ALERT } from "../../../shared/config/config";
 import logger from "../../../shared/config/logger";
-import { getUsersWithoutEngagementAlertsInPeriod } from "../../../shared/services/user.service";
+import { getUsersWithoutEngagementMessagesInPeriod } from "../../../shared/services/userEngagement.service";
 import { DateUtils } from "../../../shared/utils/DateUtils";
 import { categorizeUsers } from "./categorizeUsers";
 const Logger = logger("lib/processUserEngagement");
@@ -12,8 +12,12 @@ export const processUserEngagement = async () => {
     const currentDate = new Date();
 
     try {
-
-        const usersWithoutEngagementAlerts = await getUsersWithoutEngagementAlertsInPeriod(dateMinusInterval, currentDate);
+        /**
+         * 1. Get users who have not received any engagement messages in last X days
+         * 2. Categorize users whom to send summary and whom to reminders
+         */
+        const usersWithoutEngagementAlerts = await getUsersWithoutEngagementMessagesInPeriod(dateMinusInterval, currentDate);
+        Logger("processUserEngagement").info(`Users without engagement alerts: ${usersWithoutEngagementAlerts.length}`);
         const { usersToSendSummary, usersToSendReminders } = await categorizeUsers(usersWithoutEngagementAlerts, dateMinusInterval);
 
         Logger("processUserEngagement").info(`Users to send summary: ${usersToSendSummary.length}`);

@@ -1,6 +1,5 @@
 import logger from "../config/logger";
 import User, { IUser, IUserCreate } from "../models/user.model";
-import UserEngagementAlert from "../models/userEngagementAlert.model";
 const Logger = logger("user.service");
 
 export const createUser = async (userData: IUserCreate): Promise<IUser> => {
@@ -60,24 +59,3 @@ export const deleteUser = async (id: string): Promise<IUser | null> => {
   return user;
 };
 
-export const getUsersWithoutEngagementAlertsInPeriod = async (
-  startDate: Date,
-  endDate: Date
-): Promise<IUser[]> => {
-  Logger("getUsersWithoutEngagementAlertsInPeriod").debug("");
-
-  const engagedUsers = await UserEngagementAlert.distinct('user', {
-    createdAt: {
-      $gte: startDate,
-      $lte: endDate,
-    },
-  });
-
-  const usersWithoutEngagement = await User.find({
-    _id: {
-      $nin: engagedUsers
-    }
-  });
-
-  return usersWithoutEngagement;
-};
