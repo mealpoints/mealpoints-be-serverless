@@ -1,5 +1,5 @@
 import { WebhookTypesEnum } from "../types/enums";
-import { WebhookObject } from "../types/message";
+import { WhastappWebhookObject } from "../types/message";
 
 export type WebhookMessageType = "inboundMessage" | "statusUpdate" | undefined;
 
@@ -7,7 +7,7 @@ export class WhatsappData {
   private _webhookMessageType: WebhookMessageType;
   private _webhookType: WebhookTypesEnum;
 
-  constructor(private data: WebhookObject) {
+  constructor(private data: WhastappWebhookObject) {
     this._webhookMessageType = this.getWebhookMessageType();
     this._webhookType = this.categoriseInboundMessageWebhook();
   }

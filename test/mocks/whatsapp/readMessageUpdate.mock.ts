@@ -1,7 +1,7 @@
 import { StatusEnum } from "../../../shared/types/enums";
-import { WebhookObject } from "../../../shared/types/message";
+import { WhastappWebhookObject } from "../../../shared/types/message";
 
-export const READ_MESSAGE_UPDATE: WebhookObject = {
+export const READ_MESSAGE_UPDATE: WhastappWebhookObject = {
   object: "whatsapp_business_account",
   entry: [
     {

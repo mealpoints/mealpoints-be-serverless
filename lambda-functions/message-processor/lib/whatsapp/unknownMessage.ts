@@ -4,11 +4,11 @@ import { IConversation } from "../../../../shared/models/conversation.model";
 import { IUser } from "../../../../shared/models/user.model";
 import * as messageService from "../../../../shared/services/message.service";
 import { MessageTypesEnum } from "../../../../shared/types/enums";
-import { WebhookObject } from "../../../../shared/types/message";
+import { WhastappWebhookObject } from "../../../../shared/types/message";
 const Logger = logger("lib/whatsapp/unknownMessage");
 
 export const processUnknownMessage = async (
-  payload: WebhookObject,
+  payload: WhastappWebhookObject,
   user: IUser,
   conversation: IConversation
 ) => {

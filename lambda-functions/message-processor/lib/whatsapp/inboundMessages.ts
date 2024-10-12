@@ -3,7 +3,7 @@ import * as conversationService from "../../../../shared/services/conversation.s
 import * as messageService from "../../../../shared/services/message.service";
 import * as userService from "../../../../shared/services/user.service";
 import { WebhookTypesEnum } from "../../../../shared/types/enums";
-import { WebhookObject } from "../../../../shared/types/message";
+import { WhastappWebhookObject } from "../../../../shared/types/message";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { isUserRateLimited } from "../rate-limiter";
 import { processImageMessage } from "./imageMessage";
@@ -12,7 +12,9 @@ import { processUnknownMessage } from "./unknownMessage";
 
 const Logger = logger("lib/whatsapp/inboundMessages");
 
-export const processInboundMessageWebhook = async (payload: WebhookObject) => {
+export const processInboundMessageWebhook = async (
+  payload: WhastappWebhookObject
+) => {
   try {
     const { webhookType, contact, whatsappMessageId } = new WhatsappData(
       payload
