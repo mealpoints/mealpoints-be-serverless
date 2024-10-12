@@ -36,6 +36,7 @@ export const ask = async (
 
     const result = await openAIHandler.ask();
     const parsedResult = JSON.parse(result);
+    Logger("ask").info(result);
 
     if (openAIHandler.newThreadCreated) {
       await conversationService.updateConversation(
