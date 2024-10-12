@@ -13,14 +13,14 @@ interface IAskOptions {
 }
 
 export const ask = async (
-  data: string,
+  prompt: string,
   user: IUser,
   conversation: IConversation,
   options: IAskOptions
 ): Promise<OpenAIResponse> => {
   try {
     const openAIHandler = new OpenAIHandler(
-      data,
+      prompt,
       conversation,
       options.messageType,
       options.assistantId
