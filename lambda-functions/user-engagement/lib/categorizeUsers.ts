@@ -3,15 +3,18 @@ import logger from '../../../shared/config/logger';
 import UserEngagementMessage from '../../../shared/models/userEngagementMessage.model';
 import UserMeal from '../../../shared/models/userMeal.model';
 import { userEngagementMessageTypesEnum } from '../../../shared/types/enums';
+import { objectifyId } from '../../../shared/utils/mongoose';
 import User, { IUser } from './../../../shared/models/user.model';
 const Logger = logger('lib/categorizeUsers');
 
-export const categorizeUsers = async (usersWithoutEngagementAlerts: IUser[], dateMinusEngagementInterval: Date) => {
+export const categorizeUsers = async (usersWithoutEngagementMessage: IUser[], reminderThresholdDate: Date) => {
     Logger("categorizeUsers").debug("Categorizing users");
 
     // TODO: a single aggregation function to return both usersToSendSummary and usersToSendReminders
-    const usersToSendSummary = await getUsersToSendSummary(usersWithoutEngagementAlerts, dateMinusEngagementInterval);
-    const usersToSendReminders = await getUsersToSendReminders(usersWithoutEngagementAlerts, dateMinusEngagementInterval);
+    const [usersToSendSummary, usersToSendReminders] = await Promise.all([
+        getUsersToSendSummary(usersWithoutEngagementMessage, reminderThresholdDate),
+        getUsersToSendReminders(usersWithoutEngagementMessage, reminderThresholdDate)
+    ]);
 
     return {
         usersToSendSummary,
@@ -19,14 +22,21 @@ export const categorizeUsers = async (usersWithoutEngagementAlerts: IUser[], dat
     };
 }
 
-async function getUsersToSendSummary(usersWithoutEngagementAlerts: IUser[], dateMinusEngagementInterval: Date) {
+async function getUsersToSendSummary(usersWithoutEngagementMessage: IUser[], reminderThresholdDate: Date) {
     Logger("getUsersToSendSummary").debug("Getting users to send summary");
 
+    /**
+     * 1. match users with their meals in past X days
+     * 2. group user meals into single array
+     * 3. extract user metaData from user Schema 
+     */
+
+    const userIds = usersWithoutEngagementMessage.map((user: IUser) => objectifyId(user.id));
     const usersToSendSummary = await UserMeal.aggregate([
         {
             $match: {
-                user: { $in: usersWithoutEngagementAlerts.map(user => user.id) },
-                createdAt: { $gte: dateMinusEngagementInterval }
+                user: { $in: userIds },
+                createdAt: { $gte: reminderThresholdDate }
             }
         },
         {
@@ -46,22 +56,25 @@ async function getUsersToSendSummary(usersWithoutEngagementAlerts: IUser[], date
         { $unwind: "$user" }
     ]);
 
+    Logger("getUsersToSendSummary").info(`Found ${usersToSendSummary.length} Users to send summary`);
+
     return usersToSendSummary;
 }
 
-async function getUsersToSendReminders(usersWithoutEngagementAlerts: IUser[], dateMinusEngagementInterval: Date) {
+async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], reminderThresholdDate: Date) {
     Logger("getUsersToSendReminders").debug("Getting users to send reminders");
 
-    const usersToSendReminders = await UserMeal.aggregate([
+    /**
+     * 1. match users and extract their meals & reminders
+     * 2. check whether user haveMeal, lastMealDate, remindersCount
+     * 3. final check based on either (zero mealCount or lastMealDate < reminderThresholdDate) and sentReminderCount < max_reminders
+     */
+
+    const userIds = usersWithoutEngagementMessage.map((user: IUser) => objectifyId(user.id));
+    const usersToSendReminders = await User.aggregate([
         {
             $match: {
-                user: { $in: usersWithoutEngagementAlerts.map(user => user.id) }
-            }
-        },
-        {
-            $group: {
-                _id: "$user",
-                lastMealDate: { $max: "$createdAt" }
+                _id: { $in: userIds }
             }
         },
         {
@@ -73,47 +86,54 @@ async function getUsersToSendReminders(usersWithoutEngagementAlerts: IUser[], da
             }
         },
         {
+            $lookup: {
+                from: UserMeal.collection.name,
+                localField: "_id",
+                foreignField: "user",
+                as: "meals"
+            }
+        },
+        {
             $addFields: {
-                remindersAfterLastMeal: {
-                    $filter: {
-                        input: "$alerts",
-                        as: "alert",
-                        cond: {
-                            $and: [
-                                { $eq: ["$$alert.type", userEngagementMessageTypesEnum.Reminder] },
-                                { $gte: ["$$alert.createdAt", "$lastMealDate"] }
-                            ]
+                haveMeals: { $gt: [{ $size: "$meals" }, 0] },
+                lastMealDate: { $max: "$meals.createdAt" },
+                remindersCount: {
+                    $size: {
+                        $filter: {
+                            input: "$alerts",
+                            as: "alert",
+                            cond: {
+                                $and: [
+                                    { $eq: ["$$alert.type", userEngagementMessageTypesEnum.Reminder] },
+                                    {
+                                        $or: [
+                                            { $eq: ["$lastMealDate", undefined] },
+                                            { $gte: ["$$alert.createdAt", "$lastMealDate"] }
+                                        ]
+                                    }
+                                ]
+                            }
                         }
                     }
                 }
             }
         },
         {
-            $addFields: {
-                remindersCount: { $size: "$remindersAfterLastMeal" }
-            }
-        },
-        {
             $match: {
-                lastMealDate: { $lt: dateMinusEngagementInterval },
-                remindersCount: { $lt: USER_ENGAGEMENT_ALERT.max_reminders }
-            }
-        },
-        {
-            $lookup: {
-                from: User.collection.name,
-                localField: "_id",
-                foreignField: "_id",
-                as: "user"
-            }
-        },
-        { $unwind: "$user" },
-        {
-            $project: {
-                user: 1 // Only projecting user info, as meals aren't needed for reminder
+                $and: [
+                    {
+                        $or: [
+                            { haveMeals: false },
+                            { lastMealDate: { $lt: reminderThresholdDate } }
+                        ]
+                    },
+                    { remindersCount: { $lt: USER_ENGAGEMENT_ALERT.max_reminders } }
+                ]
             }
         }
     ]);
+
+    Logger("getUsersToSendReminders").info(`Found ${usersToSendReminders.length} Users to send reminders`);
 
     return usersToSendReminders.map(u => u.user);
 }

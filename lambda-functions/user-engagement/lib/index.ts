@@ -8,7 +8,7 @@ const Logger = logger("lib/processUserEngagement");
 export const processUserEngagement = async () => {
 
     Logger("processUserEngagement").info("Starting user engagement process");
-    const dateMinusInterval = new DateUtils().subtractDays(USER_ENGAGEMENT_ALERT.interval_in_days).toDate();
+    const reminderThresholdDate = new DateUtils().subtractDays(USER_ENGAGEMENT_ALERT.interval_in_days).toDate();
     const currentDate = new Date();
 
     try {
@@ -16,10 +16,11 @@ export const processUserEngagement = async () => {
          * 1. Get users who have not received any engagement messages in last X days
          * 2. Categorize users whom to send summary and whom to reminders
          */
-        const usersWithoutEngagementAlerts = await getUsersWithoutEngagementMessagesInPeriod(dateMinusInterval, currentDate);
+        const usersWithoutEngagementAlerts = await getUsersWithoutEngagementMessagesInPeriod(reminderThresholdDate, currentDate);
         Logger("processUserEngagement").info(`Users without engagement alerts: ${usersWithoutEngagementAlerts.length}`);
-        const { usersToSendSummary, usersToSendReminders } = await categorizeUsers(usersWithoutEngagementAlerts, dateMinusInterval);
+        const { usersToSendSummary, usersToSendReminders } = await categorizeUsers(usersWithoutEngagementAlerts, reminderThresholdDate);
 
+        // temp logs to avoid eslint warnings
         Logger("processUserEngagement").info(`Users to send summary: ${usersToSendSummary.length}`);
         Logger("processUserEngagement").info(`Users to send reminders: ${usersToSendReminders.length}`);
 
@@ -28,6 +29,5 @@ export const processUserEngagement = async () => {
         Logger("processUserEngagement").info("Finished user engagement process");
     } catch (error) {
         Logger("processUserEngagement").error("Error processing user engagement", error);
-        throw error;
     }
 }
