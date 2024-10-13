@@ -62,7 +62,7 @@ async function getUsersToSendSummary(usersWithoutEngagementMessage: IUser[], rem
         },
         { $unwind: "$user" }
     ]);
-
+    // Logger("getUsersToSendSummary").info(`${JSON.stringify(usersToSendSummary)}`);
     Logger("getUsersToSendSummary").info(`Found ${usersToSendSummary.length} Users to send summary`);
 
     return usersToSendSummary as IUserWithMeals[];
@@ -137,9 +137,22 @@ async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], r
                     { remindersCount: { $lt: USER_ENGAGEMENT_ALERT.max_reminders } }
                 ]
             }
+        },
+        // Adding user data in a 'user' field for consistency as usersToSendSummary
+        {
+            $addFields: {
+                user: "$$ROOT"
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                user: 1
+            }
         }
     ]);
 
+    // Logger("getUsersToSendReminders").info(`${JSON.stringify(usersToSendReminders)}`);
     Logger("getUsersToSendReminders").info(`Found ${usersToSendReminders.length} Users to send reminders`);
 
     return usersToSendReminders as IUser[];

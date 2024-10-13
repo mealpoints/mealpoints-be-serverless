@@ -21,7 +21,7 @@ export const enqueueUsersToSendEngagement = async (
 
             await queueService.enqueueMessage({
                 queueUrl: process.env.AWS_SQS_URL as string,
-                messageBody: JSON.stringify(user),
+                messageBody: JSON.stringify({body: user}),
                 messageGroupId,
                 messageDeduplicationId: uuidv4(),
             });
