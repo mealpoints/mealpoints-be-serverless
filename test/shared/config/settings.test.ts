@@ -11,9 +11,9 @@ describe("Settings", () => {
 
   it("should return the value of the setting", async () => {
     const settings = await SettingsSingleton.getInstance();
-    const setting = settings.get("openai_assistant_id");
+    const setting = settings.get("openai.assistant.mealpoints-core");
     const assistantIdInDatabase = dataServiceSettings.get(
-      "openai_assistant_id"
+      "openai.assistant.mealpoints-core"
     );
     expect(setting).toBe(assistantIdInDatabase);
   });

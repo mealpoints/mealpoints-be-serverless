@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import { USER_MESSAGES } from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
+import SettingsSingleton from "../../../../shared/config/settings";
 import * as awsHandler from "../../../../shared/handlers/aws.handler";
 import * as whatsappHandler from "../../../../shared/handlers/whatsapp.handler";
 import { IConversation } from "../../../../shared/models/conversation.model";
@@ -26,6 +27,11 @@ export const processImageMessage = async (
   Logger("processImageMessage").info("");
   const { imageId } = new WhatsappData(payload);
 
+  const settings = await SettingsSingleton.getInstance();
+  const assistantId = settings.get(
+    "openai.assistant.mealpoints-core"
+  ) as string;
+
   try {
     const imageFilePath = await fetchImage(imageId as string);
     const s3Path = await uploadImageToS3(
@@ -39,7 +45,7 @@ export const processImageMessage = async (
         s3Path,
         user,
         conversation,
-        { messageType: OpenAIMessageTypesEnum.Image }
+        { messageType: OpenAIMessageTypesEnum.Image, assistantId }
       );
       cleanupLocalFile(imageFilePath);
       await updateReceivedMessage(payload, s3Path);

@@ -1,5 +1,6 @@
 import { USER_MESSAGES } from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
+import SettingsSingleton from "../../../../shared/config/settings";
 import { IConversation } from "../../../../shared/models/conversation.model";
 import { IUser } from "../../../../shared/models/user.model";
 import * as messageService from "../../../../shared/services/message.service";
@@ -21,6 +22,10 @@ export const processTextMessage = async (
 ) => {
   Logger("processTextMessage").info("");
   const { userMessage } = new WhatsappData(payload);
+  const settings = await SettingsSingleton.getInstance();
+  const assistantId = settings.get(
+    "openai.assistant.mealpoints-core"
+  ) as string;
 
   try {
     try {
@@ -30,6 +35,7 @@ export const processTextMessage = async (
         conversation,
         {
           messageType: OpenAIMessageTypesEnum.Text,
+          assistantId,
         }
       );
 
