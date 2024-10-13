@@ -3,6 +3,7 @@ import logger from "../../../shared/config/logger";
 import { getUsersWithoutEngagementMessagesInPeriod } from "../../../shared/services/userEngagement.service";
 import { IUserWithMeals } from "../../../shared/types/queueMessages";
 import { DateUtils } from "../../../shared/utils/DateUtils";
+import { enqueueUsersToSendEngagement } from "../services/enqueue.service";
 import { IUser } from './../../../shared/models/user.model';
 import { categorizeUsers } from "./categorizeUsers";
 const Logger = logger("lib/processUserEngagement");
@@ -18,15 +19,12 @@ export const processUserEngagement = async () => {
          * 1. Get users who have not received any engagement messages in last X days
          * 2. Categorize users whom to send summary and whom to reminders
          */
-        const usersWithoutEngagementAlerts = await getUsersWithoutEngagementMessagesInPeriod(reminderThresholdDate, currentDate);
-        Logger("processUserEngagement").info(`Users without engagement alerts: ${usersWithoutEngagementAlerts.length}`);
-        const { usersToSendSummary, usersToSendReminders }: { usersToSendSummary: IUserWithMeals[], usersToSendReminders: IUser[] } = await categorizeUsers(usersWithoutEngagementAlerts, reminderThresholdDate);
+        const usersWithoutEngagementMessage = await getUsersWithoutEngagementMessagesInPeriod(reminderThresholdDate, currentDate);
+        const usersToEngage: (IUserWithMeals | IUser)[] = await categorizeUsers(usersWithoutEngagementMessage, reminderThresholdDate);
 
-        // temp logs to avoid eslint warnings
-        Logger("processUserEngagement").info(`Users to send summary: ${usersToSendSummary.length}`);
-        Logger("processUserEngagement").info(`Users to send reminders: ${usersToSendReminders.length}`);
+        // Logger("processUserEngagement").info(`===== >> ${JSON.stringify(usersToEngage)}`);
 
-        // TODO: Push to SQS to process OpenService.ask() per user
+        await enqueueUsersToSendEngagement(usersToEngage);
 
         Logger("processUserEngagement").info("Finished user engagement process");
     } catch (error) {

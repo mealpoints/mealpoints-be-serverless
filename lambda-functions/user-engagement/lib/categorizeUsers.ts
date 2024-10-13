@@ -11,16 +11,22 @@ const Logger = logger('lib/categorizeUsers');
 export const categorizeUsers = async (usersWithoutEngagementMessage: IUser[], reminderThresholdDate: Date) => {
     Logger("categorizeUsers").debug("Categorizing users");
 
-    // TODO: a single aggregation function to return both usersToSendSummary and usersToSendReminders
+    const usersToEngage: (IUserWithMeals | IUser)[] = [];
+
+    // kept separate for less complexity and easy to debug
     const [usersToSendSummary, usersToSendReminders] = await Promise.all([
         getUsersToSendSummary(usersWithoutEngagementMessage, reminderThresholdDate),
         getUsersToSendReminders(usersWithoutEngagementMessage, reminderThresholdDate)
     ]);
 
-    return {
-        usersToSendSummary,
-        usersToSendReminders,
-    };
+    // merging both arrays to avoid further redundancy in while enqueueing
+    usersToSendSummary.forEach(userToSendSummary => {
+        usersToEngage.push({ user: userToSendSummary.user, meals: userToSendSummary.meals });
+    });
+
+    usersToEngage.push(...usersToSendReminders);
+
+    return usersToEngage;
 }
 
 async function getUsersToSendSummary(usersWithoutEngagementMessage: IUser[], reminderThresholdDate: Date): Promise<IUserWithMeals[]> {
@@ -56,7 +62,7 @@ async function getUsersToSendSummary(usersWithoutEngagementMessage: IUser[], rem
         },
         { $unwind: "$user" }
     ]);
-    Logger("getUsersToSendSummary").debug(`Users to send summary: ${JSON.stringify(usersToSendSummary, undefined, 2)}`);
+
     Logger("getUsersToSendSummary").info(`Found ${usersToSendSummary.length} Users to send summary`);
 
     return usersToSendSummary as IUserWithMeals[];
@@ -134,7 +140,6 @@ async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], r
         }
     ]);
 
-    Logger("getUsersToSendReminders").debug(`Users to send reminders: ${JSON.stringify(usersToSendReminders, undefined, 2)}`);
     Logger("getUsersToSendReminders").info(`Found ${usersToSendReminders.length} Users to send reminders`);
 
     return usersToSendReminders as IUser[];

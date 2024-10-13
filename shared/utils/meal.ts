@@ -1,4 +1,6 @@
 import { OpenAIResponse } from "../types/openai";
+import { IUser } from "../models/user.model";
+import { IUserWithMeals } from "../types/queueMessages";
 
 export const isMeal = (meal: OpenAIResponse): boolean => {
   if (meal === null || meal === undefined) return false;
@@ -8,4 +10,8 @@ export const isMeal = (meal: OpenAIResponse): boolean => {
     return true;
   }
   return false;
+};
+
+export const hasMeals = (user: IUser | IUserWithMeals): boolean => {
+  return Array.isArray((user as IUserWithMeals).meals) && (user as IUserWithMeals).meals.length > 0;
 };
