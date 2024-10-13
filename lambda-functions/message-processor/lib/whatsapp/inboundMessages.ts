@@ -1,5 +1,4 @@
 import logger from "../../../../shared/config/logger";
-import * as conversationService from "../../../../shared/services/conversation.service";
 import * as messageService from "../../../../shared/services/message.service";
 import * as userService from "../../../../shared/services/user.service";
 import { WebhookTypesEnum } from "../../../../shared/types/enums";
@@ -25,9 +24,6 @@ export const processInboundMessageWebhook = async (
     // Ensure user exists
     const user = await userService.ensureUserByContact(contact as string);
 
-    // Ensure conversation exists
-    const conversation = await conversationService.ensureConversation(user.id);
-
     const existingMessage = await messageService.findRecievedMessage({
       whatsappMessageId,
     });
@@ -41,28 +37,27 @@ export const processInboundMessageWebhook = async (
     }
 
     // Ensure user had not exceeded the limit of messages per day
-    if (await isUserRateLimited(user, conversation)) return;
+    if (await isUserRateLimited(user)) return;
 
     // Create message
     await messageService.createRecievedMessage({
       user: user.id,
       payload,
       type: webhookType,
-      conversation: conversation.id,
       wamid: whatsappMessageId as string,
     });
 
     switch (webhookType) {
       case WebhookTypesEnum.Text: {
-        return processTextMessage(payload, user, conversation);
+        return processTextMessage(payload, user);
       }
 
       case WebhookTypesEnum.Image: {
-        return processImageMessage(payload, user, conversation);
+        return processImageMessage(payload, user);
       }
 
       default: {
-        return processUnknownMessage(payload, user, conversation);
+        return processUnknownMessage(payload, user);
       }
     }
   } catch (error) {

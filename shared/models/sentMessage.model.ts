@@ -7,7 +7,6 @@ export interface ISentMessage extends Document {
   user: string;
   payload?: string;
   interactive?: InteractiveMessageBodyOptions;
-  conversation: string;
   type: MessageTypesEnum;
   status: StatusEnum;
   wamid?: string;
@@ -19,7 +18,6 @@ export interface ISentMessageCreate {
   user: string;
   payload?: string;
   interactive?: InteractiveMessageBodyOptions;
-  conversation: string;
   type: MessageTypesEnum;
   wamid?: string;
   media?: string;
@@ -29,11 +27,6 @@ export interface ISentMessageCreate {
 const SentMessageSchema: Schema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
   payload: { type: String },
-  conversation: {
-    type: Schema.Types.ObjectId,
-    ref: "Conversation",
-    required: true,
-  },
   interactve: { type: Schema.Types.Mixed },
   status: {
     type: String,
