@@ -1,10 +1,9 @@
 import logger from "../config/logger";
 import { OpenAIHandler } from "../handlers/openAI.handler";
-import { IConversation } from "../models/conversation.model";
 import { IUser } from "../models/user.model";
+import * as openAIThreadService from "../services/openAIThread.service";
 import { OpenAIMessageTypesEnum } from "../types/enums";
 import { OpenAIResponse } from "../types/openai";
-import * as conversationService from "./conversation.service";
 const Logger = logger("services/openai.service");
 
 interface IAskOptions {
@@ -15,29 +14,30 @@ interface IAskOptions {
 export const ask = async (
   prompt: string,
   user: IUser,
-  conversation: IConversation,
   options: IAskOptions
 ): Promise<OpenAIResponse> => {
+  const openAIThread = await openAIThreadService.getLatestOpenAIThreadByUserId(
+    user.id
+  );
+
   try {
-    const openAIHandler = new OpenAIHandler(
+    const openAIHandler = new OpenAIHandler({
       prompt,
-      conversation,
-      options.messageType,
-      options.assistantId
-    );
+      openAIThread,
+      messageType: options.messageType,
+      assistantId: options.assistantId,
+    });
 
     const result = await openAIHandler.ask();
     const parsedResult = JSON.parse(result);
     Logger("ask").info(result);
 
     if (openAIHandler.newThreadCreated) {
-      await conversationService.updateConversation(
-        { user: user.id },
-        {
-          openaiThreadId: openAIHandler.threadId,
-          openaiAssistantId: openAIHandler.assistantId,
-        }
-      );
+      await openAIThreadService.createOpenAIThread({
+        user: user.id,
+        threadId: openAIHandler.threadId,
+        assistantId: options.assistantId,
+      });
     }
 
     return parsedResult;

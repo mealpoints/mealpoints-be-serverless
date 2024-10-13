@@ -16,8 +16,6 @@ describe("processImageMessage", () => {
   });
 
   test("should process image message", async () => {
-    const conversation = { id: "test-conversation-id" };
-
     (whatsappHandler.getImageSentViaMessage as jest.Mock).mockResolvedValue(
       "test-image-file-path"
     );
@@ -26,7 +24,7 @@ describe("processImageMessage", () => {
     (messageService.sendTextMessage as jest.Mock).mockResolvedValue({});
 
     // @ts-expect-error - we don't need to pass all the properties of the user object
-    await processImageMessage(IMAGE_MESSAGE_PAYLOAD, USER, conversation);
+    await processImageMessage(IMAGE_MESSAGE_PAYLOAD, USER);
 
     expect(whatsappHandler.getImageSentViaMessage).toHaveBeenCalledWith(
       "345150251694683"
@@ -44,7 +42,6 @@ describe("processImageMessage", () => {
     );
     expect(messageService.sendTextMessage).toHaveBeenCalledWith({
       user: USER.id,
-      conversation: "test-conversation-id",
       payload: `This is stuff about the image message.`,
       type: MessageTypesEnum.Text,
     });
@@ -52,7 +49,6 @@ describe("processImageMessage", () => {
 
   test("should throw error when processing fails", async () => {
     const user = { id: "test-user-id" };
-    const conversation = { id: "test-conversation-id" };
 
     (whatsappHandler.getImageSentViaMessage as jest.Mock).mockRejectedValue(
       new Error("Test error")
@@ -60,7 +56,7 @@ describe("processImageMessage", () => {
 
     await expect(
       // @ts-expect-error - We are intentionally passing an empty payload
-      processImageMessage(IMAGE_MESSAGE_PAYLOAD, user, conversation)
+      processImageMessage(IMAGE_MESSAGE_PAYLOAD, user)
     ).rejects.toThrow("Test error");
   });
 });

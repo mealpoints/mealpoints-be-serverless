@@ -8,11 +8,9 @@ describe("Message Service", () => {
   it("should send Interactive Message", async () => {
     const dataService = DataService.getInstance();
     const userId = dataService.getUser().id;
-    const conversationId = dataService.getConversation().id;
 
     const response = await messageService.sendInteractiveMessage({
       user: userId,
-      conversation: conversationId,
       type: MessageTypesEnum.Interactive,
       interactive: {
         header: "Your report is ready",
@@ -32,10 +30,8 @@ describe("Message Service", () => {
   it("should send Text Message", async () => {
     const dataService = DataService.getInstance();
     const userId = dataService.getUser().id;
-    const conversationId = dataService.getConversation().id;
     const response = await messageService.sendTextMessage({
       user: userId,
-      conversation: conversationId,
       type: MessageTypesEnum.Text,
       payload: "Hello, how can I help you?",
     });
