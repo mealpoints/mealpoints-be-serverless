@@ -1,7 +1,9 @@
 import { USER_ENGAGEMENT_ALERT } from "../../../shared/config/config";
 import logger from "../../../shared/config/logger";
 import { getUsersWithoutEngagementMessagesInPeriod } from "../../../shared/services/userEngagement.service";
+import { IUserWithMeals } from "../../../shared/types/queueMessages";
 import { DateUtils } from "../../../shared/utils/DateUtils";
+import { IUser } from './../../../shared/models/user.model';
 import { categorizeUsers } from "./categorizeUsers";
 const Logger = logger("lib/processUserEngagement");
 
@@ -18,7 +20,7 @@ export const processUserEngagement = async () => {
          */
         const usersWithoutEngagementAlerts = await getUsersWithoutEngagementMessagesInPeriod(reminderThresholdDate, currentDate);
         Logger("processUserEngagement").info(`Users without engagement alerts: ${usersWithoutEngagementAlerts.length}`);
-        const { usersToSendSummary, usersToSendReminders } = await categorizeUsers(usersWithoutEngagementAlerts, reminderThresholdDate);
+        const { usersToSendSummary, usersToSendReminders }: { usersToSendSummary: IUserWithMeals[], usersToSendReminders: IUser[] } = await categorizeUsers(usersWithoutEngagementAlerts, reminderThresholdDate);
 
         // temp logs to avoid eslint warnings
         Logger("processUserEngagement").info(`Users to send summary: ${usersToSendSummary.length}`);

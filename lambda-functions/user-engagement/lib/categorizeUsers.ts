@@ -3,6 +3,7 @@ import logger from '../../../shared/config/logger';
 import UserEngagementMessage from '../../../shared/models/userEngagementMessage.model';
 import UserMeal from '../../../shared/models/userMeal.model';
 import { userEngagementMessageTypesEnum } from '../../../shared/types/enums';
+import { IUserWithMeals } from '../../../shared/types/queueMessages';
 import { objectifyId } from '../../../shared/utils/mongoose';
 import User, { IUser } from './../../../shared/models/user.model';
 const Logger = logger('lib/categorizeUsers');
@@ -22,7 +23,7 @@ export const categorizeUsers = async (usersWithoutEngagementMessage: IUser[], re
     };
 }
 
-async function getUsersToSendSummary(usersWithoutEngagementMessage: IUser[], reminderThresholdDate: Date) {
+async function getUsersToSendSummary(usersWithoutEngagementMessage: IUser[], reminderThresholdDate: Date): Promise<IUserWithMeals[]> {
     Logger("getUsersToSendSummary").debug("Getting users to send summary");
 
     /**
@@ -55,13 +56,13 @@ async function getUsersToSendSummary(usersWithoutEngagementMessage: IUser[], rem
         },
         { $unwind: "$user" }
     ]);
-
+    Logger("getUsersToSendSummary").debug(`Users to send summary: ${JSON.stringify(usersToSendSummary, undefined, 2)}`);
     Logger("getUsersToSendSummary").info(`Found ${usersToSendSummary.length} Users to send summary`);
 
-    return usersToSendSummary;
+    return usersToSendSummary as IUserWithMeals[];
 }
 
-async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], reminderThresholdDate: Date) {
+async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], reminderThresholdDate: Date): Promise<IUser[]> {
     Logger("getUsersToSendReminders").debug("Getting users to send reminders");
 
     /**
@@ -133,7 +134,8 @@ async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], r
         }
     ]);
 
+    Logger("getUsersToSendReminders").debug(`Users to send reminders: ${JSON.stringify(usersToSendReminders, undefined, 2)}`);
     Logger("getUsersToSendReminders").info(`Found ${usersToSendReminders.length} Users to send reminders`);
 
-    return usersToSendReminders.map(u => u.user);
+    return usersToSendReminders as IUser[];
 }
