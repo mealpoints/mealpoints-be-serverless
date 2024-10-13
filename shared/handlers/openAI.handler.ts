@@ -4,7 +4,7 @@ import { Run } from "openai/resources/beta/threads/runs/runs";
 import { Thread } from "openai/resources/beta/threads/threads";
 import logger from "../config/logger";
 import SettingsSingleton from "../config/settings";
-import { IConversation } from "../models/conversation.model";
+import { IOpenAIThread } from "../models/openAIThread.model";
 import { OpenAIMessageTypesEnum } from "../types/enums";
 import { isValidUrl } from "../utils/url";
 const Logger = logger("openai.handler");
@@ -19,15 +19,29 @@ export class OpenAIHandler {
   result: string = "";
   thread!: Thread;
   run!: Run;
+  prompt: string;
+  openAIThread: IOpenAIThread | null;
+  messageType: OpenAIMessageTypesEnum;
+  assistantId: string;
 
   private _newThreadCreated: boolean = false;
 
-  constructor(
-    private prompt: string,
-    private conversation: IConversation,
-    private messageType: OpenAIMessageTypesEnum,
-    public assistantId: string
-  ) {}
+  constructor({
+    prompt,
+    openAIThread,
+    messageType,
+    assistantId,
+  }: {
+    prompt: string;
+    openAIThread: IOpenAIThread | null;
+    messageType: OpenAIMessageTypesEnum;
+    assistantId: string;
+  }) {
+    this.prompt = prompt;
+    this.openAIThread = openAIThread;
+    this.messageType = messageType;
+    this.assistantId = assistantId;
+  }
 
   private async initAsk() {
     await this.ensureThreadWithCurrentAssistant();
@@ -46,11 +60,8 @@ export class OpenAIHandler {
   }
 
   private async ensureThreadWithCurrentAssistant() {
-    const threadIdInConversation = this.conversation.openaiThreadId;
-    const assistantIdInCoversation = this.conversation.openaiAssistantId;
-
     // If there is no thread, create a new one.
-    if (!threadIdInConversation) {
+    if (!this.openAIThread?.threadId) {
       Logger("checkIfThreadExists").info(
         "No thread exists, creating new thread"
       );
@@ -59,7 +70,7 @@ export class OpenAIHandler {
     }
 
     // If the thread exists but the assistant is different, create a new thread.
-    if (assistantIdInCoversation !== this.assistantId) {
+    if (this.openAIThread?.assistantId !== this.assistantId) {
       Logger("checkIfThreadExists").info(
         "Thread with the same assistant does not exist, creating new thread"
       );
@@ -71,7 +82,9 @@ export class OpenAIHandler {
     Logger("checkIfThreadExists").info(
       "Thread with the same assistant already exists, fetching it"
     );
-    this.thread = await openai.beta.threads.retrieve(threadIdInConversation);
+    this.thread = await openai.beta.threads.retrieve(
+      this.openAIThread?.threadId
+    );
   }
 
   private async createMessageWithText() {

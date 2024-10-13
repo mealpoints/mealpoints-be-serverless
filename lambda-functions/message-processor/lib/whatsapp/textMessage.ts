@@ -1,7 +1,6 @@
 import { USER_MESSAGES } from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
-import { IConversation } from "../../../../shared/models/conversation.model";
 import { IUser } from "../../../../shared/models/user.model";
 import * as messageService from "../../../../shared/services/message.service";
 import * as openAIService from "../../../../shared/services/openAI.service";
@@ -17,8 +16,7 @@ const Logger = logger("lib/whatsapp/textMessage");
 
 export const processTextMessage = async (
   payload: WhastappWebhookObject,
-  user: IUser,
-  conversation: IConversation
+  user: IUser
 ) => {
   Logger("processTextMessage").info("");
   const { userMessage } = new WhatsappData(payload);
@@ -29,26 +27,19 @@ export const processTextMessage = async (
 
   try {
     try {
-      const result = await openAIService.ask(
-        userMessage as string,
-        user,
-        conversation,
-        {
-          messageType: OpenAIMessageTypesEnum.Text,
-          assistantId,
-        }
-      );
+      const result = await openAIService.ask(userMessage as string, user, {
+        messageType: OpenAIMessageTypesEnum.Text,
+        assistantId,
+      });
 
       await messageService.sendTextMessage({
         user: user.id,
-        conversation: conversation.id,
         payload: convertToHumanReadableMessage(result.message),
         type: MessageTypesEnum.Text,
       });
     } catch (error) {
       await messageService.sendTextMessage({
         user: user.id,
-        conversation: conversation.id,
         payload: USER_MESSAGES.errors.text_not_processed,
         type: MessageTypesEnum.Text,
       });
