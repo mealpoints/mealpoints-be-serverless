@@ -15,3 +15,8 @@ export interface IUserWithMeals {
   user: IUser;
   meals: IUserMeal[];
 }
+
+export interface IUserWithLastMeal{
+  user: IUser;
+  lastMeal: IUserMeal;
+}

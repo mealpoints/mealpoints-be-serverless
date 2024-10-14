@@ -22,4 +22,5 @@ export const QUEUE_MESSAGE_GROUP_IDS = {
 export const USER_ENGAGEMENT_ALERT = {
   interval_in_days: 3,
   max_reminders: 3,
+  max_meal_for_reminder: 1,
 }

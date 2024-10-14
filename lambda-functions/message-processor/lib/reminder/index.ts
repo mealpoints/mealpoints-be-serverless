@@ -1,8 +1,14 @@
 import logger from "../../../../shared/config/logger";
+import SettingsSingleton from "../../../../shared/config/settings";
+import * as messageService from "../../../../shared/services/message.service";
+import * as openAIService from "../../../../shared/services/openAI.service";
+import { MessageTypesEnum, OpenAIMessageTypesEnum } from "../../../../shared/types/enums";
+import { IUserWithLastMeal } from "../../../../shared/types/queueMessages";
+import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
 
 const Logger = logger("lib/reminder/logger");
 
-export const processReminder = async (messageBody: object) => {
+export const processReminder = async (messageBody: IUserWithLastMeal) => {
   Logger("processReminder").info(`Starting processReminder`);
 
   /**
@@ -12,9 +18,28 @@ export const processReminder = async (messageBody: object) => {
  *  4. return
  */
 
-  console.log("Reminder :::", messageBody);
+  const settings = await SettingsSingleton.getInstance();
+  const assistantId = settings.get(
+    "openai.assistant.reminder"
+  ) as string;
+  const stringifiedMeals = JSON.stringify(messageBody.lastMeal);
+  const user = messageBody.user;
 
-  // TODO: Remove this line after adding the logic
-  // eslint-disable-next-line unicorn/no-useless-promise-resolve-reject
-  return Promise.resolve();
+  try {
+    const result = await openAIService.ask(stringifiedMeals, user, {
+      messageType: OpenAIMessageTypesEnum.Text,
+      assistantId,
+    })
+
+    await messageService.sendTextMessage({
+      user: user.id,
+      payload: convertToHumanReadableMessage(result.message),
+      type: MessageTypesEnum.Text,
+    })
+    // TODO: SAVE ENGAGMENT MESSAGE INTO db, userEngagementMessage SERVICES NEEDS TO BE IMPLEMENTED FIRST
+    
+    return;
+  } catch (error) {
+    Logger("processReminder").error(error);
+  }
 };

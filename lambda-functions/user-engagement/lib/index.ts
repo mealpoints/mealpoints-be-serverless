@@ -1,10 +1,9 @@
 import { USER_ENGAGEMENT_ALERT } from "../../../shared/config/config";
 import logger from "../../../shared/config/logger";
 import { getUsersWithoutEngagementMessagesInPeriod } from "../../../shared/services/userEngagement.service";
-import { IUserWithMeals } from "../../../shared/types/queueMessages";
+import { IUserWithLastMeal, IUserWithMeals } from "../../../shared/types/queueMessages";
 import { DateUtils } from "../../../shared/utils/DateUtils";
 import { enqueueUsersToSendEngagement } from "../services/enqueue.service";
-import { IUser } from './../../../shared/models/user.model';
 import { categorizeUsers } from "./categorizeUsers";
 const Logger = logger("lib/processUserEngagement");
 
@@ -20,7 +19,7 @@ export const processUserEngagement = async () => {
          * 2. Categorize users whom to send summary and whom to reminders
          */
         const usersWithoutEngagementMessage = await getUsersWithoutEngagementMessagesInPeriod(reminderThresholdDate, currentDate);
-        const usersToEngage: (IUserWithMeals | IUser)[] = await categorizeUsers(usersWithoutEngagementMessage, reminderThresholdDate);
+        const usersToEngage: (IUserWithMeals | IUserWithLastMeal)[] = await categorizeUsers(usersWithoutEngagementMessage, reminderThresholdDate);
 
         // Logger("processUserEngagement").info(`===== >> ${JSON.stringify(usersToEngage)}`);
 

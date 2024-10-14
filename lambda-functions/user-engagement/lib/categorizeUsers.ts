@@ -3,7 +3,7 @@ import logger from '../../../shared/config/logger';
 import UserEngagementMessage from '../../../shared/models/userEngagementMessage.model';
 import UserMeal from '../../../shared/models/userMeal.model';
 import { userEngagementMessageTypesEnum } from '../../../shared/types/enums';
-import { IUserWithMeals } from '../../../shared/types/queueMessages';
+import { IUserWithLastMeal, IUserWithMeals } from '../../../shared/types/queueMessages';
 import { objectifyId } from '../../../shared/utils/mongoose';
 import User, { IUser } from './../../../shared/models/user.model';
 const Logger = logger('lib/categorizeUsers');
@@ -11,7 +11,7 @@ const Logger = logger('lib/categorizeUsers');
 export const categorizeUsers = async (usersWithoutEngagementMessage: IUser[], reminderThresholdDate: Date) => {
     Logger("categorizeUsers").debug("Categorizing users");
 
-    const usersToEngage: (IUserWithMeals | IUser)[] = [];
+    const usersToEngage: (IUserWithMeals | IUserWithLastMeal)[] = [];
 
     // kept separate for less complexity and easy to debug
     const [usersToSendSummary, usersToSendReminders] = await Promise.all([
@@ -68,7 +68,7 @@ async function getUsersToSendSummary(usersWithoutEngagementMessage: IUser[], rem
     return usersToSendSummary as IUserWithMeals[];
 }
 
-async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], reminderThresholdDate: Date): Promise<IUser[]> {
+async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], reminderThresholdDate: Date): Promise<IUserWithLastMeal[]> {
     Logger("getUsersToSendReminders").debug("Getting users to send reminders");
 
     /**
@@ -92,18 +92,22 @@ async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], r
                 as: "alerts"
             }
         },
-        {
+        { // from UserMeal getting last meal of currentUser of pipeline
             $lookup: {
                 from: UserMeal.collection.name,
-                localField: "_id",
-                foreignField: "user",
-                as: "meals"
+                let: { userId: "$_id" },
+                pipeline: [
+                    { $match: { $expr: { $eq: ["$user", "$$userId"] } } },
+                    { $sort: { createdAt: -1 } },
+                    { $limit: USER_ENGAGEMENT_ALERT.max_meal_for_reminder }
+                ],
+                as: "lastMeal"
             }
         },
         {
             $addFields: {
-                haveMeals: { $gt: [{ $size: "$meals" }, 0] },
-                lastMealDate: { $max: "$meals.createdAt" },
+                lastMeal: { $arrayElemAt: ["$lastMeal", 0] },
+                lastMealDate: { $arrayElemAt: ["$lastMeal.createdAt", 0] },
                 remindersCount: {
                     $size: {
                         $filter: {
@@ -130,7 +134,7 @@ async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], r
                 $and: [
                     {
                         $or: [
-                            { haveMeals: false },
+                            { lastMealDate: undefined },
                             { lastMealDate: { $lt: reminderThresholdDate } }
                         ]
                     },
@@ -147,13 +151,14 @@ async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], r
         {
             $project: {
                 _id: 0,
-                user: 1
+                user: 1,
+                lastMeal: { $ifNull: ["$lastMeal", undefined] }
             }
         }
     ]);
 
-    // Logger("getUsersToSendReminders").info(`${JSON.stringify(usersToSendReminders)}`);
+    Logger("getUsersToSendReminders").info(`${JSON.stringify(usersToSendReminders)}`);
     Logger("getUsersToSendReminders").info(`Found ${usersToSendReminders.length} Users to send reminders`);
 
-    return usersToSendReminders as IUser[];
+    return usersToSendReminders as IUserWithLastMeal[];
 }

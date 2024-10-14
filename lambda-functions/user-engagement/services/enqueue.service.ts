@@ -3,14 +3,13 @@ import { QUEUE_MESSAGE_GROUP_IDS } from '../../../shared/config/config';
 import logger from '../../../shared/config/logger';
 import { queue } from '../../../shared/config/queue';
 import { SqsQueueService } from '../../../shared/services/queue.service';
-import { IUserWithMeals } from '../../../shared/types/queueMessages';
+import { IUserWithLastMeal, IUserWithMeals } from '../../../shared/types/queueMessages';
 import { hasMeals } from '../../../shared/utils/meal';
-import { IUser } from './../../../shared/models/user.model';
 
 const Logger = logger("user-engagement/enqueue.service");
 
 export const enqueueUsersToSendEngagement = async (
-    usersToEngage: (IUserWithMeals | IUser)[]
+    usersToEngage: (IUserWithMeals | IUserWithLastMeal)[]
 ): Promise<void> => {
     Logger("enqueueUsersToSendEngagement").info(`Enqueuing ${usersToEngage.length} users for engagement`);
     const queueService = new SqsQueueService(queue);
@@ -21,7 +20,7 @@ export const enqueueUsersToSendEngagement = async (
 
             await queueService.enqueueMessage({
                 queueUrl: process.env.AWS_SQS_URL as string,
-                messageBody: JSON.stringify({body: user}),
+                messageBody: JSON.stringify({ body: user }),
                 messageGroupId,
                 messageDeduplicationId: uuidv4(),
             });
