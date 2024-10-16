@@ -1,6 +1,6 @@
-import { WhastappWebhookObject } from "./message";
 import { IUser } from "../models/user.model";
 import { IUserMeal } from "../models/userMeal.model";
+import { WhastappWebhookObject } from "./message";
 
 export interface IMessage {
   body: WhastappWebhookObject;
@@ -16,7 +16,6 @@ export interface IUserWithMeals {
   meals: IUserMeal[];
 }
 
-export interface IUserWithLastMeal{
-  user: IUser;
-  lastMeal: IUserMeal;
+export interface IUserWithLastMeal {
+  user: IUser & { lastMeal?: IUserMeal | null };
 }

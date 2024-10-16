@@ -106,8 +106,7 @@ async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], r
         },
         {
             $addFields: {
-                lastMeal: { $arrayElemAt: ["$lastMeal", 0] },
-                lastMealDate: { $arrayElemAt: ["$lastMeal.createdAt", 0] },
+                lastMeal: { $arrayElemAt: ["$lastMeal", 0] }, // Get the latest meal or undefined
                 remindersCount: {
                     $size: {
                         $filter: {
@@ -118,8 +117,8 @@ async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], r
                                     { $eq: ["$$alert.type", userEngagementMessageTypesEnum.Reminder] },
                                     {
                                         $or: [
-                                            { $eq: ["$lastMealDate", undefined] },
-                                            { $gte: ["$$alert.createdAt", "$lastMealDate"] }
+                                            { $eq: ["$lastMeal", undefined] },
+                                            { $gte: ["$$alert.createdAt", "$lastMeal.createdAt"] }
                                         ]
                                     }
                                 ]
@@ -134,25 +133,18 @@ async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], r
                 $and: [
                     {
                         $or: [
-                            { lastMealDate: undefined },
-                            { lastMealDate: { $lt: reminderThresholdDate } }
+                            { lastMeal: undefined },
+                            { "lastMeal.createdAt": { $lt: reminderThresholdDate } }
                         ]
                     },
                     { remindersCount: { $lt: USER_ENGAGEMENT_ALERT.max_reminders } }
                 ]
             }
         },
-        // Adding user data in a 'user' field for consistency as usersToSendSummary
-        {
-            $addFields: {
-                user: "$$ROOT"
-            }
-        },
         {
             $project: {
                 _id: 0,
-                user: 1,
-                lastMeal: { $ifNull: ["$lastMeal", undefined] }
+                user: "$$ROOT",
             }
         }
     ]);
