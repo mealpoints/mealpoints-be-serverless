@@ -2,7 +2,8 @@ import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
 import * as messageService from "../../../../shared/services/message.service";
 import * as openAIService from "../../../../shared/services/openAI.service";
-import { MessageTypesEnum, OpenAIMessageTypesEnum } from "../../../../shared/types/enums";
+import * as userEngagementMessageService from "../../../../shared/services/userEngagement.service";
+import { MessageTypesEnum, OpenAIMessageTypesEnum, userEngagementMessageTypesEnum } from "../../../../shared/types/enums";
 import { IUserWithMeals } from "../../../../shared/types/queueMessages";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
 
@@ -31,12 +32,20 @@ export const processMealSummary = async (messageBody: IUserWithMeals) => {
       assistantId,
     })
 
-    await messageService.sendTextMessage({
+    const textMessageResponse = await messageService.sendTextMessage({
       user: user.id,
       payload: convertToHumanReadableMessage(result.message),
       type: MessageTypesEnum.Text,
     })
-    // TODO: SAVE ENGAGMENT MESSAGE INTO db, userEngagementMessage SERVICES NEEDS TO BE IMPLEMENTED FIRST
+
+    // Todo: Check Response Success
+    if(textMessageResponse){
+        await userEngagementMessageService.createUserEngagementMessage({
+        user: user.id,
+        content: result.message,
+        type: userEngagementMessageTypesEnum.Summary
+      }) 
+    }
 
     return;
   } catch (error) {

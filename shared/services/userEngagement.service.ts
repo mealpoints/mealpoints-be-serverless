@@ -1,6 +1,6 @@
 import logger from "../config/logger";
 import User, { IUser } from "../models/user.model";
-import UserEngagementMessage from "../models/userEngagementMessage.model";
+import UserEngagementMessage, { IUserEngagementMessage, IUserEngagementMessageCreate } from "../models/userEngagementMessage.model";
 const Logger = logger("userEngagement.service");
 
 export const getUsersWithoutEngagementMessagesInPeriod = async (startDate: Date, endDate: Date): Promise<IUser[]> => {
@@ -24,3 +24,16 @@ export const getUsersWithoutEngagementMessagesInPeriod = async (startDate: Date,
     Logger("getUsersWithoutEngagementMessagesInPeriod").debug(`Users without engagement: ${usersWithoutEngagement.length}`);
     return usersWithoutEngagement;
 }
+
+export const createUserEngagementMessage = async (
+  engagementMessage: IUserEngagementMessageCreate
+  ): Promise<IUserEngagementMessage> => {
+    try {
+      Logger("createUserEngagementMessage").info("");
+      const newEngagementMessage = await UserEngagementMessage.create(engagementMessage);
+      return newEngagementMessage;
+    } catch (error) {
+      Logger("createUserEngagementMessage").error(error);
+      throw error;
+    }
+  };
