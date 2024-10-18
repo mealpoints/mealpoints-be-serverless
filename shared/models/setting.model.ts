@@ -9,7 +9,10 @@ export type SettingKey =
   | "rate-limit.message-limit-per-day"
   | "internal-alerts.alert-list"
   | "open-ai.max-runs-on-a-thread"
-  | "open-ai.max-retries";
+  | "open-ai.max-retries"
+  | "user-engangement.last-consumed-meal"
+  | "user-engangement.max-reminders"
+  | "user-engangement.interval-in-days";
 
 export interface ISetting extends Document {
   key: SettingKey;
