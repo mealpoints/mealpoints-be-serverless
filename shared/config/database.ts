@@ -34,7 +34,6 @@ export const closeDBconnection = async (): Promise<void> => {
     );
     return;
   }
-
   try {
     console.debug(
       "[config/database/closeDBconnection]: Disconnecting from database"

@@ -3,7 +3,7 @@ import SettingsSingleton from "../../../../shared/config/settings";
 import * as messageService from "../../../../shared/services/message.service";
 import * as openAIService from "../../../../shared/services/openAI.service";
 import * as userEngagementMessageService from "../../../../shared/services/userEngagement.service";
-import { MessageTypesEnum, OpenAIMessageTypesEnum, userEngagementMessageTypesEnum } from "../../../../shared/types/enums";
+import { MessageTypesEnum, OpenAIMessageTypesEnum, UserEngagementMessageTypesEnum } from "../../../../shared/types/enums";
 import { IUserWithLastMeal } from "../../../../shared/types/queueMessages";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
 
@@ -43,7 +43,7 @@ export const processReminder = async (messageBody: IUserWithLastMeal) => {
       await userEngagementMessageService.createUserEngagementMessage({
         user: user.id,
         content: result.message,
-        type: userEngagementMessageTypesEnum.Summary
+        type: UserEngagementMessageTypesEnum.Summary
       })
     }
 

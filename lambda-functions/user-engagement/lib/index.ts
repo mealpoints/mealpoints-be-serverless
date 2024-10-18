@@ -21,8 +21,6 @@ export const processUserEngagement = async () => {
         const usersWithoutEngagementMessage = await getUsersWithoutEngagementMessagesInPeriod(reminderThresholdDate, currentDate);
         const usersToEngage: (IUserWithMeals | IUserWithLastMeal)[] = await categorizeUsers(usersWithoutEngagementMessage, reminderThresholdDate);
 
-        // Logger("processUserEngagement").info(`===== >> ${JSON.stringify(usersToEngage)}`);
-
         await enqueueUsersToSendEngagement(usersToEngage);
 
         Logger("processUserEngagement").info("Finished user engagement process");

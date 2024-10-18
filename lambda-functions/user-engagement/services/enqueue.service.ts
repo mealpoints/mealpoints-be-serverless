@@ -15,16 +15,16 @@ export const enqueueUsersToSendEngagement = async (
     const queueService = new SqsQueueService(queue);
 
     try {
-        await Promise.all(usersToEngage.map(async user => {
+        for (const user of usersToEngage) {
             const messageGroupId = hasMeals(user) ? QUEUE_MESSAGE_GROUP_IDS.meal_summary : QUEUE_MESSAGE_GROUP_IDS.reminder;
-
+    
             await queueService.enqueueMessage({
                 queueUrl: process.env.AWS_SQS_URL as string,
                 messageBody: JSON.stringify({ body: user }),
                 messageGroupId,
                 messageDeduplicationId: uuidv4(),
             });
-        }));
+        }
 
         Logger("enqueueUsersToSendEngagement").info(`Enqueued ${usersToEngage.length} users for engagement`);
     } catch (error) {

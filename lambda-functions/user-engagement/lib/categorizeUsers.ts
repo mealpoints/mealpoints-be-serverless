@@ -2,7 +2,7 @@ import { USER_ENGAGEMENT_ALERT } from '../../../shared/config/config';
 import logger from '../../../shared/config/logger';
 import UserEngagementMessage from '../../../shared/models/userEngagementMessage.model';
 import UserMeal from '../../../shared/models/userMeal.model';
-import { userEngagementMessageTypesEnum } from '../../../shared/types/enums';
+import { UserEngagementMessageTypesEnum } from '../../../shared/types/enums';
 import { IUserWithLastMeal, IUserWithMeals } from '../../../shared/types/queueMessages';
 import { objectifyId } from '../../../shared/utils/mongoose';
 import User, { IUser } from './../../../shared/models/user.model';
@@ -62,7 +62,6 @@ async function getUsersToSendSummary(usersWithoutEngagementMessage: IUser[], rem
         },
         { $unwind: "$user" }
     ]);
-    // Logger("getUsersToSendSummary").info(`${JSON.stringify(usersToSendSummary)}`);
     Logger("getUsersToSendSummary").info(`Found ${usersToSendSummary.length} Users to send summary`);
 
     return usersToSendSummary as IUserWithMeals[];
@@ -114,7 +113,7 @@ async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], r
                             as: "alert",
                             cond: {
                                 $and: [
-                                    { $eq: ["$$alert.type", userEngagementMessageTypesEnum.Reminder] },
+                                    { $eq: ["$$alert.type", UserEngagementMessageTypesEnum.Reminder] },
                                     {
                                         $or: [
                                             { $eq: ["$lastMeal", undefined] },
@@ -148,8 +147,6 @@ async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], r
             }
         }
     ]);
-
-    Logger("getUsersToSendReminders").info(`${JSON.stringify(usersToSendReminders)}`);
     Logger("getUsersToSendReminders").info(`Found ${usersToSendReminders.length} Users to send reminders`);
 
     return usersToSendReminders as IUserWithLastMeal[];
