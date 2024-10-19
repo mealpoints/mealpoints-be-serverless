@@ -23,7 +23,7 @@ export const processReminder = async (messageBody: IUserWithLastMeal) => {
   const assistantId = settings.get(
     "openai.assistant.reminder"
   ) as string;
-  const stringifiedMeals = JSON.stringify(messageBody.user.lastMeal);
+  const stringifiedMeals = JSON.stringify(messageBody.user.lastMeal || {});
   const user = messageBody.user;
 
   try {

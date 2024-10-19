@@ -1,5 +1,5 @@
-import { USER_ENGAGEMENT_ALERT } from '../../../shared/config/config';
 import logger from '../../../shared/config/logger';
+import SettingsSingleton from '../../../shared/config/settings';
 import UserEngagementMessage from '../../../shared/models/userEngagementMessage.model';
 import UserMeal from '../../../shared/models/userMeal.model';
 import { UserEngagementMessageTypesEnum } from '../../../shared/types/enums';
@@ -60,7 +60,12 @@ async function getUsersToSendSummary(usersWithoutEngagementMessage: IUser[], rem
                 as: "user"
             }
         },
-        { $unwind: "$user" }
+        { $unwind: "$user" },
+        {
+            $addFields: {
+                "user.id": "$user._id"
+            }
+        }
     ]);
     Logger("getUsersToSendSummary").info(`Found ${usersToSendSummary.length} Users to send summary`);
 
@@ -69,6 +74,13 @@ async function getUsersToSendSummary(usersWithoutEngagementMessage: IUser[], rem
 
 async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], reminderThresholdDate: Date): Promise<IUserWithLastMeal[]> {
     Logger("getUsersToSendReminders").debug("Getting users to send reminders");
+    const settings = await SettingsSingleton.getInstance();
+    const lastConsumedMealLimit = settings.get(
+        "user-engangement.last-consumed-meal"
+    ) as number;
+    const maxRemindersPerUser = settings.get(
+        "user-engangement.max-reminders"
+    ) as number;
 
     /**
      * 1. match users and extract their meals & reminders
@@ -98,7 +110,7 @@ async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], r
                 pipeline: [
                     { $match: { $expr: { $eq: ["$user", "$$userId"] } } },
                     { $sort: { createdAt: -1 } },
-                    { $limit: USER_ENGAGEMENT_ALERT.max_meal_for_reminder }
+                    { $limit: lastConsumedMealLimit }
                 ],
                 as: "lastMeal"
             }
@@ -136,8 +148,13 @@ async function getUsersToSendReminders(usersWithoutEngagementMessage: IUser[], r
                             { "lastMeal.createdAt": { $lt: reminderThresholdDate } }
                         ]
                     },
-                    { remindersCount: { $lt: USER_ENGAGEMENT_ALERT.max_reminders } }
+                    { remindersCount: { $lt: maxRemindersPerUser } }
                 ]
+            }
+        },
+        {
+            $addFields: {
+                "id": "$_id"
             }
         },
         {

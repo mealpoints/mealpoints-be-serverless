@@ -9,6 +9,11 @@
 
 [] Check if rate limiter is fetching data properly
 
+## Codebase Enhacements
+
+[] resolve `_id` and `id` conflicts after aggregation
+[] fix TS error in `consumer.ts` near `processMessage`
+
 ## Issues
 
 ### [Resolved] The settings singleton can get stale if the Lambda has been running while a settings has been updated or added.
