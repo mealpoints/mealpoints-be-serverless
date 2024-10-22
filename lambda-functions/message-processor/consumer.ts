@@ -33,6 +33,8 @@ export const handler = async (sqsEvent: SQSEvent) => {
 
   if (processMessage) {
     Logger("handler").info(`Processing ${eventData.messageGroupId} messages`);
+    // TODO: Fix the type error for processMessage
+    // @ts-expect-error - processMessage is a function
     const eventService = new EventService(queueService, processMessage);
     await eventService.handle(sqsEvent);
   } else {

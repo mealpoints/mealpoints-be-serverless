@@ -7,7 +7,7 @@
 [x] Create an Alerting Mechanism.
 [] Update open_ai_thread mechanism thats store all threads
 
-[] Check if rate limiter is fetching data properly
+[x] Check if rate limiter is fetching data properly
 
 ## Codebase Enhacements
 
