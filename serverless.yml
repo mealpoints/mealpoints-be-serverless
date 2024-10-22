@@ -50,5 +50,11 @@ functions:
     timeout: 300 
     events:
       - sqs: ${env:AWS_SQS_ARN}
-   
+  user-engagement:
+    handler: lambda-functions/user-engagement/app.handler
+    timeout: 300
+    events:
+      - schedule:
+          rate: rate(30 minutes)
+          enabled: true
  

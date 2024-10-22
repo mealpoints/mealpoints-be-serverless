@@ -7,7 +7,12 @@
 [x] Create an Alerting Mechanism.
 [] Update open_ai_thread mechanism thats store all threads
 
-[] Check if rate limiter is fetching data properly
+[x] Check if rate limiter is fetching data properly
+
+## Codebase Enhacements
+
+[] resolve `_id` and `id` conflicts after aggregation
+[] fix TS error in `consumer.ts` near `processMessage`
 
 ## Issues
 

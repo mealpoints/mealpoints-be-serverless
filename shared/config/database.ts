@@ -26,3 +26,26 @@ export const connectToDatabase = async (): Promise<void> => {
 
   isConnected = !!mongoose.connection.readyState;
 };
+
+export const closeDBconnection = async (): Promise<void> => {
+  if (!isConnected) {
+    console.debug(
+      "[config/database/closeDBconnection]: Database is already disconnected"
+    );
+    return;
+  }
+  try {
+    console.debug(
+      "[config/database/closeDBconnection]: Disconnecting from database"
+    );
+    await mongoose.connection.close();
+  } catch (error) {
+    console.error(
+      "[config/database/closeDBconnection]: Error disconnecting from database:",
+      error
+    );
+    throw new Error("Error disconnecting from database");
+  } finally {
+    isConnected = false;
+  }
+};

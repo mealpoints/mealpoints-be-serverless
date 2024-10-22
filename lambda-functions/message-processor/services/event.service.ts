@@ -9,7 +9,7 @@ export class EventService<T> {
   constructor(
     private queueService: SqsQueueService,
     private processMessageFunction: (messageBody: T) => Promise<void> // Injected function
-  ) {}
+  ) { }
 
   async handle(event: SQSEvent) {
     const dequeuedMessages = this.mapEventToDequeuedMessages(event);
