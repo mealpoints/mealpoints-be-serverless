@@ -4,6 +4,6 @@ import * as reportController from "../../controllers/report.controller";
 
 const router = Router();
 
-router.get("/:userId", temporaryAuth, reportController.createReport);
+router.get("/:reportId", temporaryAuth, reportController.getReport);
 
 export default router;
