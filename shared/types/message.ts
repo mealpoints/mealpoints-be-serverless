@@ -1,8 +1,13 @@
 import {
+  ButtonPositionEnum,
+  ButtonTypesEnum,
+  ComponentTypesEnum,
   ConversationTypesEnum,
   CurrencyCodesEnum,
   DocumentMediaTypesEnum,
   ImageMediaTypesEnum,
+  LanguagesEnum,
+  ParametersTypesEnum,
   ReferralSourceTypesEnum,
   StatusEnum,
   StickerMediaTypesEnum,
@@ -272,3 +277,140 @@ export type InteractiveMessageBodyOptions = {
   footer?: string;
   action: { displayText: string; url: string };
 };
+
+export type ParametersObject<T extends ParametersTypesEnum> = {
+  type: T;
+};
+
+export type SimpleTextObject = {
+  text: string;
+};
+
+export type TextParametersObject = ParametersObject<ParametersTypesEnum.Text> &
+  SimpleTextObject;
+
+// NOTE: The parameters are not exhaustive. Add more as needed.
+export type ComponentObject<T extends ComponentTypesEnum> = {
+  type: T;
+  parameters: (
+    | CurrencyParametersObject
+    | DateTimeParametersObject
+    | DocumentParametersObject
+    | ImageParametersObject
+    | TextParametersObject
+    | VideoParametersObject
+  )[];
+};
+
+export type LanguageObject = {
+  policy: "deterministic";
+  code: LanguagesEnum;
+};
+
+export type MessageTemplateObject<T extends ComponentTypesEnum> = {
+  name: string;
+  language: LanguageObject;
+  components?: (ComponentObject<T> | ButtonComponentObject)[];
+};
+
+export interface ITemplateMessageRequestBody {
+  messaging_product: string;
+  to: string;
+  type: "template";
+  template: MessageTemplateObject<ComponentTypesEnum>;
+}
+
+export type QuickReplyButtonParametersObject = {
+  type: ParametersTypesEnum.Payload;
+  payload: string;
+};
+
+export type URLButtonParametersObject = SimpleTextObject & {
+  type: ParametersTypesEnum.Text;
+};
+
+export type ButtonParameterObject =
+  | QuickReplyButtonParametersObject
+  | URLButtonParametersObject;
+
+export type ButtonComponentObject =
+  ComponentObject<ComponentTypesEnum.Button> & {
+    parameters: ButtonParameterObject;
+    sub_type: ButtonTypesEnum;
+    index: ButtonPositionEnum;
+  };
+
+export type ImageParametersObject =
+  ParametersObject<ParametersTypesEnum.Image> & ImageMediaObject;
+
+export type ImageMediaObject = MetaImageMediaObject | HostedImageMediaObject;
+
+export type MetaImageMediaObject = {
+  id: string;
+  link?: never;
+  caption?: string;
+};
+
+export type HostedImageMediaObject = {
+  id?: never;
+  link: string;
+  caption?: string;
+};
+
+export type MetaDocumentMediaObject = {
+  id: string;
+  link?: never;
+  caption?: string;
+  filename?: string;
+};
+
+export type HostedDocumentMediaObject = {
+  id?: never;
+  link: string;
+  caption?: string;
+  filename?: string;
+};
+
+export type DocumentMediaObject =
+  | MetaDocumentMediaObject
+  | HostedDocumentMediaObject;
+
+export type DocumentParametersObject =
+  ParametersObject<ParametersTypesEnum.Document> & DocumentMediaObject;
+
+export type VideoParametersObject =
+  ParametersObject<ParametersTypesEnum.Video> & VideoMediaObject;
+
+export type VideoMediaObject =
+  | MetaHostedVideoMediaObject
+  | SelfHostedVideoMediaObject;
+
+export type MetaHostedVideoMediaObject = {
+  id: string;
+  link?: never;
+  caption?: string;
+};
+
+export type SelfHostedVideoMediaObject = {
+  id?: never;
+  link: string;
+  caption?: string;
+};
+
+export type DateTimeParametersObject =
+  ParametersObject<ParametersTypesEnum.DateTime> & {
+    date_time: {
+      fallback_value: string;
+    };
+  };
+
+export type CurrencyObject = {
+  fallback_value: string;
+  code: CurrencyCodesEnum;
+  amount_1000: number;
+};
+
+export type CurrencyParametersObject =
+  ParametersObject<ParametersTypesEnum.Currency> & {
+    currency: CurrencyObject;
+  };

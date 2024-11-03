@@ -1,12 +1,20 @@
 import mongoose, { Schema } from "mongoose";
-import { MessageTypesEnum, StatusEnum } from "../types/enums";
-import { InteractiveMessageBodyOptions } from "../types/message";
+import {
+  ComponentTypesEnum,
+  MessageTypesEnum,
+  StatusEnum,
+} from "../types/enums";
+import {
+  InteractiveMessageBodyOptions,
+  MessageTemplateObject,
+} from "../types/message";
 
 export interface ISentMessage extends Document {
   id: string;
   user: string;
   payload?: string;
   interactive?: InteractiveMessageBodyOptions;
+  template?: MessageTemplateObject<ComponentTypesEnum>;
   type: MessageTypesEnum;
   status: StatusEnum;
   wamid?: string;
@@ -18,6 +26,7 @@ export interface ISentMessageCreate {
   user: string;
   payload?: string;
   interactive?: InteractiveMessageBodyOptions;
+  template?: MessageTemplateObject<ComponentTypesEnum>;
   type: MessageTypesEnum;
   wamid?: string;
   media?: string;
@@ -28,6 +37,7 @@ const SentMessageSchema: Schema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
   payload: { type: String },
   interactve: { type: Schema.Types.Mixed },
+  template: { type: Schema.Types.Mixed },
   status: {
     type: String,
     enum: Object.values(StatusEnum),

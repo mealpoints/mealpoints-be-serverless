@@ -7,9 +7,12 @@ import axios, { AxiosInstance, AxiosResponse } from "axios";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import logger from "../config/logger";
+import { ComponentTypesEnum } from "../types/enums";
 import {
   InteractiveMessageBodyOptions,
   InteractiveMessageRequestBody,
+  ITemplateMessageRequestBody,
+  MessageTemplateObject,
 } from "../types/message";
 const Logger = logger("whatsapp.handler");
 
@@ -153,6 +156,29 @@ export const getImageSentViaMessage = async (imageId: string) => {
     return filePath;
   } catch (error) {
     Logger("getImageSentViaMessage").error(error);
+    throw error;
+  }
+};
+
+export const sendTemplateMessage = async (
+  phoneNumber: string,
+  template: MessageTemplateObject<ComponentTypesEnum>
+): Promise<AxiosResponse> => {
+  Logger("sendTemplateMessage").info("");
+
+  const data: ITemplateMessageRequestBody = {
+    messaging_product: "whatsapp",
+    to: phoneNumber,
+    type: "template",
+    template,
+  };
+
+  try {
+    return await axiosInstance.post(`/${INSTANCE_ID}/messages`, data);
+  } catch (error) {
+    Logger("sendTemplateMessage").error(error);
+    console.log(error);
+
     throw error;
   }
 };
