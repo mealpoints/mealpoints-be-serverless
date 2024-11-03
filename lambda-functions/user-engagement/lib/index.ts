@@ -1,10 +1,13 @@
 import logger from "../../../shared/config/logger";
 import SettingsSingleton from "../../../shared/config/settings";
 import { getUsersWithoutEngagementMessagesInPeriod } from "../../../shared/services/userEngagement.service";
-import { IUserWithMeals } from "../../../shared/types/queueMessages";
+import {
+  IUsersToSendReminders,
+  IUsersToSendSummaries,
+} from "../../../shared/types/queueMessages";
 import { DateUtils } from "../../../shared/utils/DateUtils";
 import { enqueueUsersToSendEngagement } from "../services/enqueue.service";
-import { categorizeUsers, IUsersToSendReminders } from "./categorizeUsers";
+import { categorizeUsers } from "./categorizeUsers";
 const Logger = logger("lib/processUserEngagement");
 
 export const processUserEngagement = async () => {
@@ -28,7 +31,7 @@ export const processUserEngagement = async () => {
         reminderThresholdDate,
         currentDate
       );
-    const usersToEngage: (IUserWithMeals | IUsersToSendReminders)[] =
+    const usersToEngage: (IUsersToSendSummaries | IUsersToSendReminders)[] =
       await categorizeUsers(
         usersWithoutEngagementMessage,
         reminderThresholdDate

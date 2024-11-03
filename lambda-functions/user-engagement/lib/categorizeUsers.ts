@@ -1,7 +1,10 @@
 import logger from "../../../shared/config/logger";
 import UserMeal from "../../../shared/models/userMeal.model";
 import { UserEngagementMessageTypesEnum } from "../../../shared/types/enums";
-import { IUserWithMeals } from "../../../shared/types/queueMessages";
+import {
+  IUsersToSendReminders,
+  IUsersToSendSummaries,
+} from "../../../shared/types/queueMessages";
 import { objectifyId } from "../../../shared/utils/mongoose";
 import User, { IUser } from "./../../../shared/models/user.model";
 const Logger = logger("lib/categorizeUsers");
@@ -12,7 +15,7 @@ export const categorizeUsers = async (
 ) => {
   Logger("categorizeUsers").debug("Categorizing users");
 
-  const usersToEngage: (IUserWithMeals | IUsersToSendReminders)[] = [];
+  const usersToEngage: (IUsersToSendSummaries | IUsersToSendReminders)[] = [];
 
   // kept separate for less complexity and easy to debug
   const [usersToSendSummary, usersToSendReminders] = await Promise.all([
@@ -39,7 +42,7 @@ export const categorizeUsers = async (
 async function getUsersToSendSummary(
   usersWithoutEngagementMessage: IUser[],
   reminderThresholdDate: Date
-): Promise<IUserWithMeals[]> {
+): Promise<IUsersToSendSummaries[]> {
   Logger("getUsersToSendSummary").debug("Getting users to send summary");
 
   /**
@@ -84,12 +87,7 @@ async function getUsersToSendSummary(
     `Found ${usersToSendSummary.length} Users to send summary`
   );
 
-  return usersToSendSummary as IUserWithMeals[];
-}
-
-export interface IUsersToSendReminders {
-  user: IUser;
-  remindersCount: number;
+  return usersToSendSummary as IUsersToSendSummaries[];
 }
 
 async function getUsersToSendReminders(
