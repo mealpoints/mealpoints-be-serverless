@@ -29,7 +29,7 @@ describe("Message Service", () => {
           topMealFat: "10g",
           topMealCarbs: "50g",
           topMealFiber: "5g",
-          topMealSugar: "10g",
+          topMealSugars: "10g",
           analysisOne:
             "Your protein intake was excellent, with a nice balance from both plant and animal sources.",
           analysisTwo:

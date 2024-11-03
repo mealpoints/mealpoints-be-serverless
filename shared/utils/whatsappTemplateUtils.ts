@@ -17,7 +17,7 @@ interface IUserMealSummaryData {
   topMealFat: string;
   topMealCarbs: string;
   topMealFiber: string;
-  topMealSugar: string;
+  topMealSugars: string;
   analysisOne: string;
   analysisTwo: string;
   analysisThree: string;
@@ -83,7 +83,7 @@ const createUserMealSummaryTemplate = (
           },
           {
             type: ParametersTypesEnum.Text,
-            text: data.topMealSugar,
+            text: data.topMealSugars,
           },
           {
             type: ParametersTypesEnum.Text,
