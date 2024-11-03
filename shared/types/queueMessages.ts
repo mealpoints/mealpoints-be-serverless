@@ -11,11 +11,12 @@ export interface IDequeuedMessage extends IMessage {
   receiptHandle: string;
 }
 
-export interface IUserWithMeals {
+export interface IUsersToSendSummaries {
   user: IUser;
   meals: IUserMeal[];
 }
 
-export interface IUserWithLastMeal {
-  user: IUser & { lastMeal?: IUserMeal | null };
+export interface IUsersToSendReminders {
+  user: IUser;
+  remindersCount: number;
 }

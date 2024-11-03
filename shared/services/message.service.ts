@@ -9,8 +9,11 @@ import SentMessage, {
   ISentMessage,
   ISentMessageCreate,
 } from "../models/sentMessage.model";
-import { StatusEnum } from "../types/enums";
-import { InteractiveMessageBodyOptions } from "../types/message";
+import { ComponentTypesEnum, StatusEnum } from "../types/enums";
+import {
+  InteractiveMessageBodyOptions,
+  MessageTemplateObject,
+} from "../types/message";
 import * as userService from "./user.service";
 const Logger = logger("message.service");
 
@@ -218,6 +221,34 @@ export const messageCountByUserPerPeriod = async (
     return messages.length;
   } catch (error) {
     Logger("messageCountByUserPerPeriod").error(error);
+    throw error;
+  }
+};
+
+export const sendTemplateMessage = async (messageData: ISentMessageCreate) => {
+  Logger("sendTemplateMessage").info("");
+  try {
+    const user = await userService.getUserById(messageData.user);
+    if (!user) {
+      Logger("sendTemplateMessage").error("User not found");
+      throw new Error("User not found");
+    }
+
+    const response = await whatsappHandler.sendTemplateMessage(
+      user.contact,
+      messageData.template as MessageTemplateObject<ComponentTypesEnum>
+    );
+
+    // Store Sent Message
+    await createSentMessage({
+      ...messageData,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+      wamid: response.data.messages[0].id,
+    });
+
+    return response;
+  } catch (error) {
+    Logger("sendTemplateMessage").error(error);
     throw error;
   }
 };

@@ -542,3 +542,10 @@ export enum CurrencyCodesEnum {
   XRE = "XRE",
   XFU = "XFU",
 }
+
+export enum WhatsappTemplateNameEnum {
+  UserMealSummary = "user_meal_summary",
+  ReminderToPostMealsOne = "reminder_to_post_meals_1",
+  ReminderToPostMealsTwo = "reminder_to_post_meals_2",
+  ReminderToPostMealsThree = "reminder_to_post_meals_3",
+}

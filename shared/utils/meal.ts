@@ -1,5 +1,8 @@
 import { OpenAIResponse } from "../types/openai";
-import { IUserWithLastMeal, IUserWithMeals } from "../types/queueMessages";
+import {
+  IUsersToSendReminders,
+  IUsersToSendSummaries,
+} from "../types/queueMessages";
 
 export const isMeal = (meal: OpenAIResponse): boolean => {
   if (meal === null || meal === undefined) return false;
@@ -11,6 +14,11 @@ export const isMeal = (meal: OpenAIResponse): boolean => {
   return false;
 };
 
-export const hasMeals = (user: IUserWithLastMeal | IUserWithMeals): boolean => {
-  return Array.isArray((user as IUserWithMeals).meals) && (user as IUserWithMeals).meals.length > 0;
+export const hasMeals = (
+  user: IUsersToSendReminders | IUsersToSendSummaries
+): boolean => {
+  return (
+    Array.isArray((user as IUsersToSendSummaries).meals) &&
+    (user as IUsersToSendSummaries).meals.length > 0
+  );
 };

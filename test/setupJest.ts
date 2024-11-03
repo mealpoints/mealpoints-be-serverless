@@ -5,5 +5,5 @@ import { DataService } from "./test_utils/DataService";
 beforeAll(async () => {
   await connectToDatabase();
   const dataService = DataService.getInstance();
-  await dataService.seed(CONTACT_NUMBERS.madhav);
+  await dataService.seed(CONTACT_NUMBERS.madhav_in);
 });
