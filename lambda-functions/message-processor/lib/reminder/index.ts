@@ -1,8 +1,10 @@
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
 import * as messageService from "../../../../shared/services/message.service";
+import * as userEngagementMessageService from "../../../../shared/services/userEngagement.service";
 import {
   MessageTypesEnum,
+  UserEngagementMessageTypesEnum,
   WhatsappTemplateNameEnum,
 } from "../../../../shared/types/enums";
 import { IUsersToSendReminders } from "../../../../shared/types/queueMessages";
@@ -37,11 +39,23 @@ export const processReminder = async (messageBody: IUsersToSendReminders) => {
       GET_REMINDER_MESSAGE_TEMPLATE_BASED_ON_REMINDER_COUNT[remindersCount] ||
       WhatsappTemplateNameEnum.ReminderToPostMealsOne;
 
-    await messageService.sendTemplateMessage({
+    const messageResponse = await messageService.sendTemplateMessage({
       user: user.id,
       type: MessageTypesEnum.Template,
       template: createWhatsappTemplate(templateName, {}),
     });
+
+    if (messageResponse) {
+      Logger("processReminder").info(
+        `Successfully sent reminder to user ${user.id}`
+      );
+
+      await userEngagementMessageService.createUserEngagementMessage({
+        user: user.id,
+        content: `Template: ${templateName}`,
+        type: UserEngagementMessageTypesEnum.Reminder,
+      });
+    }
 
     return;
   } catch (error) {
