@@ -5,7 +5,7 @@ app: mealpoints-app-serverless
 # "service" is the name of this project. This will also be added to your AWS resource names.
 service: mealpoints-be-serverless
 
-frameworkVersion: '3.38.0'
+frameworkVersion: "3.38.0"
 
 useDotenv: true
 
@@ -16,16 +16,14 @@ plugins:
   - serverless-plugin-common-excludes # this should go before serverless-plugin-include-dependencies
   - serverless-plugin-include-dependencies
 
-
-
 package:
   patterns:
-    - '!coverage/**'
-    - '!test/**'
-    - '!secrets.yml'
-    - '!node_modules/**'
+    - "!coverage/**"
+    - "!test/**"
+    - "!secrets.yml"
+    - "!node_modules/**"
 
-provider: 
+provider:
   name: aws
   runtime: nodejs20.x
   region: ap-south-1 # Mumbai region
@@ -47,7 +45,7 @@ functions:
       - http: ANY /settings/{proxy+}
   message-processor:
     handler: lambda-functions/message-processor/consumer.handler
-    timeout: 300 
+    timeout: 300
     events:
       - sqs: ${env:AWS_SQS_ARN}
   user-engagement:
@@ -55,6 +53,5 @@ functions:
     timeout: 300
     events:
       - schedule:
-          rate: rate(30 minutes)
+          rate: rate(60 minutes)
           enabled: true
- 
