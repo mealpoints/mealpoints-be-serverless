@@ -6,6 +6,7 @@ import {
   IUsersToSendSummaries,
 } from "../../../shared/types/queueMessages";
 import { DateUtils } from "../../../shared/utils/DateUtils";
+import { enqueueUsersToSendEngagement } from "../services/enqueue.service";
 import { categorizeUsers } from "./categorizeUsers";
 const Logger = logger("lib/processUserEngagement");
 
@@ -36,9 +37,7 @@ export const processUserEngagement = async () => {
         reminderThresholdDate
       );
 
-    console.log(JSON.stringify(usersToEngage));
-
-    // await enqueueUsersToSendEngagement(usersToEngage);
+    await enqueueUsersToSendEngagement(usersToEngage);
 
     Logger("processUserEngagement").info("Finished user engagement process");
   } catch (error) {
