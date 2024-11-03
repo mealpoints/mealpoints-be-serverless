@@ -22,13 +22,6 @@ const GET_REMINDER_MESSAGE_TEMPLATE_BASED_ON_REMINDER_COUNT: Record<
 export const processReminder = async (messageBody: IUsersToSendReminders) => {
   Logger("processReminder").info(`Starting processReminder`);
 
-  /**
-   *  1. Extract the message body from the event
-   *  2. OpenAI.ask to envoke model which generates reminder msg by giving the user.meals
-   *  3. send the response to User via Meta service & store the response in userEngagementMessage schema
-   *  4. return
-   */
-
   const settings = await SettingsSingleton.getInstance();
   const maxReminders = settings.get("user-engangement.max-reminders") as number;
   const { user, remindersCount } = messageBody;
