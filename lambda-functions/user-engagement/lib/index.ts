@@ -3,6 +3,7 @@ import SettingsSingleton from "../../../shared/config/settings";
 import { getUsersWithoutEngagementMessagesInPeriod } from "../../../shared/services/userEngagement.service";
 import { IUserWithMeals } from "../../../shared/types/queueMessages";
 import { DateUtils } from "../../../shared/utils/DateUtils";
+import { enqueueUsersToSendEngagement } from "../services/enqueue.service";
 import { categorizeUsers, IUsersToSendReminders } from "./categorizeUsers";
 const Logger = logger("lib/processUserEngagement");
 
@@ -33,7 +34,7 @@ export const processUserEngagement = async () => {
         reminderThresholdDate
       );
 
-    // await enqueueUsersToSendEngagement(usersToEngage);
+    await enqueueUsersToSendEngagement(usersToEngage);
 
     Logger("processUserEngagement").info("Finished user engagement process");
   } catch (error) {

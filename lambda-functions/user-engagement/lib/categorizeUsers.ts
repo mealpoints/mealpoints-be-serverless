@@ -17,7 +17,7 @@ export const categorizeUsers = async (
   // kept separate for less complexity and easy to debug
   const [usersToSendSummary, usersToSendReminders] = await Promise.all([
     getUsersToSendSummary(usersWithoutEngagementMessage, reminderThresholdDate),
-    getUsersToSendReminders1(
+    getUsersToSendReminders(
       usersWithoutEngagementMessage,
       reminderThresholdDate
     ),
@@ -79,6 +79,7 @@ async function getUsersToSendSummary(
       },
     },
   ]);
+
   Logger("getUsersToSendSummary").info(
     `Found ${usersToSendSummary.length} Users to send summary`
   );
@@ -91,7 +92,7 @@ export interface IUsersToSendReminders {
   remindersCount: number;
 }
 
-async function getUsersToSendReminders1(
+async function getUsersToSendReminders(
   usersWithoutEngagementMessage: IUser[],
   reminderThresholdDate: Date
 ): Promise<IUsersToSendReminders[]> {
@@ -160,6 +161,9 @@ async function getUsersToSendReminders1(
           lastName: "$lastName",
           contact: "$contact",
           email: "$email",
+          isActive: "$isActive",
+          createdAt: "$createdAt",
+          updatedAt: "$updatedAt",
         },
         remindersCount: { $size: "$reminders" },
       },
