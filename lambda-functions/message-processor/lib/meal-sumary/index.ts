@@ -1,3 +1,4 @@
+import * as _ from "lodash";
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
 import { IUserMeal } from "../../../../shared/models/userMeal.model";
@@ -15,7 +16,7 @@ import { createWhatsappTemplate } from "../../../../shared/utils/whatsappTemplat
 
 const Logger = logger("lib/reminder/meal-summary");
 
-const calculareMealData = (
+export const calculateMealData = (
   meals: IUserMeal[]
 ): {
   averageMealScore: string;
@@ -29,7 +30,7 @@ const calculareMealData = (
   topMealSugars: string;
   topMealFiber: string;
 } => {
-  Logger("calculareMealData").info(``);
+  Logger("calculateMealData").info(``);
 
   let totalCalories = 0;
   let totalScore = 0;
@@ -39,7 +40,7 @@ const calculareMealData = (
     totalCalories += meal.macros.calories.value;
     totalScore += meal.score.value;
   });
-  const averageMealScore = totalScore / meals.length;
+  const averageMealScore = _.round(totalScore / meals.length, 2);
 
   // Find top meal by score
   // eslint-disable-next-line unicorn/no-array-reduce
@@ -122,7 +123,6 @@ export const processMealSummary = async (
       assistantId,
     })) as unknown as IOpenAIResult;
 
-    // TODO: Make sure to check that openAI is sending all fields.
     if (!validateOpenAIResult(openAIResult)) {
       Logger("processMealSummary").error(`Invalid OpenAI response`);
       return;
@@ -140,13 +140,12 @@ export const processMealSummary = async (
         WhatsappTemplateNameEnum.UserMealSummary,
         {
           duration,
-          ...calculareMealData(meals),
+          ...calculateMealData(meals),
           ...openAIResult,
         }
       ),
     });
 
-    // Todo: Check Response Success
     if (messageResponse) {
       Logger("processMealSummary").info(
         `Successfully sent meal summary to user ${user.id}`
