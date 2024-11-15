@@ -1,5 +1,6 @@
 import logger from "../config/logger";
 import User, { IUser, IUserCreate } from "../models/user.model";
+import { getTimeZoneFromcontact } from "../utils/Timezone";
 const Logger = logger("user.service");
 
 export const createUser = async (userData: IUserCreate): Promise<IUser> => {
@@ -12,8 +13,12 @@ export const ensureUserByContact = async (contact: string): Promise<IUser> => {
   Logger("ensureUserByContact").info("");
   let user = await getUserByContact(contact);
   if (!user) {
-    Logger("ensureUserByContact").info("");
-    user = await createUser({ contact });
+    const timezone = await getTimeZoneFromcontact(contact);
+    user = await createUser({ contact, timezone });
+  } else if (!user.timezone) {
+    // FIXME: find any better place to update this info?
+    user.timezone = await getTimeZoneFromcontact(contact);
+    await user.save();
   }
   return user;
 };

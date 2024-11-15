@@ -9,6 +9,8 @@
     "@imagemagick/magick-wasm": "^0.0.29",
     "axios": "^1.7.2",
     "express": "^4.18.2",
+    "libphonenumber-geo-carrier": "^1.2.8",
+    "libphonenumber-js": "^1.11.14",
     "lodash": "^4.17.21",
     "mongoose": "^8.4.0",
     "morgan": "^1.10.0",

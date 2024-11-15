@@ -9,6 +9,7 @@ export interface IUser extends Document {
   email?: string;
   password?: string;
   isActive: boolean;
+  timezone?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,6 +24,7 @@ const userSchema = new Schema<IUser>({
   contact: { type: String, required: true, unique: true },
   email: { type: String },
   isActive: { type: Boolean, default: true },
+  timezone: { type: String },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
