@@ -1,6 +1,6 @@
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 
-export const parseContactWithMeta = (contact: string) => {
+export const getMetaDataFromContact = (contact: string) => {
     let trimmedContact = contact.trim();
 
     if (!trimmedContact.startsWith("+")) {

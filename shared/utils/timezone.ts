@@ -2,7 +2,7 @@ import * as internalAlerts from '../../shared/libs/internal-alerts';
 import { DEFAULT_GEO_INFO } from '../config/config';
 import logger from '../config/logger';
 import { CountryCodeToTimezoneEnum } from '../types/enums';
-import { parseContactWithMeta } from './contact';
+import { getMetaDataFromContact } from './contact';
 const Logger = logger("shared/utils/Timezone");
 
 export const getTimeZoneFromCountryCode = (countryCode: string): string => {
@@ -11,7 +11,7 @@ export const getTimeZoneFromCountryCode = (countryCode: string): string => {
 
 export const getGeoInfoFromcontact = async (contact: string) => {
     Logger("getGeoInfoFromcontact").info("");
-    const parsedContact = parseContactWithMeta(contact)
+    const parsedContact = getMetaDataFromContact(contact)
 
     if (!parsedContact || !parsedContact.country) {
         Logger("getGeoInfoFromcontact").error("Failed to extract country code phone number, returning default timezone");
