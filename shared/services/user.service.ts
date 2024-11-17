@@ -1,6 +1,6 @@
 import logger from "../config/logger";
 import User, { IUser, IUserCreate } from "../models/user.model";
-import { getGeoInfoFromcontact } from "../utils/Timezone";
+import { getGeoInfoFromcontact } from "../utils/timezone";
 const Logger = logger("user.service");
 
 export const createUser = async (userData: IUserCreate): Promise<IUser> => {

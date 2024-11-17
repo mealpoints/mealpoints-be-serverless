@@ -19,9 +19,7 @@ export const QUEUE_MESSAGE_GROUP_IDS = {
   reminder: "reminder",
 };
 
-export const GEO_INFO = {
-  default: {
-    countryCode: "IN",
-    timezone: "Asia/Kolkata",
-  },
+export const DEFAULT_GEO_INFO = {
+  countryCode: "IN",
+  timezone: "Asia/Kolkata",
 };
