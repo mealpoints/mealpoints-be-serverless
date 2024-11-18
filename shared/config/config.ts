@@ -18,3 +18,8 @@ export const QUEUE_MESSAGE_GROUP_IDS = {
   meal_summary: "meal_summary",
   reminder: "reminder",
 };
+
+export const DEFAULT_GEO_INFO = {
+  countryCode: "IN",
+  timezone: "Asia/Kolkata",
+};

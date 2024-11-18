@@ -21,8 +21,13 @@ describe("WhatsappData", () => {
 
   test("should return the correct webhook type", () => {
     expect(whatsappDataText.isInboundMessage).toBe(true);
+    expect(whatsappDataText.isStatusUpdate).toBe(false);
+
     expect(whatsappDataStatus.isStatusUpdate).toBe(true);
+    expect(whatsappDataStatus.isInboundMessage).toBe(false);
+
     expect(whatsappDataImage.isInboundMessage).toBe(true);
+    expect(whatsappDataImage.isStatusUpdate).toBe(false);
   });
 
   test("should return correct whatsappMessageId ", () => {
@@ -44,9 +49,15 @@ describe("WhatsappData", () => {
   });
 
   test("should return correct phoneNumberId", () => {
-    expect(whatsappDataText.phoneNumberId).toBe("100498292800637");
-    expect(whatsappDataImage.phoneNumberId).toBe("100498292800637");
-    expect(whatsappDataStatus.phoneNumberId).toBe("100498292800637");
+    expect(whatsappDataText.phoneNumberId).toBe(
+      process.env.WHATSAPP_PHONE_NUMBER_ID
+    );
+    expect(whatsappDataImage.phoneNumberId).toBe(
+      process.env.WHATSAPP_PHONE_NUMBER_ID
+    );
+    expect(whatsappDataStatus.phoneNumberId).toBe(
+      process.env.WHATSAPP_PHONE_NUMBER_ID
+    );
   });
 
   test("should return correct contact", () => {
@@ -69,10 +80,14 @@ describe("WhatsappData", () => {
 
   test("isMessageFromWatsappPhoneNumberId should return correct value", () => {
     expect(
-      whatsappDataText.isMessageFromWatsappPhoneNumberId("100498292800637")
+      whatsappDataText.isMessageFromWatsappPhoneNumberId(
+        process.env.WHATSAPP_PHONE_NUMBER_ID as string
+      )
     ).toBe(true);
     expect(
-      whatsappDataImage.isMessageFromWatsappPhoneNumberId("100498292800637")
+      whatsappDataImage.isMessageFromWatsappPhoneNumberId(
+        process.env.WHATSAPP_PHONE_NUMBER_ID as string
+      )
     ).toBe(true);
     expect(
       whatsappDataStatus.isMessageFromWatsappPhoneNumberId("100498292800638")

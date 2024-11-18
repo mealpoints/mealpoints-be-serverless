@@ -9,9 +9,9 @@ export const processWhatsappWebhook = async (
   payload: WhastappWebhookObject
 ) => {
   Logger("processWhatsappWebhook").info("");
-  const whatsappData = new WhatsappData(payload);
 
   try {
+    const whatsappData = new WhatsappData(payload);
     if (whatsappData.isInboundMessage) {
       return processInboundMessageWebhook(payload);
     } else if (whatsappData.isStatusUpdate) {

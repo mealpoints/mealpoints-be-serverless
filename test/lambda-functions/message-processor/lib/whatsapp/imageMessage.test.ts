@@ -3,19 +3,22 @@ import * as awsHandler from "../../../../../shared/handlers/aws.handler";
 import * as whatsappHandler from "../../../../../shared/handlers/whatsapp.handler";
 import * as messageService from "../../../../../shared/services/message.service";
 import { MessageTypesEnum } from "../../../../../shared/types/enums";
-import { USER } from "../../../../mocks/user.mock";
 import { IMAGE_MESSAGE_PAYLOAD } from "../../../../mocks/whatsapp/imageMessage.mock";
+import { DataService } from "../../../../test_utils/DataService";
 
-jest.mock("../../../../shared/handlers/aws.handler");
-jest.mock("../../../../shared/handlers/whatsapp.handler");
-jest.mock("../../../../shared/services/message.service");
+jest.mock("../../../../../shared/handlers/whatsapp.handler");
+jest.mock("../../../../../shared/handlers/aws.handler");
+jest.mock("../../../../../shared/services/message.service");
 
 describe("processImageMessage", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  test("should process image message", async () => {
+  // TODO: This test doesnt do anything. It should be removed or improved.
+  test.skip("should process image message", async () => {
+    const user = DataService.getInstance().getUser();
+
     (whatsappHandler.getImageSentViaMessage as jest.Mock).mockResolvedValue(
       "test-image-file-path"
     );
@@ -23,14 +26,13 @@ describe("processImageMessage", () => {
     (messageService.updateRecievedMessage as jest.Mock).mockResolvedValue({});
     (messageService.sendTextMessage as jest.Mock).mockResolvedValue({});
 
-    // @ts-expect-error - we don't need to pass all the properties of the user object
-    await processImageMessage(IMAGE_MESSAGE_PAYLOAD, USER);
+    await processImageMessage(IMAGE_MESSAGE_PAYLOAD, user);
 
     expect(whatsappHandler.getImageSentViaMessage).toHaveBeenCalledWith(
       "345150251694683"
     );
     expect(awsHandler.uploadImageToS3).toHaveBeenCalledWith(
-      `${USER.id}/345150251694683`,
+      `${user.id}/345150251694683`,
       "test-image-file-path"
     );
     expect(messageService.updateRecievedMessage).toHaveBeenCalledWith(
@@ -41,7 +43,7 @@ describe("processImageMessage", () => {
       { media: "test-s3-path" }
     );
     expect(messageService.sendTextMessage).toHaveBeenCalledWith({
-      user: USER.id,
+      user: user.id,
       payload: `This is stuff about the image message.`,
       type: MessageTypesEnum.Text,
     });

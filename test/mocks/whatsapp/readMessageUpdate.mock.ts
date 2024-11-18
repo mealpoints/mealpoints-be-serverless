@@ -12,7 +12,7 @@ export const READ_MESSAGE_UPDATE: WhastappWebhookObject = {
             messaging_product: "whatsapp",
             metadata: {
               display_phone_number: "15550992151",
-              phone_number_id: "100498292800637",
+              phone_number_id: process.env.WHATSAPP_PHONE_NUMBER_ID as string,
             },
             statuses: [
               {

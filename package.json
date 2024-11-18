@@ -9,6 +9,7 @@
     "@imagemagick/magick-wasm": "^0.0.29",
     "axios": "^1.7.2",
     "express": "^4.18.2",
+    "libphonenumber-js": "^1.11.14",
     "lodash": "^4.17.21",
     "mongoose": "^8.4.0",
     "morgan": "^1.10.0",
@@ -30,7 +31,8 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
-    "globalSetup": "<rootDir>/test/globalSetup.test.ts",
+    "globalSetup": "<rootDir>/test/globalSetup.ts",
+    "globalTeardown": "<rootDir>/test/globalTeardown.ts",
     "setupFilesAfterEnv": [
       "<rootDir>/test/setupJest.ts"
     ],

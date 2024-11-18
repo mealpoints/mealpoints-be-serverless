@@ -1,9 +1,15 @@
 import logger from "../config/logger";
 import User, { IUser, IUserCreate } from "../models/user.model";
+import { getGeoInfoFromcontact } from "../utils/timezone";
 const Logger = logger("user.service");
 
 export const createUser = async (userData: IUserCreate): Promise<IUser> => {
   Logger("createUser").info("");
+
+  const { countryCode, timezone } = await getGeoInfoFromcontact(userData.contact);
+  userData.timezone ??= timezone;
+  userData.countryCode ??= countryCode;
+
   const user = await User.create(userData);
   return user;
 };
