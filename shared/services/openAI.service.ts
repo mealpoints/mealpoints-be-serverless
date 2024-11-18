@@ -11,11 +11,11 @@ interface IAskOptions {
   assistantId: string;
 }
 
-export const ask = async (
+export const ask = async <T>(
   prompt: string,
   user: IUser,
   options: IAskOptions
-): Promise<OpenAIResponse> => {
+): Promise<OpenAIResponse<T>> => {
   const openAIThread = await openAIThreadService.getLatestOpenAIThreadByUserId(
     user.id
   );

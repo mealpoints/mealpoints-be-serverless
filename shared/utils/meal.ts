@@ -1,10 +1,10 @@
-import { OpenAIResponse } from "../types/openai";
+import { MealData, OpenAIResponse } from "../types/openai";
 import {
   IUsersToSendReminders,
   IUsersToSendSummaries,
 } from "../types/queueMessages";
 
-export const isMeal = (meal: OpenAIResponse): boolean => {
+export const isMeal = (meal: OpenAIResponse<MealData> | null | undefined): boolean => {
   if (meal === null || meal === undefined) return false;
   if (typeof meal === "string") return false;
 
