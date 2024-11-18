@@ -1,8 +1,44 @@
 {
+  // Automatically format the code whenever a file is saved
   "editor.formatOnSave": true,
+
+  // Specify the default formatter to use (ESLint in this case)
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+
+  // Disable Prettier to avoid conflicts with ESLint formatting
+  "prettier.enable": false,
+
+  // Enable specific code actions to run on save
   "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit",
-    "source.organizeImports": "explicit",
-    "source.sortMembers": "explicit"
-  }
+    // Automatically fix all fixable ESLint issues
+    "source.fixAll.eslint": true,
+
+    // Automatically organize imports on save
+    "source.organizeImports": true,
+
+    // Automatically sort object/class members if supported
+    "source.sortMembers": true
+  },
+
+  // Enable validation for JavaScript and TypeScript files using ESLint
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+  ],
+
+  // Make warnings/errors visible in the Problems panel
+  "eslint.quiet": false,
+
+  // Ensure consistent line endings across platforms (use LF by default)
+  "files.eol": "\n",
+
+  // Add trailing newline at the end of files
+  "files.insertFinalNewline": true,
+
+  // Trim trailing whitespace automatically on save
+  "files.trimTrailingWhitespace": true,
+
+  // Use spaces instead of tabs, with a width of 2 spaces
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true
 }
