@@ -5,10 +5,10 @@ import { READ_MESSAGE_UPDATE } from "../../../../mocks/whatsapp/readMessageUpdat
 import { TEXT_MESSAGE_PAYLOAD } from "../../../../mocks/whatsapp/textMessage.mock";
 
 jest.mock(
-  "../../../../lambda-functions/message-processor/lib/whatsapp/inboundMessages"
+  "../../../../../lambda-functions/message-processor/lib/whatsapp/inboundMessages"
 );
 jest.mock(
-  "../../../../lambda-functions/message-processor/lib/whatsapp/statusUpdates"
+  "../../../../../lambda-functions/message-processor/lib/whatsapp/statusUpdates"
 );
 
 describe("processWhatsappWebhook", () => {
