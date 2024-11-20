@@ -38,8 +38,14 @@ export const processImageMessage = async (
       imageFilePath
     );
 
+    const prompt = JSON.stringify({
+      image_path: s3Path,
+      usersCountry: user.countryCode,
+      usersLocaltimestamp: user.localDateTime,
+    })
+
     try {
-      const openaiResponse = await openAIService.ask(s3Path, user, {
+      const openaiResponse = await openAIService.ask(prompt, user, {
         messageType: OpenAIMessageTypesEnum.Image,
         assistantId,
       });
@@ -78,6 +84,7 @@ const storeMeal = async (user: IUser, s3Path: string, data: MealData) => {
     name: data.meal_name,
     score: data.score,
     macros: data.macros,
+    localTime: user.localDateTime,
   });
 };
 

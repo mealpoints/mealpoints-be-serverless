@@ -1,6 +1,6 @@
 import logger from "../config/logger";
 import User, { IUser, IUserCreate } from "../models/user.model";
-import { getGeoInfoFromcontact } from "../utils/timezone";
+import { getGeoInfoFromcontact, getZonedISOTime } from "../utils/timezone";
 const Logger = logger("user.service");
 
 export const createUser = async (userData: IUserCreate): Promise<IUser> => {
@@ -65,3 +65,8 @@ export const deleteUser = async (id: string): Promise<IUser | null> => {
   return user;
 };
 
+export const getUserLocalTime = (user: IUser) => {
+  Logger("getUserLocalTime").info("");
+  const { timezone } = user;
+  return getZonedISOTime(new Date(), timezone);
+};

@@ -23,6 +23,7 @@ export const processInboundMessageWebhook = async (
 
     // Ensure user exists
     const user = await userService.ensureUserByContact(contact as string);
+    user.localDateTime = userService.getUserLocalTime(user);
 
     const existingMessage = await messageService.findRecievedMessage({
       whatsappMessageId,

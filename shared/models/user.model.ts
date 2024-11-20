@@ -11,6 +11,7 @@ export interface IUser extends Document {
   isActive: boolean;
   timezone: string;
   countryCode: string;
+  localDateTime: string;
   createdAt: Date;
   updatedAt: Date;
 }

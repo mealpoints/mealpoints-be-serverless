@@ -27,7 +27,13 @@ export const processTextMessage = async (
 
   try {
     try {
-      const result = await openAIService.ask(userMessage as string, user, {
+      // considering to save userMeals from textMessages in near future
+      const prompt = JSON.stringify({
+        text: userMessage,
+        usersCountry: user.countryCode,
+        usersLocaltimestamp: user.localDateTime,
+      })
+      const result = await openAIService.ask(prompt, user, {
         messageType: OpenAIMessageTypesEnum.Text,
         assistantId,
       });
