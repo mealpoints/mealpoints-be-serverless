@@ -11,7 +11,7 @@ import {
 import { WhastappWebhookObject } from "../../../../shared/types/message";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
-import { getInstructionStringForUser } from "../../../../shared/utils/user";
+import { getInstructionForUser } from "../../../../shared/utils/user";
 
 const Logger = logger("lib/whatsapp/textMessage");
 
@@ -31,7 +31,7 @@ export const processTextMessage = async (
       const result = await openAIService.ask(userMessage as string, user, {
         messageType: OpenAIMessageTypesEnum.Text,
         assistantId,
-        additionalInstructions: getInstructionStringForUser(user),
+        additionalInstructions: getInstructionForUser(user),
       });
 
       await messageService.sendTextMessage({

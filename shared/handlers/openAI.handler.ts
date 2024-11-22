@@ -29,7 +29,7 @@ export class OpenAIHandler {
 
   constructor({
     prompt,
-    additionalInstructions = "",
+    additionalInstructions,
     openAIThread,
     messageType,
     assistantId,
@@ -161,7 +161,7 @@ export class OpenAIHandler {
     try {
       this.run = await openai.beta.threads.runs.create(this.thread.id, {
         assistant_id: this.assistantId,
-        additional_instructions: this.additionalInstructions,
+        additional_instructions: this.additionalInstructions || "",
       });
     } catch (error) {
       Logger("createRun").error(error);

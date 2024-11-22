@@ -51,6 +51,6 @@ export const getGeoInfoFromcontact = async (contact: string) => {
   };
 };
 
-export const getZonedISOTime = (date: Date, timezone: string) => {
+export const getTimeInTimezone = (date: Date, timezone: string) => {
   return date.toLocaleString("en-US", { timeZone: timezone });
 };
