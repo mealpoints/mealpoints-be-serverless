@@ -11,6 +11,7 @@ import {
 import { WhastappWebhookObject } from "../../../../shared/types/message";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
+import { getInstructionStringForUser } from "../../../../shared/utils/user";
 
 const Logger = logger("lib/whatsapp/textMessage");
 
@@ -27,15 +28,10 @@ export const processTextMessage = async (
 
   try {
     try {
-      // considering to save userMeals from textMessages in near future
-      const prompt = JSON.stringify({
-        text: userMessage,
-        usersCountry: user.countryCode,
-        usersLocaltimestamp: user.localDateTime,
-      })
-      const result = await openAIService.ask(prompt, user, {
+      const result = await openAIService.ask(userMessage as string, user, {
         messageType: OpenAIMessageTypesEnum.Text,
         assistantId,
+        additionalInstructions: getInstructionStringForUser(user),
       });
 
       await messageService.sendTextMessage({

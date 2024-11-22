@@ -20,6 +20,7 @@ export class OpenAIHandler {
   thread!: Thread;
   run!: Run;
   prompt: string;
+  additionalInstructions?: string;
   openAIThread: IOpenAIThread | null;
   messageType: OpenAIMessageTypesEnum;
   assistantId: string;
@@ -28,6 +29,7 @@ export class OpenAIHandler {
 
   constructor({
     prompt,
+    additionalInstructions = "",
     openAIThread,
     messageType,
     assistantId,
@@ -36,11 +38,13 @@ export class OpenAIHandler {
     openAIThread: IOpenAIThread | null;
     messageType: OpenAIMessageTypesEnum;
     assistantId: string;
+    additionalInstructions?: string;
   }) {
     this.prompt = prompt;
     this.openAIThread = openAIThread;
     this.messageType = messageType;
     this.assistantId = assistantId;
+    this.additionalInstructions = additionalInstructions;
   }
 
   private async initAsk() {
@@ -157,6 +161,7 @@ export class OpenAIHandler {
     try {
       this.run = await openai.beta.threads.runs.create(this.thread.id, {
         assistant_id: this.assistantId,
+        additional_instructions: this.additionalInstructions,
       });
     } catch (error) {
       Logger("createRun").error(error);

@@ -3,6 +3,7 @@ import * as messageService from "../../../../shared/services/message.service";
 import * as userService from "../../../../shared/services/user.service";
 import { WebhookTypesEnum } from "../../../../shared/types/enums";
 import { WhastappWebhookObject } from "../../../../shared/types/message";
+import { getUserLocalTime } from "../../../../shared/utils/user";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { isUserRateLimited } from "../rate-limiter";
 import { processImageMessage } from "./imageMessage";
@@ -23,7 +24,7 @@ export const processInboundMessageWebhook = async (
 
     // Ensure user exists
     const user = await userService.ensureUserByContact(contact as string);
-    user.localDateTime = userService.getUserLocalTime(user);
+    user.localTime = getUserLocalTime(user);
 
     const existingMessage = await messageService.findRecievedMessage({
       whatsappMessageId,

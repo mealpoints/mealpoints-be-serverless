@@ -9,6 +9,7 @@ const Logger = logger("services/openai.service");
 interface IAskOptions {
   messageType: OpenAIMessageTypesEnum;
   assistantId: string;
+  additionalInstructions?: string;
 }
 
 export const ask = async (
@@ -26,6 +27,7 @@ export const ask = async (
       openAIThread,
       messageType: options.messageType,
       assistantId: options.assistantId,
+      additionalInstructions: options.additionalInstructions,
     });
 
     const result = await openAIHandler.ask();
