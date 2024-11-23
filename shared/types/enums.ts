@@ -550,7 +550,7 @@ export enum WhatsappTemplateNameEnum {
   ReminderToPostMealsThree = "reminder_to_post_meals_3",
 }
 
-export enum CountryCodeToTimezoneEnum {
+export enum CountryCodeToDefaultTimezoneEnum {
   AF = "Asia/Kabul",
   AL = "Europe/Tirane",
   DZ = "Africa/Algiers",

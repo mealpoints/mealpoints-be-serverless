@@ -1,14 +1,13 @@
-import { formatInTimeZone } from "date-fns-tz";
 import * as internalAlerts from "../../shared/libs/internal-alerts";
 import { DEFAULT_GEO_INFO } from "../config/config";
 import logger from "../config/logger";
-import { CountryCodeToTimezoneEnum } from "../types/enums";
+import { CountryCodeToDefaultTimezoneEnum } from "../types/enums";
 import { getMetaDataFromContact } from "./contact";
 const Logger = logger("shared/utils/Timezone");
 
 export const getTimeZoneFromCountryCode = (countryCode: string): string => {
-  return CountryCodeToTimezoneEnum[
-    countryCode as keyof typeof CountryCodeToTimezoneEnum
+  return CountryCodeToDefaultTimezoneEnum[
+    countryCode as keyof typeof CountryCodeToDefaultTimezoneEnum
   ];
 };
 
@@ -52,6 +51,46 @@ export const getGeoInfoFromcontact = async (contact: string) => {
   };
 };
 
-export const getTimeInTimezone = (date: Date, timezone: string) => {
-  return formatInTimeZone(date, timezone, "yyyy-MM-dd'T'HH:mm:ssXXX");
+export const getTimeInTimezone = (date: Date, timezone: string): Date => {
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    timeZone: timezone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  });
+
+  // Format the date in the target timezone
+  const parts = formatter.formatToParts(date);
+
+  // Extract the components of the date
+  const year = Number.parseInt(
+    parts.find((p) => p.type === "year")?.value || "0",
+    10
+  );
+  const month =
+    Number.parseInt(parts.find((p) => p.type === "month")?.value || "0", 10) -
+    1; // Months are 0-based
+  const day = Number.parseInt(
+    parts.find((p) => p.type === "day")?.value || "0",
+    10
+  );
+  const hour = Number.parseInt(
+    parts.find((p) => p.type === "hour")?.value || "0",
+    10
+  );
+  const minute = Number.parseInt(
+    parts.find((p) => p.type === "minute")?.value || "0",
+    10
+  );
+  const second = Number.parseInt(
+    parts.find((p) => p.type === "second")?.value || "0",
+    10
+  );
+
+  // Construct a new UTC date
+  return new Date(Date.UTC(year, month, day, hour, minute, second));
 };
