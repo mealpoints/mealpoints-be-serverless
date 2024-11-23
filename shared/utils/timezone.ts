@@ -94,3 +94,7 @@ export const getTimeInTimezone = (date: Date, timezone: string): Date => {
   // Construct a new UTC date
   return new Date(Date.UTC(year, month, day, hour, minute, second));
 };
+
+export const getLocaleTimeInTimezone = (date: Date, timezone: string): string => {
+  return date.toLocaleString("en-GB", { timeZone: timezone });
+};
