@@ -1,4 +1,4 @@
-import { format } from "date-fns-tz";
+import { formatInTimeZone } from "date-fns-tz";
 import * as internalAlerts from "../../shared/libs/internal-alerts";
 import { DEFAULT_GEO_INFO } from "../config/config";
 import logger from "../config/logger";
@@ -53,5 +53,5 @@ export const getGeoInfoFromcontact = async (contact: string) => {
 };
 
 export const getTimeInTimezone = (date: Date, timezone: string) => {
-  return format(date, "yyyy-MM-dd'T'HH:mm:ssXXX", { timeZone: timezone });
+  return formatInTimeZone(date, timezone, "yyyy-MM-dd'T'HH:mm:ssXXX");
 };
