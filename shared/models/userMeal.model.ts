@@ -12,7 +12,7 @@ export interface IUserMeal extends Document {
     total: number;
   };
   macros: NutritionalData;
-  localTime: string;
+  localTime: Date;
   createdAt: Date;
 }
 
@@ -24,7 +24,7 @@ export interface IUserMealCreate {
     value: number;
     total: number;
   };
-  localTime: string;
+  localTime: Date;
   macros: NutritionalData;
 }
 
@@ -34,7 +34,7 @@ const UserMealSchema: Schema = new Schema({
   image: { type: String },
   score: { type: Object },
   macros: { type: Object },
-  localTime: { type: String, required: true },
+  localTime: { type: Date, required: true },
   createdAt: { type: Date, default: Date.now },
 });
 

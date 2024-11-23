@@ -16,7 +16,10 @@ import { WhastappWebhookObject } from "../../../../shared/types/message";
 import { MealData } from "../../../../shared/types/openai";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
-import { getInstructionForUser } from "../../../../shared/utils/user";
+import {
+  getInstructionForUser,
+  getUserLocalTime,
+} from "../../../../shared/utils/user";
 const Logger = logger("lib/whatsapp/imageMessage");
 
 export const processImageMessage = async (
@@ -80,7 +83,7 @@ const storeMeal = async (user: IUser, s3Path: string, data: MealData) => {
     name: data.meal_name,
     score: data.score,
     macros: data.macros,
-    localTime: user.localTime,
+    localTime: getUserLocalTime(user),
   });
 };
 
