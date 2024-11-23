@@ -10,8 +10,9 @@ export const getUserLocalTime = (user: IUser): Date => {
 };
 
 export const getInstructionForUser = (user: IUser): string => {
-  const localDateTime = getUserLocalTime(user);
   return `The user is from ${
     user.countryCode
-  }, and it's ${localDateTime.toLocaleString()} there.`;
+  }, and it's ${new Date().toLocaleString("en-GB", {
+    timeZone: user.timezone,
+  })} there.`;
 };
