@@ -7,7 +7,6 @@ describe("UserMealService", () => {
     it("getTodaysUserMealsByUserId", async () => {
         Logger("getTodaysUserMealsByUserId").info("");
         const userMeals = await userMealService.getTodaysUserMealsByUserId(USER.id);
-        console.log(userMeals);
         expect(userMeals.length).toBeDefined();
     });
 });
