@@ -76,3 +76,25 @@ export const getUserMealById = async (
     throw error;
   }
 };
+
+export const getTodaysUserMealsByUserId = async (userId: string): Promise<IUserMeal[]> => {
+  try {
+    Logger("getTodaysUserMealsByUserId").info("");
+    const now = new Date();
+    const localStartTime = new Date(Date.UTC(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      3, 0, 0
+    ));
+
+    const userMeals = await UserMeal.find({
+      user: userId,
+      localTime: { $gte: localStartTime },
+    });
+    return userMeals;
+  } catch (error) {
+    Logger("getTodaysUserMealsByUserId").error(error);
+    throw error;
+  }
+}

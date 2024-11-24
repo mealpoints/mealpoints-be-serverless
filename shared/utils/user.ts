@@ -1,7 +1,8 @@
 import logger from "../config/logger";
 import { IUser } from "../models/user.model";
+import { getTodaysUserMealsByUserId } from "../services/userMeal.service";
 import { CountryCodeToNameEnum } from "../types/enums";
-import { getTimeInTimezone, getLocaleTimeInTimezone } from "./timezone";
+import { getLocaleTimeInTimezone, getTimeInTimezone } from "./timezone";
 const Logger = logger("shared/utils/user");
 
 export const getUserLocalTime = (user: IUser): Date => {
@@ -21,6 +22,15 @@ const timeAndLocationOfUser = (user: IUser) => {
   return `The user is from ${countryName}, and it's ${localDateTime} in ${countryName} right now.`;
 };
 
-export const getInstructionForUser = (user: IUser): string => {
-  return timeAndLocationOfUser(user);
+const todaysMealsByUser = async (user: IUser): Promise<string> => {
+  const userMeals = await getTodaysUserMealsByUserId(user.id);
+  const mealNames = userMeals.map((userMeal) => userMeal.name);
+  if (mealNames.length === 0) {
+    return "";
+  }
+  return `The user has consumed the following meals today: ${mealNames.join(", ")}`;
+};
+
+export const getInstructionForUser = async (user: IUser): Promise<string> => {
+  return timeAndLocationOfUser(user) + await todaysMealsByUser(user);
 };
