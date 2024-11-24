@@ -19,16 +19,24 @@ const timeAndLocationOfUser = (user: IUser) => {
   
   const localDateTime = getLocaleTimeInTimezone(new Date(), user.timezone);
   
-  return `The user is from ${countryName}, and it's ${localDateTime} in ${countryName} right now.`;
+  return `The user is from ${countryName}, and it's ${localDateTime} in ${countryName} right now. `;
 };
 
 const todaysMealsByUser = async (user: IUser): Promise<string> => {
-  const userMeals = await getTodaysUserMealsByUserId(user.id);
-  const mealNames = userMeals.map((userMeal) => userMeal.name);
-  if (mealNames.length === 0) {
+  try {
+    const userMeals = await getTodaysUserMealsByUserId(user.id);
+    const mealDetails = userMeals.map((userMeal) => {
+      const mealTime = getLocaleTimeInTimezone(userMeal.createdAt, user.timezone);
+      return `${userMeal.name} at ${mealTime}`;
+    });
+    if (mealDetails.length === 0) {
+      return "";
+    }
+    return `The user has consumed the following meals today: ${mealDetails.join(", ")}`;
+  } catch (error) {
+    Logger("todaysMealsByUser").error(error);
     return "";
   }
-  return `The user has consumed the following meals today: ${mealNames.join(", ")}`;
 };
 
 export const getInstructionForUser = async (user: IUser): Promise<string> => {

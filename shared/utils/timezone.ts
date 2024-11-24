@@ -96,5 +96,11 @@ export const getTimeInTimezone = (date: Date, timezone: string): Date => {
 };
 
 export const getLocaleTimeInTimezone = (date: Date, timezone: string): string => {
-  return date.toLocaleString("en-GB", { timeZone: timezone });
+  return date.toLocaleString("en-GB", {
+    timeZone: timezone,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+  });
 };
