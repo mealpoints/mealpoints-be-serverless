@@ -3,7 +3,7 @@ import { OpenAIHandler } from "../handlers/openAI.handler";
 import { IUser } from "../models/user.model";
 import * as openAIThreadService from "../services/openAIThread.service";
 import { OpenAIMessageTypesEnum } from "../types/enums";
-import { OpenAIResponse } from "../types/openai";
+import { MealData, OpenAIResponse } from "../types/openai";
 const Logger = logger("services/openai.service");
 
 interface IAskOptions {
@@ -11,11 +11,11 @@ interface IAskOptions {
   assistantId: string;
 }
 
-export const ask = async <T>(
+export const ask = async (
   prompt: string,
   user: IUser,
   options: IAskOptions
-): Promise<OpenAIResponse<T>> => {
+): Promise<OpenAIResponse<string | MealData>> => {
   const openAIThread = await openAIThreadService.getLatestOpenAIThreadByUserId(
     user.id
   );

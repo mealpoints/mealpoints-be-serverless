@@ -7,6 +7,7 @@ import SettingsSingleton from "../config/settings";
 import { IOpenAIThread } from "../models/openAIThread.model";
 import { OpenAIMessageTypesEnum } from "../types/enums";
 import { isValidUrl } from "../utils/url";
+import { MealData } from "../types/openai";
 const Logger = logger("openai.handler");
 
 const API_KEY = process.env.OPENAI_API_KEY as string;
@@ -236,7 +237,7 @@ export class OpenAIHandler {
   }
 
   // @ts-expect-error - We are not going to return anything from the catch block.
-  async ask(): Promise<string> {
+  async ask(): Promise<string | MealData> {
     // Get Settings
     const settings = await SettingsSingleton.getInstance();
     const maxRunsOnAThread: number = settings.get(

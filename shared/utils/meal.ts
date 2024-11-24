@@ -4,7 +4,7 @@ import {
   IUsersToSendSummaries,
 } from "../types/queueMessages";
 
-export const isMeal = (meal: OpenAIResponse<MealData> | null | undefined): boolean => {
+export const isMeal = (meal: OpenAIResponse<MealData | string>): boolean => {
   if (meal === null || meal === undefined) return false;
   if (typeof meal === "string") return false;
 
