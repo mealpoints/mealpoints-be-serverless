@@ -26,7 +26,7 @@ const todaysMealsByUser = async (user: IUser): Promise<string> => {
   try {
     const userMeals = await getTodaysUserMealsByUserId(user.id);
     const mealDetails = userMeals.map((userMeal) => {
-      const mealTime = getLocaleTimeInTimezone(userMeal.createdAt, user.timezone);
+      const mealTime = getLocaleTimeInTimezone(userMeal.createdAt, user.timezone, 'time');
       return `${userMeal.name} at ${mealTime}`;
     });
     if (mealDetails.length === 0) {

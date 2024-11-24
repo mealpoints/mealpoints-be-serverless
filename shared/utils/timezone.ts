@@ -95,12 +95,32 @@ export const getTimeInTimezone = (date: Date, timezone: string): Date => {
   return new Date(Date.UTC(year, month, day, hour, minute, second));
 };
 
-export const getLocaleTimeInTimezone = (date: Date, timezone: string): string => {
-  return date.toLocaleString("en-GB", {
-    timeZone: timezone,
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true,
-  });
+export const getLocaleTimeInTimezone = (
+  date: Date,
+  timezone: string,
+  format: 'time' | 'date' | 'datetime' = 'datetime'
+): string => {
+  const baseOptions: Intl.DateTimeFormatOptions = { timeZone: timezone };
+
+  const options: Record<string, Intl.DateTimeFormatOptions> = {
+    time: {
+      ...baseOptions,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+    },
+    date: {
+      ...baseOptions,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    },
+    datetime: {
+      ...baseOptions,
+      hour12: true,
+    }
+  };
+
+  return date.toLocaleString("en-GB", options[format]);
 };

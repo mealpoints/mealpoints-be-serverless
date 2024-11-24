@@ -1,3 +1,4 @@
+import { START_HOUR_OF_DAY } from "../config/config";
 import logger from "../config/logger";
 import UserMeal, { IUserMeal, IUserMealCreate } from "../models/userMeal.model";
 import { ReportPeriod } from "../types/report";
@@ -85,7 +86,7 @@ export const getTodaysUserMealsByUserId = async (userId: string): Promise<IUserM
       now.getFullYear(),
       now.getMonth(),
       now.getDate(),
-      3, 0, 0
+      START_HOUR_OF_DAY, 0, 0
     ));
 
     const userMeals = await UserMeal.find({
