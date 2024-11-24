@@ -1,3 +1,4 @@
+import { START_HOUR_OF_DAY } from "../config/config";
 import logger from "../config/logger";
 import UserMeal, { IUserMeal, IUserMealCreate } from "../models/userMeal.model";
 import { ReportPeriod } from "../types/report";
@@ -76,3 +77,25 @@ export const getUserMealById = async (
     throw error;
   }
 };
+
+export const getTodaysUserMealsByUserId = async (userId: string): Promise<IUserMeal[]> => {
+  try {
+    Logger("getTodaysUserMealsByUserId").info("");
+    const now = new Date();
+    const localStartTime = new Date(Date.UTC(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      START_HOUR_OF_DAY, 0, 0
+    ));
+
+    const userMeals = await UserMeal.find({
+      user: userId,
+      localTime: { $gte: localStartTime },
+    });
+    return userMeals;
+  } catch (error) {
+    Logger("getTodaysUserMealsByUserId").error(error);
+    throw error;
+  }
+}

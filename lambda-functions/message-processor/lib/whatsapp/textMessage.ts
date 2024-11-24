@@ -31,7 +31,7 @@ export const processTextMessage = async (
       const result = await openAIService.ask(userMessage as string, user, {
         messageType: OpenAIMessageTypesEnum.Text,
         assistantId,
-        additionalInstructions: getInstructionForUser(user),
+        additionalInstructions: await getInstructionForUser(user),
       });
 
       await messageService.sendTextMessage({

@@ -23,3 +23,5 @@ export const DEFAULT_GEO_INFO = {
   countryCode: "IN",
   timezone: "Asia/Kolkata",
 };
+
+export const START_HOUR_OF_DAY = 3;

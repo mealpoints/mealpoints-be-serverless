@@ -46,7 +46,7 @@ export const processImageMessage = async (
       const openaiResponse = await openAIService.ask(s3Path, user, {
         messageType: OpenAIMessageTypesEnum.Image,
         assistantId,
-        additionalInstructions: getInstructionForUser(user),
+        additionalInstructions: await getInstructionForUser(user),
       });
       cleanupLocalFile(imageFilePath);
       await updateReceivedMessage(payload, s3Path);

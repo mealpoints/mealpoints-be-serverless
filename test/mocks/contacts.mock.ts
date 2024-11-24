@@ -7,6 +7,7 @@ export const CONTACT_NUMBERS = {
   shruti_in: "919540599849",
   shruti_de: "4915123564195",
   kairav_in: "919967900241",
+  niraj_in: "917400217755",
 };
 
 export const CONTACT_MOCK_FOR_GEOINFO = {
