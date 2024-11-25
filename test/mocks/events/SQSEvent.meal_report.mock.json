@@ -1,0 +1,24 @@
+{
+  "Records": [
+    {
+      "messageId": "c42943bf-b247-4a79-821b-db89961ea7e3",
+      "receiptHandle": "AQEBEKPH47xNPDq/m6vFyvwijQ4AzCl2RdUv/RUy3jab1zmkZIlCJJ6czKwVuFyo98sY3ZmGMidDFPh8hOknd+uSkBFfsnKnFpsTNcwUCY7YtNFz+9dRO0h16Sh3VdjKKcLm5YXi1HokAlfTU+gDrezYjMuCLRuiOmo+YF84/zrYDxkzoNlKMxROVeSFsLCk5FpB2sRkM/wFE5zuR235L2RsoUJqNf/tlilQec+5ZHbvLw5d0SAvwH4acR5Fl2lhCHXaZaBXK0n/LvjsBqPnwmhUKQ==",
+      "body": "{\n  \"body\": {\n    \"user\": {\n      \"_id\": \"66903c69fc2f6a42f733b5d4\",\n      \"contact\": \"917022629939\",\n      \"isActive\": true,\n      \"createdAt\": \"2024-07-11T20:11:21.440Z\",\n      \"updatedAt\": \"2024-07-11T20:11:21.440Z\",\n      \"__v\": 0,\n      \"id\": \"66903c69fc2f6a42f733b5d4\"\n    },\n    \"meals\": [\n      {\n        \"_id\": \"6727331630f91ada66147fd6\",\n        \"user\": \"66903c69fc2f6a42f733b5d4\",\n        \"name\": \"General Tso's Chicken with Brown Rice\",\n        \"image\": \"https://mealpoints-dev.s3.ap-south-1.amazonaws.com/66903c69fc2f6a42f733b5d4/3248699211938313.jpg\",\n        \"score\": { \"value\": 7.8, \"total\": 10 },\n        \"macros\": {\n          \"calories\": { \"value\": 450, \"unit\": \"kcal\" },\n          \"protein\": { \"value\": 25, \"unit\": \"grams\" },\n          \"fat\": { \"value\": 10, \"unit\": \"grams\" },\n          \"carbohydrates\": { \"value\": 60, \"unit\": \"grams\" },\n          \"fiber\": { \"value\": 5, \"unit\": \"grams\" },\n          \"sugars\": { \"value\": 15, \"unit\": \"grams\" }\n        },\n        \"createdAt\": \"2024-11-03T08:23:50.400Z\",\n        \"__v\": 0\n      },\n      {\n        \"_id\": \"6727336730f91ada66147fe4\",\n        \"user\": \"66903c69fc2f6a42f733b5d4\",\n        \"name\": \"Chicken, Sweet Potato, Avocado, and Broccolini Bowl\",\n        \"image\": \"https://mealpoints-dev.s3.ap-south-1.amazonaws.com/66903c69fc2f6a42f733b5d4/1065939258557556.jpg\",\n        \"score\": { \"value\": 9.1, \"total\": 10 },\n        \"macros\": {\n          \"calories\": { \"value\": 550, \"unit\": \"kcal\" },\n          \"protein\": { \"value\": 30, \"unit\": \"grams\" },\n          \"fat\": { \"value\": 20, \"unit\": \"grams\" },\n          \"carbohydrates\": { \"value\": 50, \"unit\": \"grams\" },\n          \"fiber\": { \"value\": 14, \"unit\": \"grams\" },\n          \"sugars\": { \"value\": 8, \"unit\": \"grams\" }\n        },\n        \"createdAt\": \"2024-11-03T08:25:11.412Z\",\n        \"__v\": 0\n      }\n    ]\n  }\n}\n",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "AWSTraceHeader": "Root=1-6708cf34-1cbdd1f63b92ccc619e50a82;Parent=59a890c166174257;Sampled=0;Lineage=1:82a6cceb:0",
+        "SentTimestamp": "1728630582494",
+        "SequenceNumber": "18889273502828015872",
+        "MessageGroupId": "meal_report",
+        "SenderId": "AROA5FTZAFROM3VUQ3K66:mealpoints-be-serverless-dev-api",
+        "MessageDeduplicationId": "wamid.HBgMOTE3MDIyNjI5OTM5FQIAEhgWM0VCMEYxMTAxNTJFNTVGM0ZERTBBMgA=",
+        "ApproximateFirstReceiveTimestamp": "1728630582494"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "aad6cb37e2e1ac239084b5275d8e4406",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:ap-south-1:905418124380:sqs-dev.fifo",
+      "awsRegion": "ap-south-1"
+    }
+  ]
+}

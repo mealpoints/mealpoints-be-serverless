@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { QUEUE_MESSAGE_GROUP_IDS } from "../../../shared/config/config";
 import logger from "../../../shared/config/logger";
 import { queue } from "../../../shared/config/queue";
 import { isContactBlacklisted } from "../../../shared/libs/blacklist";
 import { SqsQueueService } from "../../../shared/services/queue.service";
 import { WhastappWebhookObject } from "../../../shared/types/message";
+import { QUEUE_MESSAGE_GROUP_IDS } from "../../../shared/types/queueMessages";
 import ApiResponse from "../../../shared/utils/ApiResponse";
 import { WhatsappData } from "../../../shared/utils/WhatsappData";
 import { catchAsync } from "../../../shared/utils/catchAsync";

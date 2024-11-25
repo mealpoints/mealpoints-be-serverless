@@ -140,12 +140,40 @@ const createReminderToPostMealsThreeTemplate =
     };
   };
 
+interface IUserMealReportData {
+  mealReportUrl: string;
+}
+
+const createUserMealReportTemplate = (
+  data: IUserMealReportData
+): MessageTemplateObject<ComponentTypesEnum> => {
+  return {
+    name: WhatsappTemplateNameEnum.UserMealReport,
+    language: {
+      policy: "deterministic",
+      code: LanguagesEnum.English,
+    },
+    components: [
+      {
+        type: ComponentTypesEnum.Button,
+        parameters: [
+          {
+            type: ParametersTypesEnum.Text,
+            text: data.mealReportUrl,
+          },
+        ],
+      },
+    ],
+  };
+};
+
 // Mapping the enum values to their respective data types
 type WhatsappTemplateDataMap = {
   [WhatsappTemplateNameEnum.UserMealSummary]: IUserMealSummaryData;
   [WhatsappTemplateNameEnum.ReminderToPostMealsOne]: IReminderToPostMealsOne;
   [WhatsappTemplateNameEnum.ReminderToPostMealsTwo]: IReminderToPostMealsTwo;
   [WhatsappTemplateNameEnum.ReminderToPostMealsThree]: IReminderToPostMealsThree;
+  [WhatsappTemplateNameEnum.UserMealReport]: IUserMealReportData;
 };
 
 export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
@@ -164,6 +192,9 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
     }
     case WhatsappTemplateNameEnum.ReminderToPostMealsThree: {
       return createReminderToPostMealsThreeTemplate();
+    }
+    case WhatsappTemplateNameEnum.UserMealReport: {
+      return createUserMealReportTemplate(data as IUserMealReportData);
     }
     default: {
       throw new Error("Template not found");

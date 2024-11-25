@@ -13,13 +13,17 @@ export const USER_MESSAGES = {
   },
 };
 
-export const QUEUE_MESSAGE_GROUP_IDS = {
-  whatsapp_messages: "whatsapp_messages",
-  meal_summary: "meal_summary",
-  reminder: "reminder",
-};
-
 export const DEFAULT_GEO_INFO = {
   countryCode: "IN",
   timezone: "Asia/Kolkata",
+};
+
+export const MEAL_REPORT = {
+  improvementFactor: 0.15,
+  weeks: 12,
+};
+
+export const URL = {
+  baseURL: process.env.BASE_URL,
+  mealReport: "/meal-report/",
 };

@@ -5,6 +5,7 @@ export type SettingKey =
   | "openai.assistant.mealpoints-core"
   | "openai.assistant.reminder"
   | "openai.assistant.meal-summary"
+  | "openai.assistant.meal-reports"
   | "blacklist"
   | "rate-limit.message-limit-per-day"
   | "internal-alerts.alert-list"

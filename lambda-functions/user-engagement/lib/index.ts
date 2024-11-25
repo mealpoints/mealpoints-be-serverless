@@ -11,11 +11,12 @@ import { categorizeUsers } from "./categorizeUsers";
 const Logger = logger("lib/processUserEngagement");
 
 export const processUserEngagement = async () => {
-  Logger("processUserEngagement").info("Starting user engagement process");
+  Logger("processUserEngagement").info("");
   const settings = await SettingsSingleton.getInstance();
   const engagmentMessageIntervalInDays = settings.get(
     "user-engangement.interval-in-days"
   ) as number;
+
   const reminderThresholdDate = new DateUtils()
     .subtractDays(engagmentMessageIntervalInDays)
     .toDate();
@@ -31,6 +32,7 @@ export const processUserEngagement = async () => {
         reminderThresholdDate,
         currentDate
       );
+
     const usersToEngage: (IUsersToSendSummaries | IUsersToSendReminders)[] =
       await categorizeUsers(
         usersWithoutEngagementMessage,

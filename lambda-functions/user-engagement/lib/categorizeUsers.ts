@@ -4,6 +4,7 @@ import { UserEngagementMessageTypesEnum } from "../../../shared/types/enums";
 import {
   IUsersToSendReminders,
   IUsersToSendSummaries,
+  QUEUE_MESSAGE_GROUP_IDS,
 } from "../../../shared/types/queueMessages";
 import { objectifyId } from "../../../shared/utils/mongoose";
 import User, { IUser } from "./../../../shared/models/user.model";
@@ -31,10 +32,17 @@ export const categorizeUsers = async (
     usersToEngage.push({
       user: userToSendSummary.user,
       meals: userToSendSummary.meals,
+      messageGroupId: QUEUE_MESSAGE_GROUP_IDS.meal_summary,
     });
   });
 
-  usersToEngage.push(...usersToSendReminders);
+  usersToSendReminders.forEach((userToSendReminder) => {
+    usersToEngage.push({
+      user: userToSendReminder.user,
+      remindersCount: userToSendReminder.remindersCount,
+      messageGroupId: QUEUE_MESSAGE_GROUP_IDS.reminder,
+    });
+  });
 
   return usersToEngage;
 };

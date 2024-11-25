@@ -1,10 +1,11 @@
 import { SQSEvent } from "aws-lambda";
-import { QUEUE_MESSAGE_GROUP_IDS } from "../../shared/config/config";
 import { connectToDatabase } from "../../shared/config/database";
 import logger from "../../shared/config/logger";
 import { queue } from "../../shared/config/queue";
 import { SqsQueueService } from "../../shared/services/queue.service";
+import { QUEUE_MESSAGE_GROUP_IDS } from "../../shared/types/queueMessages";
 import { SQSEventData } from "../../shared/utils/SQSEventData";
+import { processMealReport } from "./lib/meal-report";
 import { processMealSummary } from "./lib/meal-sumary";
 import { processReminder } from "./lib/reminder";
 import { processWhatsappWebhook } from "./lib/whatsapp";
@@ -15,6 +16,7 @@ const messageProcessors = {
   [QUEUE_MESSAGE_GROUP_IDS.whatsapp_messages]: processWhatsappWebhook,
   [QUEUE_MESSAGE_GROUP_IDS.meal_summary]: processMealSummary,
   [QUEUE_MESSAGE_GROUP_IDS.reminder]: processReminder,
+  [QUEUE_MESSAGE_GROUP_IDS.meal_report]: processMealReport,
 };
 
 export const handler = async (sqsEvent: SQSEvent) => {
@@ -29,13 +31,21 @@ export const handler = async (sqsEvent: SQSEvent) => {
     return;
   }
 
-  const processMessage = messageProcessors[eventData.messageGroupId];
+  const processMessage =
+    messageProcessors[
+      eventData.messageGroupId as keyof typeof QUEUE_MESSAGE_GROUP_IDS
+    ];
 
   if (processMessage) {
     Logger("handler").info(`Processing ${eventData.messageGroupId} messages`);
-    // TODO: Fix the type error for processMessage
-    // @ts-expect-error - processMessage is a function
-    const eventService = new EventService(queueService, processMessage);
+
+    // TODO: Fix the types for processMessage
+    type MessageProcessor = (messageBody: unknown) => Promise<void>;
+    const eventService = new EventService(
+      queueService,
+      processMessage as MessageProcessor
+    );
+
     await eventService.handle(sqsEvent);
   } else {
     Logger("handler").error("Unknown message group ID");
