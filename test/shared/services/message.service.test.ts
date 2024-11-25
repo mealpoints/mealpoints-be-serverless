@@ -4,7 +4,7 @@ import {
   MessageTypesEnum,
   WhatsappTemplateNameEnum,
 } from "../../../shared/types/enums";
-import { createWhatsappTemplate } from "../../../shared/utils/whatsappTemplateUtils";
+import { createWhatsappTemplate } from "../../../shared/utils/whatsapp-templates";
 import { DataService } from "../../test_utils/DataService";
 const Logger = logger("test/shared/services/message.service.test");
 

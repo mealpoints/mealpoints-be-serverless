@@ -12,7 +12,7 @@ import {
   WhatsappTemplateNameEnum,
 } from "../../../../shared/types/enums";
 import { IUsersToSendSummaries } from "../../../../shared/types/queueMessages";
-import { createWhatsappTemplate } from "../../../../shared/utils/whatsappTemplateUtils";
+import { createWhatsappTemplate } from "../../../../shared/utils/whatsapp-templates";
 
 const Logger = logger("lib/reminder/meal-summary");
 

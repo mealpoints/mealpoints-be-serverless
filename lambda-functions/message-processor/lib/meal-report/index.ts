@@ -17,7 +17,7 @@ import {
   UserEngagementMessageTypesEnum,
   WhatsappTemplateNameEnum,
 } from "../../../../shared/types/enums";
-import { createWhatsappTemplate } from "../../../../shared/utils/whatsappTemplateUtils";
+import { createWhatsappTemplate } from "../../../../shared/utils/whatsapp-templates";
 import {
   getMetadata,
   getSummary,
