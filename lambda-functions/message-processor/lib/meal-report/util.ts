@@ -169,5 +169,7 @@ export const validateOpenAIResult = (
       return false;
     }
   }
+
+  // TODO: Make sure that the badges are valid. If not, return false and also send an internal alert.
   return true;
 };
