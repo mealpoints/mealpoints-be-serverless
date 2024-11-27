@@ -39,7 +39,6 @@ export const handler = async (sqsEvent: SQSEvent) => {
   if (processMessage) {
     Logger("handler").info(`Processing ${eventData.messageGroupId} messages`);
 
-    // TODO: Fix the types for processMessage
     type MessageProcessor = (messageBody: unknown) => Promise<void>;
     const eventService = new EventService(
       queueService,
