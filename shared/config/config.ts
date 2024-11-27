@@ -26,7 +26,7 @@ export const MEAL_REPORT = {
 
 export const URL = {
   baseURL: process.env.BASE_URL,
-  mealReport: "/meal-report/",
+  mealReport: "/report/",
 };
 
 const BUCKET_NAME = process.env.BUCKET_NAME;
