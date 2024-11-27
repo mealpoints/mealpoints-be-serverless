@@ -3,7 +3,7 @@ import { OpenAIHandler } from "../handlers/openAI.handler";
 import { IUser } from "../models/user.model";
 import * as openAIThreadService from "../services/openAIThread.service";
 import { OpenAIMessageTypesEnum } from "../types/enums";
-import { OpenAIResponse } from "../types/openai";
+import { OpenAIResponse, OpenAIResponseObject } from "../types/openai";
 const Logger = logger("services/openai.service");
 
 interface IAskOptions {
@@ -38,7 +38,12 @@ export const ask = async (
       });
     }
 
-    return result;
+    try {
+      return JSON.parse(result) as OpenAIResponseObject;
+    } catch {
+      return result;
+    }
+
   } catch (error) {
     Logger("ask").error(error);
     throw error;

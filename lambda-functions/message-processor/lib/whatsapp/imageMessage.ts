@@ -45,9 +45,10 @@ export const processImageMessage = async (
         assistantId,
       });
       
+      cleanupLocalFile(imageFilePath);
+      await updateReceivedMessage(payload, s3Path);
+      
       if (isOpenAIResponseObject(openaiResponse)) {
-        cleanupLocalFile(imageFilePath);
-        await updateReceivedMessage(payload, s3Path);
         await messageService.sendTextMessage({
           user: user.id,
           payload: convertToHumanReadableMessage(openaiResponse?.message),
