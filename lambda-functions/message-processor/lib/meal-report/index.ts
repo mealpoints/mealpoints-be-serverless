@@ -1,4 +1,3 @@
-import { URL } from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
 import {
@@ -94,7 +93,7 @@ export const processMealReport = async ({
       template: createWhatsappTemplate(
         WhatsappTemplateNameEnum.UserMealReport,
         {
-          mealReportUrl: `${URL.baseURL}${URL.mealReport}${mealReport.id}`,
+          mealReportId: mealReport.id,
         }
       ),
     });

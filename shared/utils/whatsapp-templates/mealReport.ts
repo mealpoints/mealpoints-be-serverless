@@ -7,7 +7,7 @@ import {
 import { MessageTemplateObject } from "../../types/message";
 
 export interface IUserMealReportData {
-  mealReportUrl: string;
+  mealReportId: string;
 }
 
 export const createUserMealReportTemplate = (
@@ -25,7 +25,7 @@ export const createUserMealReportTemplate = (
         parameters: [
           {
             type: ParametersTypesEnum.Text,
-            text: data.mealReportUrl,
+            text: data.mealReportId,
           },
         ],
       },
