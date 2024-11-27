@@ -120,7 +120,7 @@ export const processMealReport = async ({
       await userEngagementMessageService.createUserEngagementMessage({
         user: user.id,
         content: `Template: ${WhatsappTemplateNameEnum.MealReport}`,
-        type: UserEngagementMessageTypesEnum.Summary,
+        type: UserEngagementMessageTypesEnum.MealReport,
       });
     }
   } catch (error) {
