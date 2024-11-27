@@ -237,7 +237,7 @@ export class OpenAIHandler {
   }
 
   // @ts-expect-error - We are not going to return anything from the catch block.
-  async ask(): Promise<string | MealData> {
+  async ask(): Promise<string> {
     // Get Settings
     const settings = await SettingsSingleton.getInstance();
     const maxRunsOnAThread: number = settings.get(

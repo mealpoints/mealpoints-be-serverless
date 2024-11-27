@@ -34,7 +34,12 @@ export type MealData = {
   macros: NutritionalData;
 };
 
-export type OpenAIResponse<T> = {
-  message: string;
-  data?: T;
-};
+export type OpenAIResponseObject = {
+  message: string,
+  data?: MealData
+}
+
+export type OpenAIResponse<T = string> = T extends string
+  ? string
+  : OpenAIResponseObject;
+

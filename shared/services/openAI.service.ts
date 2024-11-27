@@ -3,7 +3,7 @@ import { OpenAIHandler } from "../handlers/openAI.handler";
 import { IUser } from "../models/user.model";
 import * as openAIThreadService from "../services/openAIThread.service";
 import { OpenAIMessageTypesEnum } from "../types/enums";
-import { MealData, OpenAIResponse } from "../types/openai";
+import { OpenAIResponse } from "../types/openai";
 const Logger = logger("services/openai.service");
 
 interface IAskOptions {
@@ -11,11 +11,11 @@ interface IAskOptions {
   assistantId: string;
 }
 
-export const ask = async (
+export const ask = async <T>(
   prompt: string,
   user: IUser,
   options: IAskOptions
-): Promise<OpenAIResponse<string | MealData>> => {
+): Promise<OpenAIResponse<T>> => {
   const openAIThread = await openAIThreadService.getLatestOpenAIThreadByUserId(
     user.id
   );
@@ -29,7 +29,7 @@ export const ask = async (
     });
 
     const result = await openAIHandler.ask();
-    const parsedResult = JSON.parse(result);
+    const parsedResult: OpenAIResponse<T> = tryParseJson(result);
     Logger("ask").info(result);
 
     if (openAIHandler.newThreadCreated) {
@@ -46,3 +46,11 @@ export const ask = async (
     throw error;
   }
 };
+
+function tryParseJson<T>(data: string): OpenAIResponse<T> {
+  try {
+    return JSON.parse(data) as OpenAIResponse<T>;
+  } catch {
+    return data as OpenAIResponse<T>;
+  }
+}
