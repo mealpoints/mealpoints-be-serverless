@@ -549,7 +549,7 @@ export enum WhatsappTemplateNameEnum {
   ReminderToPostMealsOne = "reminder_to_post_meals_1",
   ReminderToPostMealsTwo = "reminder_to_post_meals_2",
   ReminderToPostMealsThree = "reminder_to_post_meals_3",
-  UserMealReport = "user_meal_report",
+  MealReport = "user_meal_report",
 }
 
 export enum CountryCodeToDefaultTimezoneEnum {

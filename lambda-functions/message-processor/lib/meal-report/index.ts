@@ -90,12 +90,9 @@ export const processMealReport = async ({
     const messageResponse = await messageService.sendTemplateMessage({
       user: user.id,
       type: MessageTypesEnum.Template,
-      template: createWhatsappTemplate(
-        WhatsappTemplateNameEnum.UserMealReport,
-        {
-          mealReportId: mealReport.id,
-        }
-      ),
+      template: createWhatsappTemplate(WhatsappTemplateNameEnum.MealReport, {
+        mealReportId: mealReport.id,
+      }),
     });
 
     if (messageResponse) {
@@ -105,7 +102,7 @@ export const processMealReport = async ({
 
       await userEngagementMessageService.createUserEngagementMessage({
         user: user.id,
-        content: `Template: ${WhatsappTemplateNameEnum.UserMealReport}`,
+        content: `Template: ${WhatsappTemplateNameEnum.MealReport}`,
         type: UserEngagementMessageTypesEnum.Summary,
       });
     }

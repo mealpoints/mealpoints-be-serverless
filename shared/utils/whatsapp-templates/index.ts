@@ -26,7 +26,7 @@ type WhatsappTemplateDataMap = {
   [WhatsappTemplateNameEnum.ReminderToPostMealsOne]: IReminderToPostMealsOne;
   [WhatsappTemplateNameEnum.ReminderToPostMealsTwo]: IReminderToPostMealsTwo;
   [WhatsappTemplateNameEnum.ReminderToPostMealsThree]: IReminderToPostMealsThree;
-  [WhatsappTemplateNameEnum.UserMealReport]: IUserMealReportData;
+  [WhatsappTemplateNameEnum.MealReport]: IUserMealReportData;
 };
 
 export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
@@ -46,7 +46,7 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
     case WhatsappTemplateNameEnum.ReminderToPostMealsThree: {
       return createReminderToPostMealsThreeTemplate();
     }
-    case WhatsappTemplateNameEnum.UserMealReport: {
+    case WhatsappTemplateNameEnum.MealReport: {
       return createUserMealReportTemplate(data as IUserMealReportData);
     }
     default: {

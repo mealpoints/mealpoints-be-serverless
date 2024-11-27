@@ -14,7 +14,7 @@ export const createUserMealReportTemplate = (
   data: IUserMealReportData
 ): MessageTemplateObject<ComponentTypesEnum> => {
   return {
-    name: WhatsappTemplateNameEnum.UserMealReport,
+    name: WhatsappTemplateNameEnum.MealReport,
     language: {
       policy: "deterministic",
       code: LanguagesEnum.English,
