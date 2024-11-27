@@ -18,6 +18,7 @@ import {
 } from "../../../../shared/types/enums";
 import { createWhatsappTemplate } from "../../../../shared/utils/whatsapp-templates";
 import {
+  getBadgeData,
   getMetadata,
   getSummary,
   getTop3BestAndWorstMeals,
@@ -57,6 +58,8 @@ export const processMealReport = async ({
       throw new Error("Invalid OpenAI response");
     }
 
+    const { tipsToImproveScore, failuresToAvoid } = openAIResult;
+
     const previousWeekMealReport =
       await mealReportService.getMealReportOfPreviousWeek(startDate);
 
@@ -67,6 +70,10 @@ export const processMealReport = async ({
     const { bestMeals, worstMeals } = getTop3BestAndWorstMeals(meals);
     const metadata = getMetadata(meals);
     const summary = getSummary(meals, previousWeekAverageScore);
+    const { personalityBadge, mealWins } = getBadgeData(
+      openAIResult.personalityBadge,
+      openAIResult.mealWins
+    );
 
     const finalMealReport: IMealReportCreate = {
       user: user.id,
@@ -76,7 +83,10 @@ export const processMealReport = async ({
       metadata,
       bestMeals,
       worstMeals,
-      ...openAIResult,
+      tipsToImproveScore,
+      failuresToAvoid,
+      personalityBadge,
+      mealWins,
     };
 
     // Store the meal report in the database

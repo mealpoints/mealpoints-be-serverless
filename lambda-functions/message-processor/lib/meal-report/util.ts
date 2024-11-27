@@ -6,6 +6,7 @@ import {
   IMealReportFromOpenAI,
 } from "../../../../shared/models/mealReport.model";
 import { IUserMeal } from "../../../../shared/models/userMeal.model";
+import { getBadgeDataById } from "../../../../shared/utils/badges";
 
 const Logger = logger("message-processor/lib/meal-report/util");
 
@@ -172,4 +173,22 @@ export const validateOpenAIResult = (
 
   // TODO: Make sure that the badges are valid. If not, return false and also send an internal alert.
   return true;
+};
+
+interface GetBadgeDataReturnType {
+  personalityBadge: IMealReport["personalityBadge"];
+  mealWins: IMealReport["mealWins"];
+}
+export const getBadgeData = (
+  personalityBadge: IMealReportFromOpenAI["personalityBadge"],
+  mealWins: IMealReportFromOpenAI["mealWins"]
+): GetBadgeDataReturnType => {
+  return {
+    personalityBadge: getBadgeDataById("personality", personalityBadge),
+    mealWins: {
+      first: getBadgeDataById("mealWin", mealWins.first),
+      second: getBadgeDataById("mealWin", mealWins.second),
+      third: getBadgeDataById("mealWin", mealWins.third),
+    },
+  } as GetBadgeDataReturnType; // We can assert the types as we are validating the OpenAI response in the validateOpenAIResult function
 };

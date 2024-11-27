@@ -6,6 +6,14 @@ export interface NutrientInfo {
   target: number;
 }
 
+export interface IBadgeData {
+  name: string;
+  description: string;
+  id: string;
+  image: string;
+}
+
+// TODO: Move this after MP-13
 export interface IMealReportFromOpenAI {
   personalityBadge: string;
   mealWins: {
@@ -23,9 +31,23 @@ export interface IMealReportFromOpenAI {
   }>;
 }
 
-export interface IMealReport extends Document, IMealReportFromOpenAI {
+export interface IMealReport extends Document {
   id: string;
   user: string;
+  personalityBadge: IBadgeData;
+  mealWins: {
+    first: IBadgeData;
+    second: IBadgeData;
+    third: IBadgeData;
+  };
+  tipsToImproveScore: Array<{
+    title: string;
+    description: string;
+  }>;
+  failuresToAvoid: Array<{
+    title: string;
+    description: string;
+  }>;
   bestMeals: string[];
   worstMeals: string[];
   metadata: {
@@ -48,10 +70,24 @@ export interface IMealReport extends Document, IMealReportFromOpenAI {
   updatedAt: Date;
 }
 
-export interface IMealReportCreate extends IMealReportFromOpenAI {
+export interface IMealReportCreate {
   user: string;
   bestMeals: string[];
   worstMeals: string[];
+  personalityBadge: IBadgeData;
+  mealWins: {
+    first: IBadgeData;
+    second: IBadgeData;
+    third: IBadgeData;
+  };
+  tipsToImproveScore: Array<{
+    title: string;
+    description: string;
+  }>;
+  failuresToAvoid: Array<{
+    title: string;
+    description: string;
+  }>;
   metadata: {
     calories: NutrientInfo;
     protein: NutrientInfo;
@@ -70,13 +106,26 @@ export interface IMealReportCreate extends IMealReportFromOpenAI {
   endDate: Date;
 }
 
+const nutrientInfoSchema = {
+  value: { type: Number, required: true },
+  unit: { type: String, required: true },
+  target: { type: Number, required: true },
+};
+
+const badgeSchma = {
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  id: { type: String, required: true },
+  image: { type: String, required: true },
+};
+
 const mealReportSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  personalityBadge: { type: String, required: true },
+  personalityBadge: badgeSchma,
   mealWins: {
-    first: { type: String, required: true },
-    second: { type: String, required: true },
-    third: { type: String, required: true },
+    first: badgeSchma,
+    second: badgeSchma,
+    third: badgeSchma,
   },
   tipsToImproveScore: [
     {
@@ -93,36 +142,12 @@ const mealReportSchema = new Schema({
   bestMeals: [{ type: Schema.Types.ObjectId, ref: "UserMeal" }],
   worstMeals: [{ type: Schema.Types.ObjectId, ref: "UserMeal" }],
   metadata: {
-    calories: {
-      value: { type: Number, required: true },
-      unit: { type: String, required: true },
-      target: { type: Number, required: true },
-    },
-    protein: {
-      value: { type: Number, required: true },
-      unit: { type: String, required: true },
-      target: { type: Number, required: true },
-    },
-    fat: {
-      value: { type: Number, required: true },
-      unit: { type: String, required: true },
-      target: { type: Number, required: true },
-    },
-    carbohydrates: {
-      value: { type: Number, required: true },
-      unit: { type: String, required: true },
-      target: { type: Number, required: true },
-    },
-    fiber: {
-      value: { type: Number, required: true },
-      unit: { type: String, required: true },
-      target: { type: Number, required: true },
-    },
-    sugars: {
-      value: { type: Number, required: true },
-      unit: { type: String, required: true },
-      target: { type: Number, required: true },
-    },
+    calories: nutrientInfoSchema,
+    protein: nutrientInfoSchema,
+    fat: nutrientInfoSchema,
+    carbohydrates: nutrientInfoSchema,
+    fiber: nutrientInfoSchema,
+    sugars: nutrientInfoSchema,
   },
   summary: {
     averageScore: { type: Number, required: true },
