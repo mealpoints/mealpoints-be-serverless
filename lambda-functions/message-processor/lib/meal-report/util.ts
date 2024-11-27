@@ -109,15 +109,13 @@ function generateScoreComparisonMessage(
   const scoreDifference = averageScore - previousWeekAverageScore;
 
   if (scoreDifference > 0) {
-    return `Your score has increased by ${scoreDifference.toFixed(
-      1
-    )} points! Keep up the great work!`;
+    return `Your score has increased by ${scoreDifference.toFixed(1)} points!`;
   } else if (scoreDifference < 0) {
     return `Your score has decreased by ${Math.abs(scoreDifference).toFixed(
       1
-    )} points. Let's aim for improvement next week!`;
+    )} points.`;
   } else {
-    return `Your score remained the same as last week. Keep pushing for better results!`;
+    return `Your score remained the same as last week.`;
   }
 }
 
