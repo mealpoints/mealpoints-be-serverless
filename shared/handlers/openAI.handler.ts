@@ -7,7 +7,6 @@ import SettingsSingleton from "../config/settings";
 import { IOpenAIThread } from "../models/openAIThread.model";
 import { OpenAIMessageTypesEnum } from "../types/enums";
 import { isValidUrl } from "../utils/url";
-import { MealData } from "../types/openai";
 const Logger = logger("openai.handler");
 
 const API_KEY = process.env.OPENAI_API_KEY as string;
@@ -180,7 +179,7 @@ export class OpenAIHandler {
             reject(
               new Error(
                 "Run failed with error: " + JSON.stringify(run.last_error) ||
-                  "Unknown error"
+                "Unknown error"
               )
             );
           }

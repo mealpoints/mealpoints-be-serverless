@@ -11,11 +11,11 @@ interface IAskOptions {
   assistantId: string;
 }
 
-export const ask = async <T>(
+export const ask = async (
   prompt: string,
   user: IUser,
   options: IAskOptions
-): Promise<OpenAIResponse<T>> => {
+): Promise<OpenAIResponse> => {
   const openAIThread = await openAIThreadService.getLatestOpenAIThreadByUserId(
     user.id
   );
@@ -29,8 +29,6 @@ export const ask = async <T>(
     });
 
     const result = await openAIHandler.ask();
-    const parsedResult: OpenAIResponse<T> = tryParseJson(result);
-    Logger("ask").info(result);
 
     if (openAIHandler.newThreadCreated) {
       await openAIThreadService.createOpenAIThread({
@@ -40,17 +38,9 @@ export const ask = async <T>(
       });
     }
 
-    return parsedResult;
+    return result;
   } catch (error) {
     Logger("ask").error(error);
     throw error;
   }
 };
-
-function tryParseJson<T>(data: string): OpenAIResponse<T> {
-  try {
-    return JSON.parse(data) as OpenAIResponse<T>;
-  } catch {
-    return data as OpenAIResponse<T>;
-  }
-}

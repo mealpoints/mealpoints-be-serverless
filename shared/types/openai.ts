@@ -39,7 +39,5 @@ export type OpenAIResponseObject = {
   data?: MealData
 }
 
-export type OpenAIResponse<T = string> = T extends string
-  ? string
-  : OpenAIResponseObject;
+export type OpenAIResponse = OpenAIResponseObject | string
 

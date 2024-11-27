@@ -10,6 +10,7 @@ import {
 } from "../../../../shared/types/enums";
 import { WhastappWebhookObject } from "../../../../shared/types/message";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
+import { isOpenAIResponseObject } from "../../../../shared/utils/openAi";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
 
 const Logger = logger("lib/whatsapp/textMessage");
@@ -32,9 +33,11 @@ export const processTextMessage = async (
         assistantId,
       });
 
+      const message = isOpenAIResponseObject(result) ? result.message : result;
+
       await messageService.sendTextMessage({
         user: user.id,
-        payload: convertToHumanReadableMessage(result.message),
+        payload: convertToHumanReadableMessage(message),
         type: MessageTypesEnum.Text,
       });
     } catch (error) {

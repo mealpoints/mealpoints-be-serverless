@@ -15,6 +15,7 @@ import {
 import { WhastappWebhookObject } from "../../../../shared/types/message";
 import { MealData } from "../../../../shared/types/openai";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
+import { isOpenAIResponseObject } from "../../../../shared/utils/openAi";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
 const Logger = logger("lib/whatsapp/imageMessage");
 
@@ -43,15 +44,18 @@ export const processImageMessage = async (
         messageType: OpenAIMessageTypesEnum.Image,
         assistantId,
       });
-      cleanupLocalFile(imageFilePath);
-      await updateReceivedMessage(payload, s3Path);
-      await messageService.sendTextMessage({
-        user: user.id,
-        payload: convertToHumanReadableMessage(openaiResponse.message),
-        type: MessageTypesEnum.Text,
-      });
-      if (openaiResponse.data?.meal_name) {
-        await storeMeal(user, s3Path, openaiResponse.data);
+      
+      if (isOpenAIResponseObject(openaiResponse)) {
+        cleanupLocalFile(imageFilePath);
+        await updateReceivedMessage(payload, s3Path);
+        await messageService.sendTextMessage({
+          user: user.id,
+          payload: convertToHumanReadableMessage(openaiResponse?.message),
+          type: MessageTypesEnum.Text,
+        });
+        if (openaiResponse?.data?.meal_name) {
+          await storeMeal(user, s3Path, openaiResponse?.data);
+        }
       }
     } catch (error) {
       await messageService.sendTextMessage({
