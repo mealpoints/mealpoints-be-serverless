@@ -1,4 +1,8 @@
-import { getTop3BestAndWorstMeals } from "../../../../../lambda-functions/message-processor/lib/meal-report/util";
+import {
+  calculateTargetScore,
+  getTop3BestAndWorstMeals,
+} from "../../../../../lambda-functions/message-processor/lib/meal-report/util";
+import { MEAL_REPORT } from "../../../../../shared/config/config";
 import { IUserMeal } from "../../../../../shared/models/userMeal.model";
 
 describe("getTop3BestAndWorstMeals", () => {
@@ -55,5 +59,40 @@ describe("getTop3BestAndWorstMeals", () => {
 
     expect(result.bestMeals).toEqual(["7", "8", "2"]);
     expect(result.worstMeals).toEqual(["1", "6", "5"]);
+  });
+});
+
+describe("calculateTargetScore", () => {
+  it("should calculate the target score correctly with previous week average score", () => {
+    const averageScore = 7;
+    const previousWeekAverageScore = 6.5;
+    const expectedTargetScore =
+      6.5 + (7 * MEAL_REPORT.improvementFactor) / MEAL_REPORT.weeks;
+    const result = calculateTargetScore(averageScore, previousWeekAverageScore);
+    expect(result).toBeCloseTo(expectedTargetScore, 5);
+  });
+
+  it("should calculate the target score correctly without previous week average score", () => {
+    const averageScore = 7;
+    const expectedTargetScore =
+      7 + (7 * MEAL_REPORT.improvementFactor) / MEAL_REPORT.weeks;
+    const result = calculateTargetScore(averageScore);
+    expect(result).toBeCloseTo(expectedTargetScore, 5);
+  });
+
+  it("should not exceed the maximum score", () => {
+    const averageScore = 9.5;
+    const previousWeekAverageScore = 9.8;
+    const result = calculateTargetScore(averageScore, previousWeekAverageScore);
+    expect(result).toBeLessThanOrEqual(MEAL_REPORT.maxScore);
+  });
+
+  it("should handle zero average score", () => {
+    const averageScore = 0;
+    const previousWeekAverageScore = 0;
+    const expectedTargetScore =
+      0 + (0 * MEAL_REPORT.improvementFactor) / MEAL_REPORT.weeks;
+    const result = calculateTargetScore(averageScore, previousWeekAverageScore);
+    expect(result).toBeCloseTo(expectedTargetScore, 5);
   });
 });

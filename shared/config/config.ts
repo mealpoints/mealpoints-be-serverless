@@ -21,6 +21,7 @@ export const DEFAULT_GEO_INFO = {
 export const MEAL_REPORT = {
   improvementFactor: 0.15,
   weeks: 12,
+  maxScore: 10,
 };
 
 export const URL = {

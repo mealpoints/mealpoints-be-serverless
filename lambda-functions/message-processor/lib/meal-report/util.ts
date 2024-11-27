@@ -82,7 +82,7 @@ export const getMetadata = (meals: IUserMeal[]): IMealReport["metadata"] => {
   return metadata;
 };
 
-function calculateTargetScore(
+export function calculateTargetScore(
   averageScore: number,
   previousWeekAverageScore?: number
 ): number {
@@ -98,7 +98,8 @@ function calculateTargetScore(
   // Calculate the target score for the current week
   const targetScore = baselineScore + weeklyImprovement;
 
-  return targetScore;
+  // Ensure the target score does not exceed 10.0
+  return Math.min(targetScore, MEAL_REPORT.maxScore);
 }
 
 function generateScoreComparisonMessage(
