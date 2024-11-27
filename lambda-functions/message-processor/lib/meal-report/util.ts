@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { MEAL_REPORT } from "../../../../shared/config/config";
+import { BADGES, MEAL_REPORT } from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
 import {
   IMealReport,
@@ -171,7 +171,14 @@ export const validateOpenAIResult = (
     }
   }
 
-  // TODO: Make sure that the badges are valid. If not, return false and also send an internal alert.
+  if (
+    !BADGES["personality"][result.personalityBadge] ||
+    !BADGES["mealWin"][result.mealWins.first] ||
+    !BADGES["mealWin"][result.mealWins.second] ||
+    !BADGES["mealWin"][result.mealWins.third]
+  )
+    return false;
+
   return true;
 };
 

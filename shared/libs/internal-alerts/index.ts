@@ -7,7 +7,7 @@ const Logger = logger("shared/libs/internal-alerts");
 
 interface InternalAlert {
   message: string;
-  severity: "minor" | "majoy" | "critical";
+  severity: "minor" | "major" | "critical";
 }
 
 export const sendInternalAlert = async ({

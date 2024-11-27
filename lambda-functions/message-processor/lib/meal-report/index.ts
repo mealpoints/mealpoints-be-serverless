@@ -1,5 +1,6 @@
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
+import { sendInternalAlert } from "../../../../shared/libs/internal-alerts";
 import {
   IMealReportCreate,
   IMealReportFromOpenAI,
@@ -54,7 +55,13 @@ export const processMealReport = async ({
 
     // validate openAIResult
     if (!validateOpenAIResult(openAIResult)) {
-      Logger("processMealReport").error(`Invalid OpenAI response`);
+      Logger("processMealReport").error(
+        `Invalid OpenAI response: ${JSON.stringify(openAIResult)}`
+      );
+      await sendInternalAlert({
+        message: `Invalid OpenAI response: ${JSON.stringify(openAIResult)}`,
+        severity: "minor",
+      });
       throw new Error("Invalid OpenAI response");
     }
 

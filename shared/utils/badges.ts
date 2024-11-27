@@ -8,10 +8,8 @@ export const getBadgeDataById = (
   if (!BADGES[category]) return undefined;
   if (!BADGES[category][badgeId]) return undefined;
 
-  const badgeData = BADGES[category][badgeId];
-
   return {
     id: badgeId,
-    ...badgeData,
+    ...BADGES[category][badgeId],
   };
 };
