@@ -1,3 +1,4 @@
+import * as _ from "lodash";
 import logger from "../config/logger";
 import { OpenAIHandler } from "../handlers/openAI.handler";
 import { IUser } from "../models/user.model";
@@ -31,7 +32,6 @@ export const ask = async (
     });
 
     const result = await openAIHandler.ask();
-    const parsedResult = JSON.parse(result);
     Logger("ask").info(result);
 
     if (openAIHandler.newThreadCreated) {
@@ -42,7 +42,10 @@ export const ask = async (
       });
     }
 
-    return parsedResult;
+    if (_.isObject(result)) {
+      return JSON.parse(result);
+    }
+    return result;
   } catch (error) {
     Logger("ask").error(error);
     throw error;

@@ -1,3 +1,4 @@
+import * as _ from "lodash";
 import { USER_MESSAGES } from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
@@ -34,9 +35,11 @@ export const processTextMessage = async (
         additionalInstructions: await getInstructionForUser(user),
       });
 
+      const message = _.isObject(result) ? result.message : result;
+
       await messageService.sendTextMessage({
         user: user.id,
-        payload: convertToHumanReadableMessage(result.message),
+        payload: convertToHumanReadableMessage(message),
         type: MessageTypesEnum.Text,
       });
     } catch (error) {
@@ -46,7 +49,7 @@ export const processTextMessage = async (
         type: MessageTypesEnum.Text,
       });
       Logger("processTextMessage").error(error);
-      return;
+      throw error;
     }
 
     return;
