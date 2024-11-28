@@ -25,7 +25,7 @@ export const processReminder = async (messageBody: IUsersToSendReminders) => {
   Logger("processReminder").info(`Starting processReminder`);
 
   const settings = await SettingsSingleton.getInstance();
-  const maxReminders = settings.get("user-engangement.max-reminders") as number;
+  const maxReminders = settings.get("user-engagement.max-reminders") as number;
   const { user, remindersCount } = messageBody;
 
   try {

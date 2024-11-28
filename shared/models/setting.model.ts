@@ -10,9 +10,10 @@ export type SettingKey =
   | "internal-alerts.alert-list"
   | "open-ai.max-runs-on-a-thread"
   | "open-ai.max-retries"
-  | "user-engangement.last-consumed-meal"
-  | "user-engangement.max-reminders"
-  | "user-engangement.interval-in-days";
+  | "user-engagement.max-reminders"
+  | "user-engagement.flows"
+  | "user-engagement.flows.window-in-minutes"
+  | "user-engagement.interval-in-days";
 
 export interface ISetting extends Document {
   key: SettingKey;

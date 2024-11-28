@@ -5,6 +5,7 @@ import { IUserMeal } from "../../../../shared/models/userMeal.model";
 import * as messageService from "../../../../shared/services/message.service";
 import * as openAIService from "../../../../shared/services/openAI.service";
 import * as userEngagementMessageService from "../../../../shared/services/userEngagement.service";
+import { findUserMeals } from "../../../../shared/services/userMeal.service";
 import {
   MessageTypesEnum,
   OpenAIMessageTypesEnum,
@@ -12,6 +13,7 @@ import {
   WhatsappTemplateNameEnum,
 } from "../../../../shared/types/enums";
 import { IUsersToSendSummaries } from "../../../../shared/types/queueMessages";
+import { DateUtils } from "../../../../shared/utils/DateUtils";
 import { createWhatsappTemplate } from "../../../../shared/utils/whatsappTemplateUtils";
 
 const Logger = logger("lib/reminder/meal-summary");
@@ -104,20 +106,39 @@ interface IOpenAIResult {
   motivation: string;
 }
 
-export const processMealSummary = async (
-  messageBody: IUsersToSendSummaries
-) => {
+export const processMealSummary = async (user: IUsersToSendSummaries) => {
   Logger("processMealSummary").info(``);
+
+  // TEMP: Remove this once the user object is properly created
+  user.id = user.id || (user._id as string);
 
   const settings = await SettingsSingleton.getInstance();
   const assistantId = settings.get("openai.assistant.meal-summary") as string;
   const engagmentMessageIntervalInDays = settings.get(
-    "user-engangement.interval-in-days"
+    "user-engagement.interval-in-days"
   ) as number;
-  const stringifiedMeals = JSON.stringify(messageBody.meals);
-  const { user, meals } = messageBody;
+
+  const startDate = new DateUtils()
+    .subtractDays(engagmentMessageIntervalInDays)
+    .toDate();
+  const currentDate = new Date();
 
   try {
+    const mealsLoggedByUserInPeriod = await findUserMeals({
+      user: user.id,
+      createdAt: {
+        $gte: startDate,
+        $lte: currentDate,
+      },
+    });
+
+    if (mealsLoggedByUserInPeriod.length === 0) {
+      Logger("processMealSummary").info(`No meals logged by user ${user.id}`);
+      return;
+    }
+
+    const stringifiedMeals = JSON.stringify(mealsLoggedByUserInPeriod);
+
     const openAIResult = (await openAIService.ask(stringifiedMeals, user, {
       messageType: OpenAIMessageTypesEnum.Text,
       assistantId,
@@ -140,7 +161,7 @@ export const processMealSummary = async (
         WhatsappTemplateNameEnum.UserMealSummary,
         {
           duration,
-          ...calculateMealData(meals),
+          ...calculateMealData(mealsLoggedByUserInPeriod),
           ...openAIResult,
         }
       ),

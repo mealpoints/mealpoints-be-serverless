@@ -1,3 +1,4 @@
+import { FilterQuery } from "mongoose";
 import { START_HOUR_OF_DAY } from "../config/config";
 import logger from "../config/logger";
 import UserMeal, { IUserMeal, IUserMealCreate } from "../models/userMeal.model";
@@ -78,16 +79,22 @@ export const getUserMealById = async (
   }
 };
 
-export const getTodaysUserMealsByUserId = async (userId: string): Promise<IUserMeal[]> => {
+export const getTodaysUserMealsByUserId = async (
+  userId: string
+): Promise<IUserMeal[]> => {
   try {
     Logger("getTodaysUserMealsByUserId").info("");
     const now = new Date();
-    const localStartTime = new Date(Date.UTC(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      START_HOUR_OF_DAY, 0, 0
-    ));
+    const localStartTime = new Date(
+      Date.UTC(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        START_HOUR_OF_DAY,
+        0,
+        0
+      )
+    );
 
     const userMeals = await UserMeal.find({
       user: userId,
@@ -98,4 +105,15 @@ export const getTodaysUserMealsByUserId = async (userId: string): Promise<IUserM
     Logger("getTodaysUserMealsByUserId").error(error);
     throw error;
   }
-}
+};
+
+export const findUserMeals = async (filter: FilterQuery<IUserMeal>) => {
+  Logger("findUserMeals").info(`called with`);
+  try {
+    const userMeals = await UserMeal.find(filter);
+    return userMeals;
+  } catch (error) {
+    Logger("findUserMeals").error(error);
+    throw error;
+  }
+};

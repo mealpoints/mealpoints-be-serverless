@@ -177,8 +177,6 @@ export const sendTemplateMessage = async (
     return await axiosInstance.post(`/${INSTANCE_ID}/messages`, data);
   } catch (error) {
     Logger("sendTemplateMessage").error(error);
-    console.log(error);
-
     throw error;
   }
 };

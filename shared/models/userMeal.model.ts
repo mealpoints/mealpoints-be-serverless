@@ -5,7 +5,7 @@ import { PaginateModel, paginatePlugin } from "../utils/mongoosePlugins";
 export interface IUserMeal extends Document {
   id: string;
   user: string;
-  image: string;
+  image?: string;
   name: string;
   score: {
     value: number;
@@ -18,7 +18,7 @@ export interface IUserMeal extends Document {
 
 export interface IUserMealCreate {
   user: string;
-  image: string;
+  image?: string;
   name: string;
   score: {
     value: number;
