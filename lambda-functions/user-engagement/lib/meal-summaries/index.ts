@@ -31,7 +31,7 @@ export const mealSummariesFlow = async (timezone: string) => {
       });
 
     Logger("mealSummariesFlow").info(
-      `Found ${usersToSendSummaries.length} users to send reminders`
+      `Found ${usersToSendSummaries.length} users to send summaries`
     );
 
     if (usersToSendSummaries.length === 0) return;

@@ -1,6 +1,6 @@
 import { addMinutes, isWithinInterval, parse, subMinutes } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
-import { shouldExecute } from "../../../lambda-functions/user-engagement/utils";
+import { isLocalTimeInFlowWindow } from "../../../lambda-functions/user-engagement/utils";
 import SettingsSingleton from "../../../shared/config/settings";
 
 // Mock the dependencies
@@ -14,12 +14,12 @@ jest.mock("date-fns", () => ({
 }));
 jest.mock("../../../shared/config/settings");
 
-describe("shouldExecute", () => {
+describe("isLocalTimeInFlowWindow", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should return true if the current time is within the execution window", async () => {
+  it("should return true if the current time is within the execution window", () => {
     const executionTime = "12:00";
     const timezone = "UTC";
     const windowInMinutes = 10;
@@ -29,20 +29,21 @@ describe("shouldExecute", () => {
     const startTime = new Date("2023-06-15T11:55:00Z");
     const endTime = new Date("2023-06-15T12:05:00Z");
 
-    (SettingsSingleton.getInstance as jest.Mock).mockResolvedValue({
-      get: jest.fn().mockReturnValue(windowInMinutes),
-    });
     (toZonedTime as jest.Mock).mockReturnValue(currentZonedTime);
     (parse as jest.Mock).mockReturnValue(parsedTime);
     (subMinutes as jest.Mock).mockReturnValue(startTime);
     (addMinutes as jest.Mock).mockReturnValue(endTime);
     (isWithinInterval as jest.Mock).mockReturnValue(true);
 
-    const result = await shouldExecute(executionTime, timezone);
+    const result = isLocalTimeInFlowWindow(
+      executionTime,
+      timezone,
+      windowInMinutes
+    );
     expect(result).toBe(true);
   });
 
-  it("should return false if the current time is outside the execution window", async () => {
+  it("should return false if the current time is outside the execution window", () => {
     const executionTime = "12:00";
     const timezone = "UTC";
     const windowInMinutes = 10;
@@ -52,16 +53,17 @@ describe("shouldExecute", () => {
     const startTime = new Date("2023-06-15T11:55:00Z");
     const endTime = new Date("2023-06-15T12:05:00Z");
 
-    (SettingsSingleton.getInstance as jest.Mock).mockResolvedValue({
-      get: jest.fn().mockReturnValue(windowInMinutes),
-    });
     (toZonedTime as jest.Mock).mockReturnValue(currentZonedTime);
     (parse as jest.Mock).mockReturnValue(parsedTime);
     (subMinutes as jest.Mock).mockReturnValue(startTime);
     (addMinutes as jest.Mock).mockReturnValue(endTime);
     (isWithinInterval as jest.Mock).mockReturnValue(false);
 
-    const result = await shouldExecute(executionTime, timezone);
+    const result = isLocalTimeInFlowWindow(
+      executionTime,
+      timezone,
+      windowInMinutes
+    );
     expect(result).toBe(false);
   });
 
@@ -75,12 +77,12 @@ describe("shouldExecute", () => {
     });
     (parse as jest.Mock).mockReturnValue(new Date("Invalid Date"));
 
-    await expect(shouldExecute(executionTime, timezone)).rejects.toThrow(
-      'Invalid execution time format. Use "HH:mm".'
-    );
+    await expect(
+      isLocalTimeInFlowWindow(executionTime, timezone)
+    ).rejects.toThrow('Invalid execution time format. Use "HH:mm".');
   });
 
-  it("should handle different timezones correctly", async () => {
+  it("should handle different timezones correctly", () => {
     const executionTime = "12:00";
     const timezone = "Asia/Kolkata";
     const windowInMinutes = 10;
@@ -90,16 +92,17 @@ describe("shouldExecute", () => {
     const startTime = new Date("2023-06-15T11:55:00+05:30");
     const endTime = new Date("2023-06-15T12:05:00+05:30");
 
-    (SettingsSingleton.getInstance as jest.Mock).mockResolvedValue({
-      get: jest.fn().mockReturnValue(windowInMinutes),
-    });
     (toZonedTime as jest.Mock).mockReturnValue(currentZonedTime);
     (parse as jest.Mock).mockReturnValue(parsedTime);
     (subMinutes as jest.Mock).mockReturnValue(startTime);
     (addMinutes as jest.Mock).mockReturnValue(endTime);
     (isWithinInterval as jest.Mock).mockReturnValue(true);
 
-    const result = await shouldExecute(executionTime, timezone);
+    const result = isLocalTimeInFlowWindow(
+      executionTime,
+      timezone,
+      windowInMinutes
+    );
     expect(result).toBe(true);
   });
 });

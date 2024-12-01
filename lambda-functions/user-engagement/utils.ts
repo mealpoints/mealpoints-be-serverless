@@ -2,20 +2,17 @@ import { addMinutes, isWithinInterval, parse, subMinutes } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 import { isNaN } from "lodash";
 import logger from "../../shared/config/logger";
-import SettingsSingleton from "../../shared/config/settings";
 
 const Logger = logger("user-engagement/utils");
 
-export const shouldExecute = async (
+export const isLocalTimeInFlowWindow = (
   executionTime: string,
-  timezone: string
-): Promise<boolean> => {
-  Logger("shouldExecute").info(`checking for ${executionTime} in ${timezone}`);
-
-  const settings = await SettingsSingleton.getInstance();
-  const windowInMinutes = settings.get(
-    "user-engagement.flows.window-in-minutes"
-  ) as number;
+  timezone: string,
+  windowInMinutes: number = 20
+): boolean => {
+  Logger("isLocalTimeInFlowWindow").info(
+    `checking for ${executionTime} in ${timezone}`
+  );
 
   // Validate and parse the execution time (HH:mm)
   const parsedTime = parse(executionTime, "HH:mm", new Date());
