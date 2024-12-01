@@ -133,7 +133,7 @@ export const getSummary = (
   const averageScore = _.round(totalScore / meals.length, 2);
 
   const delta = previousWeekAverageScore
-    ? generateScoreComparisonMessage(previousWeekAverageScore, averageScore)
+    ? averageScore - previousWeekAverageScore
     : undefined;
 
   const nextWeekGoal = calculateTargetScore(

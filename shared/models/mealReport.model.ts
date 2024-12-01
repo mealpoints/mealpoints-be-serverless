@@ -60,7 +60,7 @@ export interface IMealReport extends Document {
   };
   summary: {
     averageScore: number;
-    delta?: string;
+    delta?: number;
     previousWeekAverageScore?: number;
     nextWeekGoal: number;
   };
@@ -98,7 +98,7 @@ export interface IMealReportCreate {
   };
   summary: {
     averageScore: number;
-    delta?: string;
+    delta?: number;
     previousWeekAverageScore?: number;
     nextWeekGoal: number;
   };
@@ -151,7 +151,7 @@ const mealReportSchema = new Schema({
   },
   summary: {
     averageScore: { type: Number, required: true },
-    delta: { type: String },
+    delta: { type: Number },
     previousWeekAverageScore: { type: Number },
     nextWeekGoal: { type: Number, required: true },
   },
