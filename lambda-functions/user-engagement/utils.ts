@@ -22,13 +22,13 @@ export const isLocalTimeInFlowWindow = (
 
   // Get the current time in the specified timezone
   const now = new Date();
-  const currentZonedTime = toZonedTime(now, timezone);
+  const currentZonedDateTime = toZonedTime(now, timezone);
 
   // Create the execution time adjusted to today's date in the target timezone
   const executionDateTime = new Date(
-    currentZonedTime.getFullYear(),
-    currentZonedTime.getMonth(),
-    currentZonedTime.getDate(),
+    currentZonedDateTime.getFullYear(),
+    currentZonedDateTime.getMonth(),
+    currentZonedDateTime.getDate(),
     parsedTime.getHours(),
     parsedTime.getMinutes()
   );
@@ -38,7 +38,7 @@ export const isLocalTimeInFlowWindow = (
   const endTime = addMinutes(executionDateTime, windowInMinutes / 2);
 
   // Check if the current time falls within this interval
-  const isInExecutionWindow = isWithinInterval(currentZonedTime, {
+  const isInExecutionWindow = isWithinInterval(currentZonedDateTime, {
     start: startTime,
     end: endTime,
   });
