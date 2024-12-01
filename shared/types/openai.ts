@@ -34,7 +34,9 @@ export type MealData = {
   macros: NutritionalData;
 };
 
-export type OpenAIResponse = {
+export interface IOpenAIMealResponse {
   message: string;
   data?: MealData;
-};
+}
+
+export type OpenAIResponse = string | IOpenAIMealResponse;
