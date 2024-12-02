@@ -6,3 +6,12 @@ export function convertToHumanReadableMessage(input: string): string {
     .replaceAll(String.raw`\t`, "\t") // Replace escaped tabs with actual tabs
     .trim(); // Remove any leading or trailing whitespace
 }
+
+export function isValidJsonString(string_: string): boolean {
+  try {
+    JSON.parse(string_);
+    return true; // It's valid JSON
+  } catch {
+    return false; // It's not valid JSON
+  }
+}

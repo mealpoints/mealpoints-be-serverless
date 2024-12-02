@@ -7,7 +7,7 @@ import {
   UserEngagementMessageTypesEnum,
   WhatsappTemplateNameEnum,
 } from "../../../../shared/types/enums";
-import { IUsersToSendReminders } from "../../../../shared/types/queueMessages";
+import { IUserToSendReminders } from "../../../../shared/types/queueMessages";
 import { createWhatsappTemplate } from "../../../../shared/utils/whatsapp-templates";
 
 const Logger = logger("lib/reminder/logger");
@@ -21,11 +21,11 @@ const GET_REMINDER_MESSAGE_TEMPLATE_BASED_ON_REMINDER_COUNT: Record<
   2: WhatsappTemplateNameEnum.ReminderToPostMealsThree,
 };
 
-export const processReminder = async (messageBody: IUsersToSendReminders) => {
+export const processReminder = async (messageBody: IUserToSendReminders) => {
   Logger("processReminder").info(`Starting processReminder`);
 
   const settings = await SettingsSingleton.getInstance();
-  const maxReminders = settings.get("user-engangement.max-reminders") as number;
+  const maxReminders = settings.get("user-engagement.max-reminders") as number;
   const { user, remindersCount } = messageBody;
 
   try {

@@ -4,6 +4,7 @@ import { IUser } from "../models/user.model";
 import * as openAIThreadService from "../services/openAIThread.service";
 import { OpenAIMessageTypesEnum } from "../types/enums";
 import { OpenAIResponse } from "../types/openai";
+import { isValidJsonString } from "../utils/string";
 const Logger = logger("services/openai.service");
 
 interface IAskOptions {
@@ -31,7 +32,6 @@ export const ask = async (
     });
 
     const result = await openAIHandler.ask();
-    const parsedResult = JSON.parse(result);
     Logger("ask").info(result);
 
     if (openAIHandler.newThreadCreated) {
@@ -42,7 +42,10 @@ export const ask = async (
       });
     }
 
-    return parsedResult;
+    const normalizedResult = isValidJsonString(result)
+      ? JSON.parse(result)
+      : result;
+    return normalizedResult;
   } catch (error) {
     Logger("ask").error(error);
     throw error;

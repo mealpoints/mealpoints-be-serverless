@@ -249,6 +249,7 @@ export const sendTemplateMessage = async (messageData: ISentMessageCreate) => {
     return response;
   } catch (error) {
     Logger("sendTemplateMessage").error(error);
+    console.log(error); // TODO: Remove this when MP-54 is completed
     throw error;
   }
 };

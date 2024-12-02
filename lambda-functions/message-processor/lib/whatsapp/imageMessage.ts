@@ -13,7 +13,7 @@ import {
   OpenAIMessageTypesEnum,
 } from "../../../../shared/types/enums";
 import { WhastappWebhookObject } from "../../../../shared/types/message";
-import { MealData } from "../../../../shared/types/openai";
+import { IOpenAIMealResponse, MealData } from "../../../../shared/types/openai";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
 import {
@@ -43,12 +43,14 @@ export const processImageMessage = async (
     );
 
     try {
-      const openaiResponse = await openAIService.ask(s3Path, user, {
+      const openaiResponse = (await openAIService.ask(s3Path, user, {
         messageType: OpenAIMessageTypesEnum.Image,
         assistantId,
-        additionalInstructions: getInstructionForUser(user),
-      });
+        additionalInstructions: await getInstructionForUser(user),
+      })) as IOpenAIMealResponse; // We know that the response is a meal response in JSON format
+
       cleanupLocalFile(imageFilePath);
+
       await updateReceivedMessage(payload, s3Path);
       await messageService.sendTextMessage({
         user: user.id,

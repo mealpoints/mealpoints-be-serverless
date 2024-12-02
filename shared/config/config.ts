@@ -13,6 +13,13 @@ export const USER_MESSAGES = {
   },
 };
 
+// TODO: Convert this to enum later
+export const QUEUE_MESSAGE_GROUP_IDS = {
+  whatsapp_messages: "whatsapp_messages",
+  meal_summary: "meal_summary",
+  reminder: "reminder",
+};
+
 export const DEFAULT_GEO_INFO = {
   countryCode: "IN",
   timezone: "Asia/Kolkata",
