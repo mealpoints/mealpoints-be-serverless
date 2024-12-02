@@ -1,3 +1,4 @@
+// TODO: Deprecate this class and use date-fns instead
 export class DateUtils {
   private date: Date;
 
@@ -103,5 +104,9 @@ export class DateUtils {
   // Get the native Date object
   toDate(): Date {
     return this.date;
+  }
+  // Check if the date is between two given dates
+  isBetween(startDate: Date, endDate: Date): boolean {
+    return this.date >= startDate && this.date <= endDate;
   }
 }

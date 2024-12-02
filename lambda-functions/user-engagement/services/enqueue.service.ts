@@ -7,40 +7,35 @@ import {
   IUsersToSendReminders,
   IUsersToSendSummaries,
 } from "../../../shared/types/queueMessages";
-import { hasMeals } from "../../../shared/utils/meal";
 
 const Logger = logger("user-engagement/enqueue.service");
 
 export const enqueueUsersToSendEngagement = async (
-  usersToEngage: (IUsersToSendSummaries | IUsersToSendReminders)[]
+  usersToEngage: (IUsersToSendSummaries | IUsersToSendReminders)[],
+  messageGroupId: keyof typeof QUEUE_MESSAGE_GROUP_IDS
 ): Promise<void> => {
   Logger("enqueueUsersToSendEngagement").info(
-    `Enqueuing ${usersToEngage.length} users for engagement`
+    `Enqueuing ${usersToEngage.length} users for engagement with the messageGroupId: ${messageGroupId}`
   );
   const queueService = new SqsQueueService(queue);
 
   try {
     for (const user of usersToEngage) {
-      const messageGroupId = hasMeals(user)
-        ? QUEUE_MESSAGE_GROUP_IDS.meal_summary
-        : QUEUE_MESSAGE_GROUP_IDS.reminder;
+      const messageBody = JSON.stringify({ body: user });
 
       await queueService.enqueueMessage({
         queueUrl: process.env.AWS_SQS_URL as string,
-        messageBody: JSON.stringify({ body: user }),
+        messageBody,
         messageGroupId,
         messageDeduplicationId: uuidv4(),
       });
     }
 
     Logger("enqueueUsersToSendEngagement").info(
-      `Enqueued ${usersToEngage.length} users for engagement`
+      `Enqueued ${usersToEngage.length} users for engagement with the messageGroupId: ${messageGroupId}`
     );
   } catch (error) {
-    Logger("enqueueUsersToSendEngagement").error(
-      "Error enqueueing users",
-      error
-    );
+    Logger("enqueueUsersToSendEngagement").error(error);
     throw error;
   }
 };

@@ -1,5 +1,4 @@
 import { IUser } from "../models/user.model";
-import { IUserMeal } from "../models/userMeal.model";
 import { WhastappWebhookObject } from "./message";
 
 export interface IMessage {
@@ -11,10 +10,7 @@ export interface IDequeuedMessage extends IMessage {
   receiptHandle: string;
 }
 
-export interface IUsersToSendSummaries {
-  user: IUser;
-  meals: IUserMeal[];
-}
+export interface IUsersToSendSummaries extends IUser {}
 
 export interface IUsersToSendReminders {
   user: IUser;

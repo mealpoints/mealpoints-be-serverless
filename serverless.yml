@@ -53,5 +53,5 @@ functions:
     timeout: 300
     events:
       - schedule:
-          rate: rate(60 minutes)
+          rate: rate(30 minutes)
           enabled: true

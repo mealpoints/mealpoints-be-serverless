@@ -4,14 +4,24 @@ import UserEngagementMessage, {
   IUserEngagementMessage,
   IUserEngagementMessageCreate,
 } from "../models/userEngagementMessage.model";
+import { UserEngagementMessageTypesEnum } from "../types/enums";
 const Logger = logger("userEngagement.service");
 
-export const getUsersWithoutEngagementMessagesInPeriod = async (
-  startDate: Date,
-  endDate: Date
-): Promise<IUser[]> => {
+interface IGetUsersWithoutEngagementMessagesInPeriod {
+  startDate: Date;
+  endDate: Date;
+  timezone?: string;
+  type?: UserEngagementMessageTypesEnum;
+}
+
+export const getUsersWithoutEngagementMessagesInPeriod = async ({
+  startDate,
+  endDate,
+  timezone,
+  type,
+}: IGetUsersWithoutEngagementMessagesInPeriod): Promise<IUser[]> => {
   Logger("getUsersWithoutEngagementMessagesInPeriod").debug(
-    "Getting users without engagement messages in period"
+    `Getting users in ${timezone}  without engagement messages in period`
   );
   /**
    * 1. get all the users who have engagementMessages in last X days
@@ -22,6 +32,7 @@ export const getUsersWithoutEngagementMessagesInPeriod = async (
       $gte: startDate,
       $lte: endDate,
     },
+    type,
   });
 
   // TODO: Use the user service. Do not use the User model directly
@@ -29,6 +40,7 @@ export const getUsersWithoutEngagementMessagesInPeriod = async (
     _id: {
       $nin: engagedUsers,
     },
+    timezone,
   });
   Logger("getUsersWithoutEngagementMessagesInPeriod").debug(
     `Users without engagement: ${usersWithoutEngagement.length}`

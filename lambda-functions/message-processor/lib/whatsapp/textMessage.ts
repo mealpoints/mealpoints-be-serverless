@@ -5,6 +5,7 @@ import SettingsSingleton from "../../../../shared/config/settings";
 import { IUser } from "../../../../shared/models/user.model";
 import * as messageService from "../../../../shared/services/message.service";
 import * as openAIService from "../../../../shared/services/openAI.service";
+import * as userMealService from "../../../../shared/services/userMeal.service";
 import {
   MessageTypesEnum,
   OpenAIMessageTypesEnum,
@@ -12,7 +13,10 @@ import {
 import { WhastappWebhookObject } from "../../../../shared/types/message";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
-import { getInstructionForUser } from "../../../../shared/utils/user";
+import {
+  getInstructionForUser,
+  getUserLocalTime,
+} from "../../../../shared/utils/user";
 
 const Logger = logger("lib/whatsapp/textMessage");
 
@@ -36,6 +40,18 @@ export const processTextMessage = async (
       });
 
       const message = _.isObject(result) ? result.message : result;
+
+      // Store meal if mealData is present
+      if (_.isObject(result) && result.data?.meal_name) {
+        const data = result.data;
+        await userMealService.createUserMeal({
+          user: user.id,
+          name: data.meal_name,
+          score: data.score,
+          macros: data.macros,
+          localTime: getUserLocalTime(user),
+        });
+      }
 
       await messageService.sendTextMessage({
         user: user.id,

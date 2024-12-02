@@ -6,7 +6,9 @@ const Logger = logger("user.service");
 export const createUser = async (userData: IUserCreate): Promise<IUser> => {
   Logger("createUser").info("");
 
-  const { countryCode, timezone } = await getGeoInfoFromcontact(userData.contact);
+  const { countryCode, timezone } = await getGeoInfoFromcontact(
+    userData.contact
+  );
   userData.timezone ??= timezone;
   userData.countryCode ??= countryCode;
 
@@ -63,4 +65,15 @@ export const deleteUser = async (id: string): Promise<IUser | null> => {
   Logger("deleteUser").info("");
   const user = await User.findByIdAndUpdate(id, { isActive: false });
   return user;
+};
+
+export const getAllTimezones = async (): Promise<string[]> => {
+  try {
+    Logger("getAllTimezones").info("");
+    const timezones = await User.distinct("timezone");
+    return timezones;
+  } catch (error) {
+    Logger("getAllTimezones").error(error);
+    throw error;
+  }
 };
