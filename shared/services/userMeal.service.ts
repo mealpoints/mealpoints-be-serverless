@@ -117,3 +117,33 @@ export const findUserMeals = async (filter: FilterQuery<IUserMeal>) => {
     throw error;
   }
 };
+
+export const getUsersWhoHaveLoggedMealsInPeriod = async (
+  startDate: Date,
+  endDate: Date
+): Promise<string[]> => {
+  try {
+    Logger("getUsersWhoHaveLoggedMealsInPeriod").info("");
+    const users = await UserMeal.distinct("user", {
+      createdAt: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    });
+    return users;
+  } catch (error) {
+    Logger("getUsersWhoHaveLoggedMealsInPeriod").error(error);
+    throw error;
+  }
+};
+
+export const find = async (filter: FilterQuery<IUserMeal>) => {
+  Logger("find").info(`called with ${JSON.stringify(filter)}`);
+  try {
+    const userMeals = await UserMeal.find(filter);
+    return userMeals;
+  } catch (error) {
+    Logger("find").error(error);
+    throw error;
+  }
+};

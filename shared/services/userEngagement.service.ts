@@ -20,7 +20,7 @@ export const getUsersWithoutEngagementMessagesInPeriod = async ({
   timezone,
   type,
 }: IGetUsersWithoutEngagementMessagesInPeriod): Promise<IUser[]> => {
-  Logger("getUsersWithoutEngagementMessagesInPeriod").debug(
+  Logger("getUsersWithoutEngagementMessagesInPeriod").info(
     `Getting users in ${timezone}  without engagement messages in period`
   );
   /**
