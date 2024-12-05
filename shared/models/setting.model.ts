@@ -3,7 +3,6 @@ import { Document, Schema, model } from "mongoose";
 export type SettingValue = string | boolean | number | string[] | number[];
 export type SettingKey =
   | "openai.assistant.mealpoints-core"
-  | "openai.assistant.reminder"
   | "openai.assistant.meal-summary"
   | "blacklist"
   | "rate-limit.message-limit-per-day"

@@ -40,7 +40,7 @@ export const calculateMealData = (
   // Calculate totals
   meals.forEach((meal: IUserMeal) => {
     totalCalories += meal.macros.calories.value;
-    totalScore += meal.score.value;
+    totalScore += _.toNumber(meal.score.value);
   });
   const averageMealScore = _.round(totalScore / meals.length, 2);
 
