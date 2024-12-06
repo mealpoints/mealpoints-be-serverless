@@ -38,7 +38,7 @@ export const URL = {
   mealReport: "/report/",
 };
 
-const BUCKET_NAME = process.env.BUCKET_NAME;
+const BUCKET_NAME = process.env.AWS_S3_BUCKET;
 
 export interface IBadge {
   name: string;
