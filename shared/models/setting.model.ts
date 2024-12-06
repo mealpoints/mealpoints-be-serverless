@@ -30,6 +30,15 @@ const settingSchema = new Schema<ISetting>({
   value: { type: Schema.Types.Mixed, required: true },
 });
 
+settingSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (document, returnValue) {
+    returnValue.id = returnValue._id;
+    delete returnValue._id;
+  },
+});
+
 // Create an index on the key key
 settingSchema.index({ key: 1 });
 

@@ -96,12 +96,6 @@ export const mealReportFlow = async (timezone: string) => {
 
     if (usersToSendMealReport.length === 0) return;
 
-    // Fixing the issue where userID is stored in _id
-    usersToSendMealReport.forEach((user: IUser) => {
-      user.id = user._id as string;
-      delete user._id;
-    });
-
     // Enqueue users to generate meal report
     await enqueueUsersToSendEngagement(usersToSendMealReport, "meal_report");
   } catch (error) {

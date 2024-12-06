@@ -49,6 +49,15 @@ const SentMessageSchema: Schema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+SentMessageSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (document, returnValue) {
+    returnValue.id = returnValue._id;
+    delete returnValue._id;
+  },
+});
+
 const SentMessage = mongoose.model<ISentMessage>(
   "SentMessage",
   SentMessageSchema

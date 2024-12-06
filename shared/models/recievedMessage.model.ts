@@ -28,6 +28,15 @@ const ReceivedMessageSchema: Schema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+ReceivedMessageSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (document, returnValue) {
+    returnValue.id = returnValue._id;
+    delete returnValue._id;
+  },
+});
+
 const RecievedMessage = mongoose.model<IRecievedMessage>(
   "RecievedMessage",
   ReceivedMessageSchema

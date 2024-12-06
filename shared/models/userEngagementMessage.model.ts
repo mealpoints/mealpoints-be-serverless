@@ -31,4 +31,13 @@ const UserEngagementMessage = mongoose.model<IUserEngagementMessage>(
   UserEngagementMessageSchema
 );
 
+UserEngagementMessageSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (document, returnValue) {
+    returnValue.id = returnValue._id;
+    delete returnValue._id;
+  },
+});
+
 export default UserEngagementMessage;

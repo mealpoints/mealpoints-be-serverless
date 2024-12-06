@@ -166,5 +166,14 @@ const mealReportSchema = new Schema({
 // Create an index on the user key
 mealReportSchema.index({ user: 1 });
 
+mealReportSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (document, returnValue) {
+    returnValue.id = returnValue._id;
+    delete returnValue._id;
+  },
+});
+
 const MealReport = mongoose.model<IMealReport>("MealReport", mealReportSchema);
 export default MealReport;

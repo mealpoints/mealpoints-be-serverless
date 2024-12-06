@@ -40,6 +40,15 @@ const UserMealSchema: Schema = new Schema({
 
 UserMealSchema.plugin(paginatePlugin);
 
+UserMealSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (document, returnValue) {
+    returnValue.id = returnValue._id;
+    delete returnValue._id;
+  },
+});
+
 const UserMeal = mongoose.model<IUserMeal, PaginateModel<IUserMeal>>(
   "UserMeal",
   UserMealSchema

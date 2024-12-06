@@ -109,9 +109,6 @@ interface IOpenAIResult {
 export const processMealSummary = async (user: IUserToSendSummaries) => {
   Logger("processMealSummary").info(``);
 
-  // TEMP: Remove this once the user object is properly created
-  user.id = user.id || (user._id as string);
-
   const settings = await SettingsSingleton.getInstance();
   const assistantId = settings.get("openai.assistant.meal-summary") as string;
   const engagmentMessageIntervalInDays = settings.get(
