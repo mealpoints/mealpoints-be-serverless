@@ -25,7 +25,13 @@ export const getMealReportById = async (
 ): Promise<IMealReport | null> => {
   try {
     Logger("getMealReportById").info("");
-    const mealReport = await MealReport.findById(mealReportId);
+    const mealReport = await MealReport.findById(
+      mealReportId,
+      {},
+      {
+        populate: ["bestMeals", "worstMeals", "user"],
+      }
+    );
     return mealReport;
   } catch (error) {
     Logger("getMealReportById").error(error);

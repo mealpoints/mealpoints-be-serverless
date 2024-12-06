@@ -147,3 +147,24 @@ export const find = async (filter: FilterQuery<IUserMeal>) => {
     throw error;
   }
 };
+
+export const getUserMealsInPeriod = async (
+  userId: string,
+  startDate: Date,
+  endDate: Date
+): Promise<IUserMeal[]> => {
+  try {
+    Logger("getUserMealsInPeriod").info("");
+    const userMeals = await UserMeal.find({
+      user: userId,
+      createdAt: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    });
+    return userMeals;
+  } catch (error) {
+    Logger("getUserMealsInPeriod").error(error);
+    throw error;
+  }
+};

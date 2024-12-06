@@ -1,9 +1,9 @@
 import { SQSEvent } from "aws-lambda";
+import { QUEUE_MESSAGE_GROUP_IDS } from "../../shared/config/config";
 import { connectToDatabase } from "../../shared/config/database";
 import logger from "../../shared/config/logger";
 import { queue } from "../../shared/config/queue";
 import { SqsQueueService } from "../../shared/services/queue.service";
-import { QUEUE_MESSAGE_GROUP_IDS } from "../../shared/types/queueMessages";
 import { SQSEventData } from "../../shared/utils/SQSEventData";
 import { processMealReport } from "./lib/meal-report";
 import { processMealSummary } from "./lib/meal-sumary";

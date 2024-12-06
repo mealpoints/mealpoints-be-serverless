@@ -1,3 +1,4 @@
+import { subDays } from "date-fns";
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
 import { sendInternalAlert } from "../../../../shared/libs/internal-alerts";
@@ -6,11 +7,11 @@ import {
   IMealReportFromOpenAI,
 } from "../../../../shared/models/mealReport.model";
 import { IUser } from "../../../../shared/models/user.model";
-import { IUserMeal } from "../../../../shared/models/userMeal.model";
 import * as mealReportService from "../../../../shared/services/mealReport.service";
 import * as messageService from "../../../../shared/services/message.service";
 import * as openAIService from "../../../../shared/services/openAI.service";
 import * as userEngagementMessageService from "../../../../shared/services/userEngagement.service";
+import * as userMealService from "../../../../shared/services/userMeal.service";
 import {
   MessageTypesEnum,
   OpenAIMessageTypesEnum,
@@ -28,26 +29,23 @@ import {
 
 const Logger = logger("lib/reminder/meal-report");
 
-interface IProcessMealReport {
-  user: IUser;
-  meals: IUserMeal[];
-  startDate: Date;
-  endDate: Date;
-}
-
-export const processMealReport = async ({
-  user,
-  meals,
-  startDate,
-  endDate,
-}: IProcessMealReport): Promise<void> => {
+export const processMealReport = async (user: IUser): Promise<void> => {
   Logger("processMealReport").info("");
   const settings = await SettingsSingleton.getInstance();
   const assistantId = settings.get("openai.assistant.meal-reports") as string;
 
-  const stringifiedMeals = JSON.stringify(meals);
-
   try {
+    const oneWeekAgo = subDays(new Date(), 7);
+    const today = new Date();
+
+    const meals = await userMealService.getUserMealsInPeriod(
+      user.id,
+      oneWeekAgo,
+      today
+    );
+
+    const stringifiedMeals = JSON.stringify(meals);
+
     const openAIResult = (await openAIService.ask(stringifiedMeals, user, {
       messageType: OpenAIMessageTypesEnum.Text,
       assistantId,
@@ -67,8 +65,10 @@ export const processMealReport = async ({
 
     const { tipsToImproveScore, failuresToAvoid } = openAIResult;
 
+    const twoWeeksAgo = subDays(oneWeekAgo, 7);
+
     const previousWeekMealReport =
-      await mealReportService.getMealReportOfPreviousWeek(startDate);
+      await mealReportService.getMealReportOfPreviousWeek(twoWeeksAgo);
 
     const previousWeekAverageScore: number | undefined =
       (previousWeekMealReport && previousWeekMealReport.summary.averageScore) ||
@@ -84,8 +84,8 @@ export const processMealReport = async ({
 
     const finalMealReport: IMealReportCreate = {
       user: user.id,
-      startDate,
-      endDate,
+      startDate: oneWeekAgo,
+      endDate: today,
       summary,
       metadata,
       bestMeals,

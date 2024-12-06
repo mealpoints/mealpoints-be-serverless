@@ -1,4 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
+import User from "./user.model";
+import UserMeal from "./userMeal.model";
 
 export interface NutrientInfo {
   value: number;
@@ -120,7 +122,7 @@ const badgeSchma = {
 };
 
 const mealReportSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  user: { type: Schema.Types.ObjectId, ref: User, required: true },
   personalityBadge: badgeSchma,
   mealWins: {
     first: badgeSchma,
@@ -139,8 +141,8 @@ const mealReportSchema = new Schema({
       description: { type: String, required: true },
     },
   ],
-  bestMeals: [{ type: Schema.Types.ObjectId, ref: "UserMeal" }],
-  worstMeals: [{ type: Schema.Types.ObjectId, ref: "UserMeal" }],
+  bestMeals: [{ type: Schema.Types.ObjectId, ref: UserMeal }],
+  worstMeals: [{ type: Schema.Types.ObjectId, ref: UserMeal }],
   metadata: {
     calories: nutrientInfoSchema,
     protein: nutrientInfoSchema,

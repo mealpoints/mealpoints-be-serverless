@@ -12,6 +12,7 @@ export const USER_MESSAGES = {
       "Sorry, we only accept food photos and text messages at the moment. The format of the message you sent is not supported. Please stay tuned for further updates.",
   },
 };
+export const START_HOUR_OF_DAY = 3;
 
 // TODO: Convert this to enum later
 export const QUEUE_MESSAGE_GROUP_IDS = {

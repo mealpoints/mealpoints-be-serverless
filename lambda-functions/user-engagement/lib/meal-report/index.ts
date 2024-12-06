@@ -102,8 +102,6 @@ export const mealReportFlow = async (timezone: string) => {
       delete user._id;
     });
 
-    console.log(usersToSendMealReport);
-
     // Enqueue users to generate meal report
     await enqueueUsersToSendEngagement(usersToSendMealReport, "meal_report");
   } catch (error) {
