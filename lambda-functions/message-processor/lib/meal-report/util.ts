@@ -100,24 +100,7 @@ export function calculateTargetScore(
   const targetScore = baselineScore + weeklyImprovement;
 
   // Ensure the target score does not exceed 10.0
-  return Math.min(targetScore, MEAL_REPORT.maxScore);
-}
-
-function generateScoreComparisonMessage(
-  previousWeekAverageScore: number,
-  averageScore: number
-): string {
-  const scoreDifference = averageScore - previousWeekAverageScore;
-
-  if (scoreDifference > 0) {
-    return `Your score has increased by ${scoreDifference.toFixed(1)} points!`;
-  } else if (scoreDifference < 0) {
-    return `Your score has decreased by ${Math.abs(scoreDifference).toFixed(
-      1
-    )} points.`;
-  } else {
-    return `Your score remained the same as last week.`;
-  }
+  return _.round(Math.min(targetScore, MEAL_REPORT.maxScore), 2);
 }
 
 export const getSummary = (
