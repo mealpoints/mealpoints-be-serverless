@@ -1,8 +1,8 @@
 import logger from "../config/logger";
-import SettingsSingleton from "../config/settings";
 import { IUser } from "../models/user.model";
 import { getTodaysUserMealsByUserId } from "../services/userMeal.service";
 import { CountryCodeToNameEnum } from "../types/enums";
+import { getGlocalInstruction } from "./openai";
 import { getLocaleTimeInTimezone, getTimeInTimezone } from "./timezone";
 const Logger = logger("shared/utils/user");
 
@@ -41,7 +41,5 @@ const todaysMealsByUser = async (user: IUser): Promise<string> => {
 };
 
 export const getInstructionForUser = async (user: IUser): Promise<string> => {
-  const settings = await SettingsSingleton.getInstance();
-  const globalInstruction = settings.get("openai.assistant.global-instruction") as string;
-  return timeAndLocationOfUser(user) + await todaysMealsByUser(user) + globalInstruction;
+  return timeAndLocationOfUser(user) + await todaysMealsByUser(user) + await getGlocalInstruction();
 };
