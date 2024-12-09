@@ -4,6 +4,7 @@ export type SettingValue = string | boolean | number | string[] | number[];
 export type SettingKey =
   | "openai.assistant.mealpoints-core"
   | "openai.assistant.meal-summary"
+  | "openai.assistant.global-instruction"
   | "blacklist"
   | "rate-limit.message-limit-per-day"
   | "internal-alerts.alert-list"
