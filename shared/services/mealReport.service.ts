@@ -52,14 +52,14 @@ export const findMealReport = async (
   }
 };
 
-// TODO: fix this function
-export const getMealReportOfPreviousWeek = async (startDate: Date) => {
+export const getPreviousWeekMealReportForUser = async (userId: string, startDate: Date) => {
   try {
     Logger("findMealReportOfPreviousWeek").info("");
     const mealReport = await MealReport.findOne({
+      user: userId,
       startDate: {
-        $lte: startDate,
-      },
+        $gte: startDate,
+      }
     });
     return mealReport;
   } catch (error) {

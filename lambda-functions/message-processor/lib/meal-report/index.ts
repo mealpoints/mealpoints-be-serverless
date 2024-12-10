@@ -68,7 +68,7 @@ export const processMealReport = async (user: IUser): Promise<void> => {
     const twoWeeksAgo = subDays(oneWeekAgo, 7);
 
     const previousWeekMealReport =
-      await mealReportService.getMealReportOfPreviousWeek(twoWeeksAgo);
+      await mealReportService.getPreviousWeekMealReportForUser(user.id, twoWeeksAgo);
 
     const previousWeekAverageScore: number | undefined =
       (previousWeekMealReport && previousWeekMealReport.summary.averageScore) ||
