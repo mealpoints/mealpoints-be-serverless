@@ -1,4 +1,6 @@
 import {
+  ButtonPositionEnum,
+  ButtonTypesEnum,
   ComponentTypesEnum,
   LanguagesEnum,
   ParametersTypesEnum,
@@ -22,6 +24,8 @@ export const createUserMealReportTemplate = (
     components: [
       {
         type: ComponentTypesEnum.Button,
+        sub_type: ButtonTypesEnum.URL,
+        index: ButtonPositionEnum.First,
         parameters: [
           {
             type: ParametersTypesEnum.Text,
