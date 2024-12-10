@@ -12,9 +12,9 @@ import {
   UserEngagementMessageTypesEnum,
   WhatsappTemplateNameEnum,
 } from "../../../../shared/types/enums";
-import { IUsersToSendSummaries } from "../../../../shared/types/queueMessages";
+import { IUserToSendSummaries } from "../../../../shared/types/queueMessages";
 import { DateUtils } from "../../../../shared/utils/DateUtils";
-import { createWhatsappTemplate } from "../../../../shared/utils/whatsappTemplateUtils";
+import { createWhatsappTemplate } from "../../../../shared/utils/whatsapp-templates";
 
 const Logger = logger("lib/reminder/meal-summary");
 
@@ -106,11 +106,8 @@ interface IOpenAIResult {
   motivation: string;
 }
 
-export const processMealSummary = async (user: IUsersToSendSummaries) => {
+export const processMealSummary = async (user: IUserToSendSummaries) => {
   Logger("processMealSummary").info(``);
-
-  // TEMP: Remove this once the user object is properly created
-  user.id = user.id || (user._id as string);
 
   const settings = await SettingsSingleton.getInstance();
   const assistantId = settings.get("openai.assistant.meal-summary") as string;

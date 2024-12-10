@@ -11,7 +11,6 @@
 
 ## Codebase Enhacements
 
-[] resolve `_id` and `id` conflicts after aggregation
 [] fix TS error in `consumer.ts` near `processMessage`
 
 ## Issues

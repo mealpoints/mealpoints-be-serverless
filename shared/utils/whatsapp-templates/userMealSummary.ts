@@ -3,10 +3,10 @@ import {
   LanguagesEnum,
   ParametersTypesEnum,
   WhatsappTemplateNameEnum,
-} from "../types/enums";
-import { MessageTemplateObject } from "../types/message";
+} from "../../types/enums";
+import { MessageTemplateObject } from "../../types/message";
 
-interface IUserMealSummaryData {
+export interface IUserMealSummaryData {
   duration: string;
   averageMealScore: string;
   totalCalories: string;
@@ -24,11 +24,7 @@ interface IUserMealSummaryData {
   motivation: string;
 }
 
-interface IReminderToPostMealsOne {}
-interface IReminderToPostMealsTwo {}
-interface IReminderToPostMealsThree {}
-
-const createUserMealSummaryTemplate = (
+export const createUserMealSummaryTemplate = (
   data: IUserMealSummaryData
 ): MessageTemplateObject<ComponentTypesEnum> => {
   return {
@@ -105,68 +101,4 @@ const createUserMealSummaryTemplate = (
       },
     ],
   };
-};
-
-const createReminderToPostMealsOneTemplate =
-  (): MessageTemplateObject<ComponentTypesEnum> => {
-    return {
-      name: WhatsappTemplateNameEnum.ReminderToPostMealsOne,
-      language: {
-        policy: "deterministic",
-        code: LanguagesEnum.English,
-      },
-    };
-  };
-
-const createReminderToPostMealsTwoTemplate =
-  (): MessageTemplateObject<ComponentTypesEnum> => {
-    return {
-      name: WhatsappTemplateNameEnum.ReminderToPostMealsTwo,
-      language: {
-        policy: "deterministic",
-        code: LanguagesEnum.English,
-      },
-    };
-  };
-
-const createReminderToPostMealsThreeTemplate =
-  (): MessageTemplateObject<ComponentTypesEnum> => {
-    return {
-      name: WhatsappTemplateNameEnum.ReminderToPostMealsThree,
-      language: {
-        policy: "deterministic",
-        code: LanguagesEnum.English,
-      },
-    };
-  };
-
-// Mapping the enum values to their respective data types
-type WhatsappTemplateDataMap = {
-  [WhatsappTemplateNameEnum.UserMealSummary]: IUserMealSummaryData;
-  [WhatsappTemplateNameEnum.ReminderToPostMealsOne]: IReminderToPostMealsOne;
-  [WhatsappTemplateNameEnum.ReminderToPostMealsTwo]: IReminderToPostMealsTwo;
-  [WhatsappTemplateNameEnum.ReminderToPostMealsThree]: IReminderToPostMealsThree;
-};
-
-export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
-  templateName: T,
-  data: WhatsappTemplateDataMap[T]
-): MessageTemplateObject<ComponentTypesEnum> => {
-  switch (templateName) {
-    case WhatsappTemplateNameEnum.UserMealSummary: {
-      return createUserMealSummaryTemplate(data as IUserMealSummaryData);
-    }
-    case WhatsappTemplateNameEnum.ReminderToPostMealsOne: {
-      return createReminderToPostMealsOneTemplate();
-    }
-    case WhatsappTemplateNameEnum.ReminderToPostMealsTwo: {
-      return createReminderToPostMealsTwoTemplate();
-    }
-    case WhatsappTemplateNameEnum.ReminderToPostMealsThree: {
-      return createReminderToPostMealsThreeTemplate();
-    }
-    default: {
-      throw new Error("Template not found");
-    }
-  }
 };

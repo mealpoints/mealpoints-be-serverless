@@ -44,6 +44,15 @@ userSchema.virtual("fullName").get(function (this: IUser) {
   return `${this.firstName} ${this.lastName}`.trim();
 });
 
+userSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (document, returnValue) {
+    returnValue.id = returnValue._id;
+    delete returnValue._id;
+  },
+});
+
 // Create and export the model
 const User = model<IUser>("User", userSchema);
 export default User;
