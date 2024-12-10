@@ -21,6 +21,15 @@ const OpenAIThreadSchema: Schema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+OpenAIThreadSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (document, returnValue) {
+    returnValue.id = returnValue._id;
+    delete returnValue._id;
+  },
+});
+
 const OpenAIThread = mongoose.model<IOpenAIThread>(
   "OpenAIThread",
   OpenAIThreadSchema

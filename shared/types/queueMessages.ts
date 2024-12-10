@@ -10,9 +10,9 @@ export interface IDequeuedMessage extends IMessage {
   receiptHandle: string;
 }
 
-export interface IUsersToSendSummaries extends IUser {}
+export interface IUserToSendSummaries extends IUser {}
 
-export interface IUsersToSendReminders {
+export interface IUserToSendReminders {
   user: IUser;
   remindersCount: number;
 }

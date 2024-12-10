@@ -3,7 +3,7 @@ import SettingsSingleton from "../../../../shared/config/settings";
 import User, { IUser } from "../../../../shared/models/user.model";
 import * as userEngagementService from "../../../../shared/services/userEngagement.service";
 import { UserEngagementMessageTypesEnum } from "../../../../shared/types/enums";
-import { IUsersToSendReminders } from "../../../../shared/types/queueMessages";
+import { IUserToSendReminders } from "../../../../shared/types/queueMessages";
 import { DateUtils } from "../../../../shared/utils/DateUtils";
 import { objectifyId } from "../../../../shared/utils/mongoose";
 import { enqueueUsersToSendEngagement } from "../../services/enqueue.service";
@@ -14,7 +14,7 @@ async function getUsersToSendReminders(
   usersWithoutEngagementMessage: IUser[],
   reminderThresholdDate: Date,
   timezone: string
-): Promise<IUsersToSendReminders[]> {
+): Promise<IUserToSendReminders[]> {
   Logger("getUsersToSendReminders").info("");
 
   const userIds = usersWithoutEngagementMessage.map((user: IUser) =>
@@ -90,7 +90,7 @@ async function getUsersToSendReminders(
     },
   ]);
 
-  return usersToSendReminders as IUsersToSendReminders[];
+  return usersToSendReminders as IUserToSendReminders[];
 }
 
 export const reminderFlow = async (timezone: string) => {

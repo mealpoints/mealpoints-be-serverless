@@ -110,3 +110,19 @@ export class DateUtils {
     return this.date >= startDate && this.date <= endDate;
   }
 }
+
+export const daysOfWeek = <const>[
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
+export function dayOfWeekAsString(
+  dayIndex: number
+): (typeof daysOfWeek)[number] {
+  return daysOfWeek[dayIndex] ?? undefined;
+}

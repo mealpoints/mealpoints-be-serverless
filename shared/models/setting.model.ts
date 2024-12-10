@@ -5,6 +5,7 @@ export type SettingKey =
   | "openai.assistant.mealpoints-core"
   | "openai.assistant.meal-summary"
   | "openai.assistant.global-instruction"
+  | "openai.assistant.meal-reports"
   | "blacklist"
   | "rate-limit.message-limit-per-day"
   | "internal-alerts.alert-list"
@@ -27,6 +28,15 @@ export interface ISettingCreate extends Partial<ISetting> {
 const settingSchema = new Schema<ISetting>({
   key: { type: String, required: true, unique: true },
   value: { type: Schema.Types.Mixed, required: true },
+});
+
+settingSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (document, returnValue) {
+    returnValue.id = returnValue._id;
+    delete returnValue._id;
+  },
 });
 
 // Create an index on the key key
