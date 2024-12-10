@@ -12,11 +12,9 @@ import {
 } from "../../../../shared/types/enums";
 import { WhastappWebhookObject } from "../../../../shared/types/message";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
+import { getOpenAiInstructions } from "../../../../shared/utils/openai";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
-import {
-  getInstructionForUser,
-  getUserLocalTime,
-} from "../../../../shared/utils/user";
+import { getUserLocalTime } from "../../../../shared/utils/user";
 
 const Logger = logger("lib/whatsapp/textMessage");
 
@@ -36,7 +34,7 @@ export const processTextMessage = async (
       const result = await openAIService.ask(userMessage as string, user, {
         messageType: OpenAIMessageTypesEnum.Text,
         assistantId,
-        additionalInstructions: await getInstructionForUser(user),
+        additionalInstructions: await getOpenAiInstructions(user),
       });
 
       const message = _.isObject(result) ? result.message : result;

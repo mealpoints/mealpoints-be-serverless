@@ -9,8 +9,8 @@ import {
   OpenAIMessageTypesEnum,
 } from "../../../../../shared/types/enums";
 import { WhastappWebhookObject } from "../../../../../shared/types/message";
+import { getOpenAiInstructions } from "../../../../../shared/utils/openai";
 import { convertToHumanReadableMessage } from "../../../../../shared/utils/string";
-import { getInstructionForUser } from "../../../../../shared/utils/user";
 import { WhatsappData } from "../../../../../shared/utils/WhatsappData";
 
 // Mock the dependencies
@@ -86,7 +86,7 @@ describe("processTextMessage", () => {
     (convertToHumanReadableMessage as jest.Mock).mockReturnValue(
       humanReadableMessage
     );
-    (getInstructionForUser as jest.Mock).mockResolvedValue(
+    (getOpenAiInstructions as jest.Mock).mockResolvedValue(
       "additional instructions"
     );
 
@@ -125,7 +125,7 @@ describe("processTextMessage", () => {
     (convertToHumanReadableMessage as jest.Mock).mockReturnValue(
       humanReadableMessage
     );
-    (getInstructionForUser as jest.Mock).mockResolvedValue(
+    (getOpenAiInstructions as jest.Mock).mockResolvedValue(
       "additional instructions"
     );
 
