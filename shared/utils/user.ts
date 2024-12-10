@@ -14,11 +14,11 @@ export const getUserLocalTime = (user: IUser): Date => {
 const timeAndLocationOfUser = (user: IUser) => {
   const countryName =
     CountryCodeToNameEnum[
-      user.countryCode as keyof typeof CountryCodeToNameEnum
+    user.countryCode as keyof typeof CountryCodeToNameEnum
     ];
-  
+
   const localDateTime = getLocaleTimeInTimezone(new Date(), user.timezone);
-  
+
   return `The user is from ${countryName}, and it's ${localDateTime} in ${countryName} right now. `;
 };
 
