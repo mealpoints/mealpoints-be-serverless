@@ -869,3 +869,36 @@ export enum CountryCodeToNameEnum {
   ZM = "Zambia",
   ZW = "Zimbabwe",
 }
+
+export enum GenderEnum {
+  Male = "male",
+  Female = "female",
+  Other = "other",
+}
+
+export enum ExerciseRoutineEnum {
+  None = "None",
+  Light = "Light",
+  Moderate = "Moderate",
+  Intense = "Intense",
+}
+
+export enum SleepPatternsEnum {
+  Poor = "Poor (<5 hours)",
+  Average = "Average (6-7 hours)",
+  Good = "Good (8+ hours)",
+}
+
+export enum StressLevelsEnum {
+  Low = "Low",
+  Moderate = "Moderate",
+  High = "High",
+}
+
+export enum HeightUnitEnum {
+  CM = "cm",
+}
+
+export enum WeightUnitEnum {
+  KG = "kg",
+}
