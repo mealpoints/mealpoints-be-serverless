@@ -1,9 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
 import {
-  DietEnum,
   ExerciseRoutineEnum,
   GenderEnum,
-  GoalsEnum,
   HeightUnitEnum,
   SleepPatternsEnum,
   StressLevelsEnum,
@@ -27,17 +25,17 @@ export interface IUserPreferences extends Document {
     value: number;
     unit: WeightUnitEnum;
   };
-  goals?: GoalsEnum; // QA: should we keep it enum? what abt custom entry?
-  motivation?: string; // QA: is this even needed ? goals is enough imo.
+  goal?: string;
+  motivation?: string;
   medicalConditions?: string;
   exerciseRoutine?: ExerciseRoutineEnum;
   sleepPatterns?: SleepPatternsEnum;
   stressLevels?: StressLevelsEnum;
   familyHistory?: string;
   occupation?: string;
-  foodPreferences?: string; // QA: should we make it array of string ?
-  excludedFoods?: string; // QA: same as above
-  diet?: DietEnum; // QA: same as goals
+  foodPreferences?: string;
+  excludedFoods?: string;
+  diet?: string;
   createdAt: Date;
 }
 
@@ -57,7 +55,7 @@ export interface IUserPreferencesCreate {
     value: number;
     unit: WeightUnitEnum;
   };
-  goals?: GoalsEnum;
+  goal?: string;
   motivation?: string;
   medicalConditions?: string;
   exerciseRoutine?: ExerciseRoutineEnum;
@@ -67,7 +65,7 @@ export interface IUserPreferencesCreate {
   occupation?: string;
   foodPreferences?: string;
   excludedFoods?: string;
-  diet?: DietEnum;
+  diet?: string;
 }
 
 const userPreferencesSchema = new Schema({
@@ -86,7 +84,7 @@ const userPreferencesSchema = new Schema({
     value: { type: Number, min: 0 },
     unit: { type: String, enum: Object.values(WeightUnitEnum) },
   },
-  goals: { type: String, enum: Object.values(GoalsEnum) },
+  goal: { type: String },
   motivation: { type: String },
   medicalConditions: { type: String },
   exerciseRoutine: { type: String, enum: Object.values(ExerciseRoutineEnum) },
@@ -96,7 +94,7 @@ const userPreferencesSchema = new Schema({
   occupation: { type: String },
   foodPreferences: { type: String },
   excludedFoods: { type: String },
-  diet: { type: String, enum: Object.values(DietEnum) },
+  diet: { type: String },
   createdAt: { type: Date, default: Date.now },
 });
 

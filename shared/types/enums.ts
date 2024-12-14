@@ -895,26 +895,6 @@ export enum StressLevelsEnum {
   High = "High",
 }
 
-export enum DietEnum {
-  None = "None",
-  Vegan = "Vegan",
-  Vegetarian = "Vegetarian",
-  Keto = "Keto",
-  Paleo = "Paleo",
-  NonVegetarian = "Non-Vegetarian",
-  Other = "Other",
-}
-
-export enum GoalsEnum {
-  WeightLoss = "weight loss",
-  WeightMaintenance = "weight maintenance",
-  WeightGain = "weight gain",
-  BuildMuscle = "build muscle",
-  TrackNutritionalIntake = "track nutritional intake",
-  ImproveEnergyLevels = "Improve Energy Levels",
-  Others = "others",
-}
-
 export enum HeightUnitEnum {
   CM = "cm",
 }
