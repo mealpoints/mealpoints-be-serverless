@@ -35,7 +35,6 @@ export interface IUserPreferences extends Document {
     diet: DietEnum;
 
     createdAt: Date;
-    updatedAt: Date;
 }
 
 const userPreferencesSchema = new Schema(
@@ -74,9 +73,7 @@ const userPreferencesSchema = new Schema(
         },
         motivation: { type: String },
         goals: { type: String, enum: Object.values(GoalsEnum), required: true },
-    },
-    {
-        timestamps: true,
+        createdAt: { type: Date, default: Date.now },
     }
 );
 
