@@ -38,8 +38,9 @@ export interface IUserPreferences extends Document {
     updatedAt: Date;
 }
 
-const userPreferencesSchema = new Schema<IUserPreferences>(
+const userPreferencesSchema = new Schema(
     {
+        user: { type: Schema.Types.ObjectId, ref: "User", required: true },
         age: { type: Number, min: 0, required: true },
         gender: { type: String, enum: Object.values(GenderEnum), required: true },
         height: {
