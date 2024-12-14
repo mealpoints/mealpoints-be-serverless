@@ -32,22 +32,22 @@ export const getUserPreferencesByUserId = async (
   }
 };
 
-export const getUserPreferencesByFilter = async (
+export const findUserPreferences = async (
   filter: FilterQuery<IUserPreferences>
 ): Promise<IUserPreferences[] | []> => {
   try {
-    Logger("getUserPreferencesByFilter").info("");
+    Logger("findUserPreferences").info("");
     const userPreferences = await UserPreferences.find(filter);
     return userPreferences;
   } catch (error) {
-    Logger("getUserPreferencesByFilter").error(error);
+    Logger("findUserPreferences").error(error);
     throw error;
   }
 };
 
 export const updateUserPreferencesByUserId = async (
   userId: string,
-  userPreferences: IUserPreferencesCreate
+  userPreferences: Omit<IUserPreferencesCreate, "user">
 ): Promise<IUserPreferences | null> => {
   try {
     Logger("updateUserPreferencesByUserId").info("");

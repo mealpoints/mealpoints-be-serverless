@@ -11,7 +11,7 @@ import {
 export interface IUserPreferences extends Document {
   id: string;
   user: string;
-  age?: number;
+  birthYear?: number;
   gender?: GenderEnum;
   height?: {
     value: number;
@@ -41,7 +41,7 @@ export interface IUserPreferences extends Document {
 
 export interface IUserPreferencesCreate {
   user: string;
-  age?: number;
+  birthYear?: number;
   gender?: GenderEnum;
   height?: {
     value: number;
@@ -70,7 +70,7 @@ export interface IUserPreferencesCreate {
 
 const userPreferencesSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  age: { type: Number, min: 0 },
+  birthYear: { type: Number, min: 1900 },
   gender: { type: String, enum: Object.values(GenderEnum) },
   height: {
     value: { type: Number, min: 0 },
@@ -96,6 +96,15 @@ const userPreferencesSchema = new Schema({
   excludedFoods: { type: String },
   diet: { type: String },
   createdAt: { type: Date, default: Date.now },
+});
+
+userPreferencesSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (document, returnValue) {
+    returnValue.id = returnValue._id;
+    delete returnValue._id;
+  },
 });
 
 const UserPreferences = mongoose.model<IUserPreferences>(
