@@ -916,10 +916,9 @@ export enum GoalsEnum {
 }
 
 export enum HeightUnitEnum {
-  CM = 'cm',
+  CM = "cm",
 }
 
 export enum WeightUnitEnum {
-  KG = 'kg',
+  KG = "kg",
 }
-
