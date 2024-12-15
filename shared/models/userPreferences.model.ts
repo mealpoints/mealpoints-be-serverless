@@ -26,7 +26,6 @@ export interface IUserPreferences extends Document {
     unit: WeightUnitEnum;
   };
   goal?: string;
-  motivation?: string;
   medicalConditions?: string;
   exerciseRoutine?: ExerciseRoutineEnum;
   sleepPatterns?: SleepPatternsEnum;
@@ -56,7 +55,6 @@ export interface IUserPreferencesCreate {
     unit: WeightUnitEnum;
   };
   goal?: string;
-  motivation?: string;
   medicalConditions?: string;
   exerciseRoutine?: ExerciseRoutineEnum;
   sleepPatterns?: SleepPatternsEnum;
@@ -85,7 +83,6 @@ const userPreferencesSchema = new Schema({
     unit: { type: String, enum: Object.values(WeightUnitEnum) },
   },
   goal: { type: String },
-  motivation: { type: String },
   medicalConditions: { type: String },
   exerciseRoutine: { type: String, enum: Object.values(ExerciseRoutineEnum) },
   sleepPatterns: { type: String, enum: Object.values(SleepPatternsEnum) },
