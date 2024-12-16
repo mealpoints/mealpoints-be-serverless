@@ -47,9 +47,22 @@ const todaysMealsByUser = async (user: IUser): Promise<string> => {
 };
 
 export const getInstructionForUser = async (user: IUser): Promise<string> => {
-  return (
-    timeAndLocationOfUser(user) +
-    (await todaysMealsByUser(user)) +
-    (await userPreferencesInstruction(user))
+  const instructionFetchers = [
+    () => timeAndLocationOfUser(user),
+    () => todaysMealsByUser(user),
+    () => userPreferencesInstruction(user),
+  ];
+
+  // Map & Execute all instruction fetch functions with try-catch and combine results
+  const instructions = await Promise.all(
+    instructionFetchers.map(async (fetchInstruction) => {
+      try {
+        return await fetchInstruction();
+      } catch {
+        return "";
+      }
+    })
   );
+
+  return instructions.join("");
 };

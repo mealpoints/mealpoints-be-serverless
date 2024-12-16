@@ -44,7 +44,9 @@ export const userPreferencesInstruction = async (
     }
 
     return (
-      Object.keys(descriptivePreferenceFields) as Array<keyof IUserPreferences>
+      Object.keys(descriptivePreferenceFields) as Array<
+        keyof Partial<IUserPreferences>
+      >
     )
       .filter((key) => {
         const value = userPreferences[key];
