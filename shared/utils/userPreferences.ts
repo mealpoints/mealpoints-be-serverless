@@ -30,6 +30,23 @@ export const descriptivePreferenceFields: {
   diet: (value) => `Their preferred diet is: "${value}".`,
 };
 
+const generateDescriptionIfValid = <K extends keyof IUserPreferences>(
+  preferenceKey: K,
+  preferenceValue: IUserPreferences[K]
+): string | undefined => {
+  const descriptionFunction = descriptivePreferenceFields[preferenceKey];
+  if (
+    descriptionFunction &&
+    preferenceValue !== null &&
+    preferenceValue !== undefined &&
+    (typeof preferenceValue !== "object" ||
+      (preferenceValue.value !== null && preferenceValue.value !== undefined))
+  ) {
+    return descriptionFunction(preferenceValue);
+  }
+  return undefined; // Skip invalid keys
+};
+
 export const userPreferencesInstruction = async (
   user: IUser
 ): Promise<string> => {
@@ -43,28 +60,17 @@ export const userPreferencesInstruction = async (
       return "";
     }
 
-    return (
-      Object.keys(descriptivePreferenceFields) as Array<
-        keyof Partial<IUserPreferences>
-      >
-    )
-      .filter((key) => {
-        const value = userPreferences[key];
-        return (
-          value !== null &&
-          value !== undefined &&
-          (typeof value !== "object" ||
-            (value.value !== null && value.value !== undefined))
-        );
-      })
-      .map(<K extends keyof IUserPreferences>(key: K) => {
-        const descriptionFunction = descriptivePreferenceFields[key];
-        const value = userPreferences[key];
+    // Loop over userPreferences to getDescriptionString of its values if Valid
+    const descriptions = Object.entries(userPreferences)
+      .map(([preferenceKey, preferenceValue]) =>
+        generateDescriptionIfValid(
+          preferenceKey as keyof IUserPreferences,
+          preferenceValue
+        )
+      )
+      .filter(Boolean) as string[]; // Remove undefined descriptions
 
-        return descriptionFunction ? descriptionFunction(value) : "";
-      })
-      .filter(Boolean)
-      .join(" ");
+    return descriptions.join(" ");
   } catch (error) {
     Logger("userPreferencesInstruction").error(error);
     throw error;
