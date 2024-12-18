@@ -902,3 +902,13 @@ export enum HeightUnitEnum {
 export enum WeightUnitEnum {
   KG = "kg",
 }
+
+export enum PaymentGatewaysEnum {
+  Razorpay = "razorpay",
+}
+
+export enum OrderStatusEnum {
+  Created = "created",
+  Attempted = "attempted",
+  Paid = "paid",
+}

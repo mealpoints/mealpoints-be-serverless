@@ -7,6 +7,7 @@ export type SettingKey =
   | "openai.assistant.global-instruction"
   | "openai.assistant.meal-reports"
   | "blacklist"
+  | "ui.home.plan"
   | "rate-limit.message-limit-per-day"
   | "internal-alerts.alert-list"
   | "open-ai.max-runs-on-a-thread"
