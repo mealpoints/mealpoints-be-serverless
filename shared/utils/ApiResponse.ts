@@ -33,7 +33,7 @@ class ApiResponse {
   // 400 Bad Request
   static BadRequest(
     response: Response,
-    message: string = "Bad request"
+    message: string | object = "Bad request"
   ): Response {
     return response.status(400).json({ message });
   }

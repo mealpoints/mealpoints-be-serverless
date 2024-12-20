@@ -19,6 +19,10 @@ import {
   createUserMealSummaryTemplate,
   IUserMealSummaryData,
 } from "./userMealSummary";
+import {
+  createWelcomeMessageTemplate,
+  IWelcomeMessageData,
+} from "./welcomeMessage";
 
 // Mapping the enum values to their respective data types
 type WhatsappTemplateDataMap = {
@@ -27,6 +31,7 @@ type WhatsappTemplateDataMap = {
   [WhatsappTemplateNameEnum.ReminderToPostMealsTwo]: IReminderToPostMealsTwo;
   [WhatsappTemplateNameEnum.ReminderToPostMealsThree]: IReminderToPostMealsThree;
   [WhatsappTemplateNameEnum.MealReport]: IUserMealReportData;
+  [WhatsappTemplateNameEnum.WelcomeMessage]: IWelcomeMessageData;
 };
 
 export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
@@ -48,6 +53,9 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
     }
     case WhatsappTemplateNameEnum.MealReport: {
       return createUserMealReportTemplate(data as IUserMealReportData);
+    }
+    case WhatsappTemplateNameEnum.WelcomeMessage: {
+      return createWelcomeMessageTemplate();
     }
     default: {
       throw new Error("Template not found");

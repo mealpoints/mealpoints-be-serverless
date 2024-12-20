@@ -1,4 +1,4 @@
-import { FilterQuery, PopulateOption } from "mongoose";
+import { FilterQuery, PopulateOptions } from "mongoose";
 import logger from "../config/logger";
 import * as razorpay from "../handlers/razorpay.handler";
 import Order, { IOrder, IOrderCreate } from "../models/order.model";
@@ -54,11 +54,14 @@ export const getOrderById = async (orderId: string) => {
 
 export const findAndUpdateOrder = async (
   filter: FilterQuery<IOrder>,
-  data: Partial<IOrderCreate>
+  data: Partial<IOrderCreate>,
+  populate: PopulateOptions["path"] = ""
 ) => {
   try {
     Logger("findAndUpdateOrder").info("%o", { filter, data });
-    const order = await Order.findOneAndUpdate(filter, data, { new: true });
+    const order = await Order.findOneAndUpdate(filter, data, {
+      new: true,
+    }).populate(populate);
     return order;
   } catch (error) {
     Logger("findAndUpdateOrder").error("%o", error);
@@ -68,11 +71,11 @@ export const findAndUpdateOrder = async (
 
 export const findOrder = async (
   query: Partial<IOrder>,
-  populate?: PopulateOption
+  populate: PopulateOptions["path"] = ""
 ) => {
   try {
     Logger("findOrder").info("%o", query);
-    const order = await Order.findOne(query, undefined, populate);
+    const order = await Order.findOne(query, undefined).populate(populate);
     return order;
   } catch (error) {
     Logger("findOrder").error("%o", error);

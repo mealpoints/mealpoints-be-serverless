@@ -33,6 +33,7 @@ export enum UserEngagementMessageTypesEnum {
   Summary = "summary",
   Reminder = "reminder",
   MealReport = "meal_report",
+  Welcome = "welcome",
 }
 
 export enum ParametersTypesEnum {
@@ -550,6 +551,7 @@ export enum WhatsappTemplateNameEnum {
   ReminderToPostMealsTwo = "reminder_to_post_meals_2",
   ReminderToPostMealsThree = "reminder_to_post_meals_3",
   MealReport = "user_meal_report",
+  WelcomeMessage = "welcome_message",
 }
 
 export enum CountryCodeToDefaultTimezoneEnum {

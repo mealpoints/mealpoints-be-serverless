@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { OrderStatusEnum, PaymentGatewaysEnum } from "../types/enums";
+import { returnAsFloat } from "../utils/mongoose";
 
 export interface IOrder extends Document {
   id: string;
@@ -34,9 +35,7 @@ const OrderSchema = new Schema(
     plan: { type: Schema.Types.ObjectId, ref: "Plan", required: true },
     amount: {
       type: Schema.Types.Decimal128,
-      get: (value: mongoose.Types.Decimal128) => {
-        return value ? Number.parseFloat(value.toString()) : undefined;
-      },
+      get: returnAsFloat,
       required: true,
     },
     paymentGatewayOrderId: {

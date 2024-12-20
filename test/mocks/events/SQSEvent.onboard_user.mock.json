@@ -1,0 +1,24 @@
+{
+  "Records": [
+    {
+      "messageId": "c42943bf-b247-4a79-821b-db89961ea7e3",
+      "receiptHandle": "AQEBEKPH47xNPDq/m6vFyvwijQ4AzCl2RdUv/RUy3jab1zmkZIlCJJ6czKwVuFyo98sY3ZmGMidDFPh8hOknd+uSkBFfsnKnFpsTNcwUCY7YtNFz+9dRO0h16Sh3VdjKKcLm5YXi1HokAlfTU+gDrezYjMuCLRuiOmo+YF84/zrYDxkzoNlKMxROVeSFsLCk5FpB2sRkM/wFE5zuR235L2RsoUJqNf/tlilQec+5ZHbvLw5d0SAvwH4acR5Fl2lhCHXaZaBXK0n/LvjsBqPnwmhUKQ==",
+      "body": "{\n  \"body\": {\n    \n\t\"user\": {\n\t\t\"contact\": \"917022629939\",\n\t\t\"isActive\": true,\n\t\t\"createdAt\": \"2024-07-11T20:11:21.440Z\",\n\t\t\"updatedAt\": \"2024-11-17T17:07:50.560Z\",\n\t\t\"timezone\": \"Asia/Kolkata\",\n\t\t\"countryCode\": \"IN\",\n\t\t\"id\": \"66903c69fc2f6a42f733b5d4\"\n\t},\n\t\"plan\": {\n\t\t\"duration\": {\n\t\t\t\"unit\": \"weeks\",\n\t\t\t\"value\": 6\n\t\t},\n\t\t\"currentPrice\": {\n\t\t\t\"label\": \"Rs. 2200\",\n\t\t\t\"value\": 5999\n\t\t},\n\t\t\"referencePrice\": {\n\t\t\t\"label\": \"Rs. 3000\",\n\t\t\t\"value\": 8500\n\t\t},\n\t\t\"name\": \"Know yourself\",\n\t\t\"description\": \"Know yourself and log all your meals\",\n\t\t\"type\": \"one-time\",\n\t\t\"currency\": \"INR\",\n\t\t\"isActive\": true,\n\t\t\"createdAt\": \"2024-12-16T19:29:05.055Z\",\n\t\t\"updatedAt\": \"2024-12-16T19:29:05.055Z\",\n\t\t\"id\": \"67607f8b1ab3779d7c229713\"\n\t},\n\t\"amount\": {\n\t\t\"$numberDecimal\": \"5999\"\n\t},\n\t\"paymentGatewayOrderId\": \"order_PZTAwyt1UDrIdF\",\n\t\"currency\": \"INR\",\n\t\"status\": \"paid\",\n\t\"gateway\": \"razorpay\",\n\t\"createdAt\": \"2024-12-20T14:50:16.290Z\",\n\t\"updatedAt\": \"2024-12-20T22:08:40.512Z\",\n\t\"paymentId\": \"pay_PZTB8xtnysltS5\",\n\t\"id\": \"67658428df877d5e8315d667\"\n\n  }\n}\n",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "AWSTraceHeader": "Root=1-6708cf34-1cbdd1f63b92ccc619e50a82;Parent=59a890c166174257;Sampled=0;Lineage=1:82a6cceb:0",
+        "SentTimestamp": "1728630582494",
+        "SequenceNumber": "18889273502828015872",
+        "MessageGroupId": "onboard_user",
+        "SenderId": "AROA5FTZAFROM3VUQ3K66:mealpoints-be-serverless-dev-api",
+        "MessageDeduplicationId": "wamid.HBgMOTE3MDIyNjI5OTM5FQIAEhgWM0VCMEYxMTAxNTJFNTVGM0ZERTBBMgA=",
+        "ApproximateFirstReceiveTimestamp": "1728630582494"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "aad6cb37e2e1ac239084b5275d8e4406",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:ap-south-1:905418124380:sqs-dev.fifo",
+      "awsRegion": "ap-south-1"
+    }
+  ]
+}

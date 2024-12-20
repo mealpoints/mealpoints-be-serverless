@@ -20,6 +20,7 @@ export const QUEUE_MESSAGE_GROUP_IDS = {
   meal_summary: "meal_summary",
   reminder: "reminder",
   meal_report: "meal_report",
+  onboard_user: "onboard_user",
 };
 
 export const DEFAULT_GEO_INFO = {

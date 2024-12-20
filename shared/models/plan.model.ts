@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
+import { returnAsFloat } from "../utils/mongoose";
 
 interface IPrice {
   value: number;
@@ -53,18 +54,14 @@ const PlanSchema = new Schema<IPlan>(
       value: {
         type: Schema.Types.Decimal128,
         required: true,
-        get: (value: mongoose.Types.Decimal128) => {
-          return value ? Number.parseFloat(value.toString()) : undefined;
-        },
+        get: returnAsFloat,
       },
       label: { type: String, required: true },
     },
     referencePrice: {
       value: {
         type: Schema.Types.Decimal128,
-        get: (value: mongoose.Types.Decimal128) => {
-          return value ? Number.parseFloat(value.toString()) : undefined;
-        },
+        get: returnAsFloat,
       },
       label: { type: String },
     },

@@ -41,6 +41,7 @@ userSchema.pre<IUser>("save", function (next) {
 });
 
 userSchema.virtual("fullName").get(function (this: IUser) {
+  if (!this.firstName && !this.lastName) return;
   return `${this.firstName} ${this.lastName}`.trim();
 });
 

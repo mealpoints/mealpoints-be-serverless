@@ -1,14 +1,19 @@
 import { Request, Response } from "express";
+import logger from "../../../shared/config/logger";
+import { queue } from "../../../shared/config/queue";
 import * as razorypayService from "../../../shared/handlers/razorpay.handler";
 import * as orderService from "../../../shared/services/order.service";
 import * as planService from "../../../shared/services/plan.service";
+import { SqsQueueService } from "../../../shared/services/queue.service";
 import * as userService from "../../../shared/services/user.service";
 import { OrderStatusEnum } from "../../../shared/types/enums";
 import ApiResponse from "../../../shared/utils/ApiResponse";
 import { catchAsync } from "../../../shared/utils/catchAsync";
 import { ensureContactFormat } from "../../../shared/utils/contact";
 
-interface createOrderRequest extends Request {
+const Logger = logger("payment.controller");
+
+export interface ICreateOrderRequest extends Request {
   body: {
     planId: string;
     contact: string;
@@ -16,7 +21,8 @@ interface createOrderRequest extends Request {
 }
 
 export const createOrder = catchAsync(
-  async (request: createOrderRequest, response: Response) => {
+  async (request: ICreateOrderRequest, response: Response) => {
+    Logger("createOrder").info("");
     const { planId, contact } = request.body;
 
     const formattedContact = ensureContactFormat(contact);
@@ -46,7 +52,7 @@ export const createOrder = catchAsync(
   }
 );
 
-interface validatePaymentRequest extends Request {
+interface IValidatePaymentRequest extends Request {
   body: {
     orderId: string;
     paymentId: string;
@@ -55,23 +61,13 @@ interface validatePaymentRequest extends Request {
 }
 
 export const validatePayment = catchAsync(
-  async (request: validatePaymentRequest, response: Response) => {
+  async (request: IValidatePaymentRequest, response: Response) => {
+    Logger("validatePayment").info("");
     const {
       orderId: paymentGatewayOrderId,
       paymentId,
       signature,
     } = request.body;
-
-    const order = await orderService.findOrder({
-      paymentGatewayOrderId,
-    });
-    if (!order) {
-      return ApiResponse.NotFound(response, "Order not found");
-    }
-
-    if (order.status !== OrderStatusEnum.Created) {
-      return ApiResponse.BadRequest(response, "Order is not in a valid state");
-    }
 
     // Validate payment
     if (
@@ -84,16 +80,30 @@ export const validatePayment = catchAsync(
       return ApiResponse.BadRequest(response, "Invalid payment signature");
     }
 
-    await orderService.findAndUpdateOrder(
+    const order = await orderService.findAndUpdateOrder(
       {
         paymentGatewayOrderId,
+        // status: OrderStatusEnum.Created, // TODO: uncomment this line
       },
       {
         paymentId,
         status: OrderStatusEnum.Paid,
-      }
+      },
+      "user plan"
     );
 
-    return ApiResponse.Ok(response, "Order validated");
+    if (!order) {
+      return ApiResponse.NotFound(response, "Order not found");
+    }
+
+    const queueService = new SqsQueueService(queue);
+    await queueService.enqueueMessage({
+      queueUrl: process.env.AWS_SQS_URL as string,
+      messageBody: JSON.stringify({ body: order }),
+      messageGroupId: "onboard_user",
+      messageDeduplicationId: order.id,
+    });
+
+    return ApiResponse.Ok(response, "Validation successful");
   }
 );
