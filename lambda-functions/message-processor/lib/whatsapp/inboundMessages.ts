@@ -1,4 +1,5 @@
 import logger from "../../../../shared/config/logger";
+import { isUserSubscribed } from "../../../../shared/libs/subscription";
 import * as messageService from "../../../../shared/services/message.service";
 import * as userService from "../../../../shared/services/user.service";
 import { WebhookTypesEnum } from "../../../../shared/types/enums";
@@ -6,6 +7,7 @@ import { WhastappWebhookObject } from "../../../../shared/types/message";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { isUserRateLimited } from "../rate-limiter";
 import { processImageMessage } from "./imageMessage";
+import { processNonCustomer } from "./nonCustomer";
 import { processTextMessage } from "./textMessage";
 import { processUnknownMessage } from "./unknownMessage";
 
@@ -24,6 +26,10 @@ export const processInboundMessageWebhook = async (
     // Ensure user exists
     const user = await userService.ensureUserByContact(contact as string);
 
+    if (!(await isUserSubscribed(user))) {
+      return processNonCustomer(user);
+    }
+
     const existingMessage = await messageService.findRecievedMessage({
       whatsappMessageId,
     });
@@ -36,9 +42,6 @@ export const processInboundMessageWebhook = async (
       return;
     }
 
-    // Ensure user had not exceeded the limit of messages per day
-    if (await isUserRateLimited(user)) return;
-
     // Create message
     await messageService.createRecievedMessage({
       user: user.id,
@@ -46,6 +49,9 @@ export const processInboundMessageWebhook = async (
       type: webhookType,
       wamid: whatsappMessageId as string,
     });
+
+    // Ensure user had not exceeded the limit of messages per day
+    if (await isUserRateLimited(user)) return;
 
     switch (webhookType) {
       case WebhookTypesEnum.Text: {

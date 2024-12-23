@@ -914,3 +914,9 @@ export enum OrderStatusEnum {
   Attempted = "attempted",
   Paid = "paid",
 }
+
+export enum SubscriptionStatusEnum {
+  Active = "active",
+  Canceled = "canceled",
+  Expired = "expired",
+}

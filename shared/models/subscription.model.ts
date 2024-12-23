@@ -1,35 +1,44 @@
 import mongoose, { Schema } from "mongoose";
+import { SubscriptionStatusEnum } from "../types/enums";
 
-interface ISubscription extends Document {
+export interface ISubscription extends Document {
   id: string;
   user: string;
   plan: string;
-  status: "active" | "canceled" | "expired";
+  order: string[];
+  status: SubscriptionStatusEnum;
   startedAt: Date;
   expiresAt: Date;
+  comment?: string;
   canceledAt?: Date;
-  metadata: {
-    nextBillingAt: Date;
-    lastBillingAt: Date;
-  };
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ISubscriptionCreate {
+  user: string;
+  plan: string;
+  order: string[];
+  status: SubscriptionStatusEnum;
+  startedAt: Date;
+  expiresAt: Date;
+  comment?: string;
 }
 
 const SubscriptionSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     plan: { type: Schema.Types.ObjectId, ref: "Plan", required: true },
+    order: [{ type: Schema.Types.ObjectId, ref: "Order", required: true }],
     status: {
       type: String,
-      enum: ["active", "canceled", "expired"],
+      enum: Object.values(SubscriptionStatusEnum),
       required: true,
     },
     startedAt: { type: Date, required: true },
     expiresAt: { type: Date, required: true },
     canceledAt: { type: Date },
-    metadata: {
-      nextBillingAt: { type: Date, required: true },
-      lastBillingAt: { type: Date, required: true },
-    },
+    comment: { type: String },
   },
   {
     timestamps: true,

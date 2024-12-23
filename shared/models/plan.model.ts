@@ -16,9 +16,9 @@ export interface IPlan extends Document {
     unit: "weeks" | "months";
   };
   currency: string;
-  billing: {
-    cycle: number | null; // Length of one billing cycle. Null for one-time offers.
-    unit: "weeks" | "months" | null; // Billing cycle unit. Null for one-time offers
+  billingCycle?: {
+    value: number; // Length of one billing cycle.
+    unit: "weeks" | "months"; // Billing cycle unit.
   };
   currentPrice: IPrice;
   referencePrice?: IPrice;
@@ -43,8 +43,8 @@ const PlanSchema = new Schema<IPlan>(
       },
     },
     currency: { type: String, required: true },
-    billing: {
-      cycle: { type: Number },
+    billingCycle: {
+      value: { type: Number },
       unit: {
         type: String,
         enum: ["weeks", "months"],

@@ -5,6 +5,7 @@ import * as razorypayService from "../../../shared/handlers/razorpay.handler";
 import * as orderService from "../../../shared/services/order.service";
 import * as planService from "../../../shared/services/plan.service";
 import { SqsQueueService } from "../../../shared/services/queue.service";
+import * as subscriptionService from "../../../shared/services/subscription.service";
 import * as userService from "../../../shared/services/user.service";
 import { OrderStatusEnum } from "../../../shared/types/enums";
 import ApiResponse from "../../../shared/utils/ApiResponse";
@@ -36,6 +37,18 @@ export const createOrder = catchAsync(
       return ApiResponse.ServerError(response, "Failed to create user");
     }
 
+    // Make sure the user does not have an active subscription
+    const activeSubscription = await subscriptionService.getActiveSubscription(
+      user.id
+    );
+    if (activeSubscription) {
+      return ApiResponse.Conflict(
+        response,
+        "User already has an active subscription"
+      );
+    }
+
+    // Get plan
     const plan = await planService.getPlanById(planId);
     if (!plan) {
       return ApiResponse.NotFound(response, "Plan not found");

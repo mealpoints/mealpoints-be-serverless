@@ -67,6 +67,11 @@ class ApiResponse {
     return response.status(404).json({ message });
   }
 
+  // 409 Conflict
+  static Conflict(response: Response, message: string): Response {
+    return response.status(409).json({ message });
+  }
+
   // 415 Unsupported Media Type
   static UnsupportedMediaType(
     response: Response,
