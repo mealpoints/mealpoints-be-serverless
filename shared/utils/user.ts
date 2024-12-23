@@ -12,7 +12,7 @@ export const getUserLocalTime = (user: IUser): Date => {
   return getTimeInTimezone(new Date(), timezone);
 };
 
-const timeAndLocationOfUser = (user: IUser) => {
+export const timeAndLocationOfUser = (user: IUser) => {
   const countryName =
     CountryCodeToNameEnum[
       user.countryCode as keyof typeof CountryCodeToNameEnum
@@ -23,7 +23,7 @@ const timeAndLocationOfUser = (user: IUser) => {
   return `The user is from ${countryName}, and it's ${localDateTime} in ${countryName} right now. `;
 };
 
-const todaysMealsByUser = async (user: IUser): Promise<string> => {
+export const todaysMealsByUser = async (user: IUser): Promise<string> => {
   try {
     const userMeals = await getTodaysUserMealsByUserId(user.id);
     const mealDetails = userMeals.map((userMeal) => {
@@ -48,17 +48,17 @@ const todaysMealsByUser = async (user: IUser): Promise<string> => {
 
 export const getInstructionForUser = async (user: IUser): Promise<string> => {
   const instructionFetchers = [
-    () => timeAndLocationOfUser(user),
-    () => todaysMealsByUser(user),
-    () => userPreferencesInstruction(user),
+    timeAndLocationOfUser,
+    todaysMealsByUser,
+    userPreferencesInstruction,
   ];
 
-  // Map & Execute all instruction fetch functions with try-catch and combine results
   const instructions = await Promise.all(
     instructionFetchers.map(async (fetchInstruction) => {
       try {
-        return await fetchInstruction();
-      } catch {
+        return await fetchInstruction(user);
+      } catch (error) {
+        Logger("getInstructionForUser").error(error);
         return "";
       }
     })
