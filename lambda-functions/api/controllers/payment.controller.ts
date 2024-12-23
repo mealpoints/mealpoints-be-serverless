@@ -96,7 +96,7 @@ export const validatePayment = catchAsync(
     const order = await orderService.findAndUpdateOrder(
       {
         paymentGatewayOrderId,
-        // status: OrderStatusEnum.Created, // TODO: uncomment this line
+        status: OrderStatusEnum.Created,
       },
       {
         paymentId,
