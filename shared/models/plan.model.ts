@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
+import { PlanTypeEnum } from "../types/enums";
 import { returnAsFloat } from "../utils/mongoose";
 
 interface IPrice {
@@ -10,7 +11,7 @@ export interface IPlan extends Document {
   id: string;
   name: string;
   description: string;
-  type: "recurring" | "one-time";
+  type: PlanTypeEnum;
   duration: {
     value: number;
     unit: "weeks" | "months";
@@ -31,7 +32,7 @@ const PlanSchema = new Schema<IPlan>(
     description: { type: String, required: true },
     type: {
       type: String,
-      enum: ["recurring", "one-time"],
+      enum: Object.values(PlanTypeEnum),
       required: true,
     },
     duration: {

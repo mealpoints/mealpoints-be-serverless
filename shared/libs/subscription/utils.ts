@@ -1,6 +1,7 @@
 import { add } from "date-fns";
 import { IOrder } from "../../models/order.model";
 import { IPlan } from "../../models/plan.model";
+import { PlanTypeEnum } from "../../types/enums";
 
 export const getSubscriptionStartAndEndDates = (
   order: IOrder,
@@ -11,7 +12,7 @@ export const getSubscriptionStartAndEndDates = (
 } => {
   const startDate = order.createdAt;
   const duration =
-    plan.type === "recurring" ? plan.billingCycle : plan.duration;
+    plan.type === PlanTypeEnum.Recurring ? plan.billingCycle : plan.duration;
 
   if (!duration) {
     throw new Error("Duration information is required for the plan");

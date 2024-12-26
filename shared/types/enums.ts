@@ -920,3 +920,8 @@ export enum SubscriptionStatusEnum {
   Canceled = "canceled",
   Expired = "expired",
 }
+
+export enum PlanTypeEnum {
+  OneTime = "one-time",
+  Recurring = "recurring",
+}
