@@ -7,6 +7,7 @@ export type SettingKey =
   | "openai.assistant.global-instruction"
   | "openai.assistant.meal-reports"
   | "blacklist"
+  | "ui.home.plan"
   | "rate-limit.message-limit-per-day"
   | "internal-alerts.alert-list"
   | "open-ai.max-runs-on-a-thread"
@@ -14,7 +15,8 @@ export type SettingKey =
   | "user-engagement.max-reminders"
   | "user-engagement.flows"
   | "user-engagement.flows.window-in-minutes"
-  | "user-engagement.interval-in-days";
+  | "user-engagement.interval-in-days"
+  | "subscription.exempt-contacts";
 
 export interface ISetting extends Document {
   key: SettingKey;

@@ -33,6 +33,7 @@ export enum UserEngagementMessageTypesEnum {
   Summary = "summary",
   Reminder = "reminder",
   MealReport = "meal_report",
+  Welcome = "welcome",
 }
 
 export enum ParametersTypesEnum {
@@ -550,6 +551,7 @@ export enum WhatsappTemplateNameEnum {
   ReminderToPostMealsTwo = "reminder_to_post_meals_2",
   ReminderToPostMealsThree = "reminder_to_post_meals_3",
   MealReport = "user_meal_report",
+  WelcomeMessage = "welcome_message",
 }
 
 export enum CountryCodeToDefaultTimezoneEnum {
@@ -901,4 +903,25 @@ export enum HeightUnitEnum {
 
 export enum WeightUnitEnum {
   KG = "kg",
+}
+
+export enum PaymentGatewaysEnum {
+  Razorpay = "razorpay",
+}
+
+export enum OrderStatusEnum {
+  Created = "created",
+  Attempted = "attempted",
+  Paid = "paid",
+}
+
+export enum SubscriptionStatusEnum {
+  Active = "active",
+  Canceled = "canceled",
+  Expired = "expired",
+}
+
+export enum PlanTypeEnum {
+  OneTime = "one-time",
+  Recurring = "recurring",
 }

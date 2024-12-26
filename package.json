@@ -16,9 +16,11 @@
     "mongoose": "^8.4.0",
     "morgan": "^1.10.0",
     "openai": "^4.51.0",
+    "razorpay": "^2.9.5",
     "serverless-http": "^3.2.0",
     "uuid": "^10.0.0",
-    "winston": "^3.13.0"
+    "winston": "^3.13.0",
+    "zod": "^3.24.1"
   },
   "scripts": {
     "deploy:dev": " npm run deploy:pre-deply && sls deploy",

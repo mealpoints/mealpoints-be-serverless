@@ -10,6 +10,8 @@ export const USER_MESSAGES = {
   info: {
     feature_not_supported:
       "Sorry, we only accept food photos and text messages at the moment. The format of the message you sent is not supported. Please stay tuned for further updates.",
+    user_not_subscribed:
+      "You are not subscribed to this service. Please subscribe to continue.",
   },
 };
 export const START_HOUR_OF_DAY = 3;
@@ -20,6 +22,7 @@ export const QUEUE_MESSAGE_GROUP_IDS = {
   meal_summary: "meal_summary",
   reminder: "reminder",
   meal_report: "meal_report",
+  onboard_user: "onboard_user",
 };
 
 export const DEFAULT_GEO_INFO = {

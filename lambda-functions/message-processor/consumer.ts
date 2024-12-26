@@ -7,6 +7,7 @@ import { SqsQueueService } from "../../shared/services/queue.service";
 import { SQSEventData } from "../../shared/utils/SQSEventData";
 import { processMealReport } from "./lib/meal-report";
 import { processMealSummary } from "./lib/meal-sumary";
+import { processOnboardUser } from "./lib/onboard-user";
 import { processReminder } from "./lib/reminder";
 import { processWhatsappWebhook } from "./lib/whatsapp";
 import { EventService } from "./services/event.service";
@@ -17,6 +18,7 @@ const messageProcessors = {
   [QUEUE_MESSAGE_GROUP_IDS.meal_summary]: processMealSummary,
   [QUEUE_MESSAGE_GROUP_IDS.reminder]: processReminder,
   [QUEUE_MESSAGE_GROUP_IDS.meal_report]: processMealReport,
+  [QUEUE_MESSAGE_GROUP_IDS.onboard_user]: processOnboardUser,
 };
 
 export const handler = async (sqsEvent: SQSEvent) => {
@@ -48,40 +50,5 @@ export const handler = async (sqsEvent: SQSEvent) => {
     await eventService.handle(sqsEvent);
   } else {
     Logger("handler").error("Unknown message group ID");
-  }
-};
-
-export const handler1 = async (sqsEvent: SQSEvent) => {
-  Logger("handler").info(JSON.stringify({ sqsEvent }));
-  await connectToDatabase();
-
-  const eventData = new SQSEventData(sqsEvent);
-  const queueService = new SqsQueueService(queue);
-
-  switch (eventData.messageGroupId) {
-    case QUEUE_MESSAGE_GROUP_IDS.whatsapp_messages: {
-      Logger("handler").info("Processing WhatsApp messages");
-      const eventService = new EventService(
-        queueService,
-        processWhatsappWebhook
-      );
-      await eventService.handle(sqsEvent);
-      break;
-    }
-    case QUEUE_MESSAGE_GROUP_IDS.meal_summary: {
-      Logger("handler").info("Processing meal summary messages");
-      const eventService = new EventService(queueService, processMealSummary);
-      await eventService.handle(sqsEvent);
-      break;
-    }
-    case QUEUE_MESSAGE_GROUP_IDS.reminder: {
-      Logger("handler").info("Processing reminder messages");
-      const eventService = new EventService(queueService, processReminder);
-      await eventService.handle(sqsEvent);
-      break;
-    }
-    default: {
-      Logger("handler").error("Unknown message group ID");
-    }
   }
 };
