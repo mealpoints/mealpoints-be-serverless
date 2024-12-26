@@ -1,4 +1,6 @@
 import { parsePhoneNumberFromString } from "libphonenumber-js";
+import logger from "../config/logger";
+const Logger = logger("shared/util/processUserEngagement");
 
 export const getMetaDataFromContact = (contact: string) => {
   let trimmedContact = contact.trim();
@@ -33,8 +35,7 @@ export const ensureContactFormat = (input: string): string | undefined => {
     }
     return phoneNumber.number.replace("+", "");
   } catch (error) {
-    console.error("Invalid phone number", error);
-    // Return undefined if the input doesn't conform to a valid phone number format
+    Logger("ensureContactFormat").error(error);
     return undefined;
   }
 };

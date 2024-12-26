@@ -2,7 +2,7 @@ import { FilterQuery, PopulateOptions } from "mongoose";
 import logger from "../config/logger";
 import * as razorpay from "../handlers/razorpay.handler";
 import Order, { IOrder, IOrderCreate } from "../models/order.model";
-import { PaymentGatewaysEnum } from "../types/enums";
+import { OrderStatusEnum, PaymentGatewaysEnum } from "../types/enums";
 
 const Logger = logger("order.service");
 
@@ -29,7 +29,7 @@ export const createOrder = async (data: ICreateOrder) => {
       amount: data.amount,
       currency: data.currency,
       paymentGatewayOrderId: razorpayOrder.id,
-      status: "created",
+      status: OrderStatusEnum.Created,
       gateway: PaymentGatewaysEnum.Razorpay,
       metadata: data.metadata,
     });
@@ -55,13 +55,13 @@ export const getOrderById = async (orderId: string) => {
 export const findAndUpdateOrder = async (
   filter: FilterQuery<IOrder>,
   data: Partial<IOrderCreate>,
-  populate: PopulateOptions["path"] = ""
+  populate?: PopulateOptions
 ) => {
   try {
     Logger("findAndUpdateOrder").info("%o", { filter, data });
     const order = await Order.findOneAndUpdate(filter, data, {
       new: true,
-    }).populate(populate);
+    }).populate(populate?.path || "");
     return order;
   } catch (error) {
     Logger("findAndUpdateOrder").error("%o", error);
@@ -71,11 +71,13 @@ export const findAndUpdateOrder = async (
 
 export const findOrder = async (
   query: Partial<IOrder>,
-  populate: PopulateOptions["path"] = ""
+  populate?: PopulateOptions
 ) => {
   try {
     Logger("findOrder").info("%o", query);
-    const order = await Order.findOne(query, undefined).populate(populate);
+    const order = await Order.findOne(query, undefined).populate(
+      populate?.path || ""
+    );
     return order;
   } catch (error) {
     Logger("findOrder").error("%o", error);

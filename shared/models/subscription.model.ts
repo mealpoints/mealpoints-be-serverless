@@ -5,7 +5,6 @@ export interface ISubscription extends Document {
   id: string;
   user: string;
   plan: string;
-  order: string[];
   status: SubscriptionStatusEnum;
   startedAt: Date;
   expiresAt: Date;
@@ -18,7 +17,6 @@ export interface ISubscription extends Document {
 export interface ISubscriptionCreate {
   user: string;
   plan: string;
-  order: string[];
   status: SubscriptionStatusEnum;
   startedAt: Date;
   expiresAt: Date;
@@ -29,7 +27,6 @@ const SubscriptionSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     plan: { type: Schema.Types.ObjectId, ref: "Plan", required: true },
-    order: [{ type: Schema.Types.ObjectId, ref: "Order", required: true }],
     status: {
       type: String,
       enum: Object.values(SubscriptionStatusEnum),

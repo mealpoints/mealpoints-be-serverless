@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { QUEUE_MESSAGE_GROUP_IDS } from "../../../shared/config/config";
 import logger from "../../../shared/config/logger";
 import { queue } from "../../../shared/config/queue";
 import * as razorypayService from "../../../shared/handlers/razorpay.handler";
@@ -102,7 +103,9 @@ export const validatePayment = catchAsync(
         paymentId,
         status: OrderStatusEnum.Paid,
       },
-      "user plan"
+      {
+        path: "user plan",
+      }
     );
 
     if (!order) {
@@ -113,7 +116,7 @@ export const validatePayment = catchAsync(
     await queueService.enqueueMessage({
       queueUrl: process.env.AWS_SQS_URL as string,
       messageBody: JSON.stringify({ body: order }),
-      messageGroupId: "onboard_user",
+      messageGroupId: QUEUE_MESSAGE_GROUP_IDS.onboard_user,
       messageDeduplicationId: order.id,
     });
 

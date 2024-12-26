@@ -26,7 +26,6 @@ export const activateSubscription = async (data: IActivateSubscription) => {
     const subscription = await subscriptionService.createSubscription({
       user: user.id,
       plan: plan.id,
-      order: [order.id],
       status: SubscriptionStatusEnum.Active,
       startedAt: startDate,
       expiresAt: endDate,
