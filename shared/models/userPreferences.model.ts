@@ -3,6 +3,7 @@ import {
   ExerciseRoutineEnum,
   GenderEnum,
   HeightUnitEnum,
+  LanguagesEnum,
   SleepPatternsEnum,
   StressLevelsEnum,
   WeightUnitEnum,
@@ -35,7 +36,9 @@ export interface IUserPreferences extends Document {
   foodPreferences?: string;
   excludedFoods?: string;
   diet?: string;
+  language: LanguagesEnum;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IUserPreferencesCreate {
@@ -64,36 +67,45 @@ export interface IUserPreferencesCreate {
   foodPreferences?: string;
   excludedFoods?: string;
   diet?: string;
+  language: LanguagesEnum;
 }
 
-const userPreferencesSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  birthYear: { type: Number, min: 1900 },
-  gender: { type: String, enum: Object.values(GenderEnum) },
-  height: {
-    value: { type: Number, min: 0 },
-    unit: { type: String, enum: Object.values(HeightUnitEnum) },
+const userPreferencesSchema = new Schema(
+  {
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    birthYear: { type: Number, min: 1900 },
+    gender: { type: String, enum: Object.values(GenderEnum) },
+    height: {
+      value: { type: Number, min: 0 },
+      unit: { type: String, enum: Object.values(HeightUnitEnum) },
+    },
+    currentWeight: {
+      value: { type: Number, min: 0 },
+      unit: { type: String, enum: Object.values(WeightUnitEnum) },
+    },
+    goalWeight: {
+      value: { type: Number, min: 0 },
+      unit: { type: String, enum: Object.values(WeightUnitEnum) },
+    },
+    goal: { type: String },
+    medicalConditions: { type: String },
+    exerciseRoutine: { type: String, enum: Object.values(ExerciseRoutineEnum) },
+    sleepPatterns: { type: String, enum: Object.values(SleepPatternsEnum) },
+    stressLevels: { type: String, enum: Object.values(StressLevelsEnum) },
+    familyHistory: { type: String },
+    occupation: { type: String },
+    foodPreferences: { type: String },
+    excludedFoods: { type: String },
+    diet: { type: String },
+    language: {
+      type: String,
+      enum: Object.values(LanguagesEnum),
+      required: true,
+      default: LanguagesEnum.English,
+    },
   },
-  currentWeight: {
-    value: { type: Number, min: 0 },
-    unit: { type: String, enum: Object.values(WeightUnitEnum) },
-  },
-  goalWeight: {
-    value: { type: Number, min: 0 },
-    unit: { type: String, enum: Object.values(WeightUnitEnum) },
-  },
-  goal: { type: String },
-  medicalConditions: { type: String },
-  exerciseRoutine: { type: String, enum: Object.values(ExerciseRoutineEnum) },
-  sleepPatterns: { type: String, enum: Object.values(SleepPatternsEnum) },
-  stressLevels: { type: String, enum: Object.values(StressLevelsEnum) },
-  familyHistory: { type: String },
-  occupation: { type: String },
-  foodPreferences: { type: String },
-  excludedFoods: { type: String },
-  diet: { type: String },
-  createdAt: { type: Date, default: Date.now },
-});
+  { timestamps: true }
+);
 
 userPreferencesSchema.set("toJSON", {
   virtuals: true,

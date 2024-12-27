@@ -28,6 +28,8 @@ export const descriptivePreferenceFields: {
   foodPreferences: (value) => `They prefer these foods: "${value}".`,
   excludedFoods: (value) => `They avoid these foods: "${value}".`,
   diet: (value) => `Their preferred diet is: "${value}".`,
+  language: (value) =>
+    `Their language preference of this conversation is ${value}. Hence Reply in ${value} language.`,
 };
 
 const generateDescriptionIfValid = <K extends keyof IUserPreferences>(
