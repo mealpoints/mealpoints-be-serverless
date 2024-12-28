@@ -100,6 +100,7 @@ export const reminderFlow = async (timezone: string) => {
     const engagmentMessageIntervalInDays = settings.get(
       "user-engagement.interval-in-days"
     ) as number;
+
     const reminderThresholdDate = subDays(
       new Date(),
       engagmentMessageIntervalInDays
@@ -128,5 +129,6 @@ export const reminderFlow = async (timezone: string) => {
     await enqueueUsersToSendEngagement(usersToSendReminders, "reminder");
   } catch (error) {
     Logger("reminderFlow").error(error);
+    throw error;
   }
 };

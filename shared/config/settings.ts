@@ -42,6 +42,10 @@ class SettingsSingleton {
   }
 
   public get(key: SettingKey) {
+    if (!this.settings.has(key)) {
+      Logger("get").error(`Setting with key ${key} not found`);
+      throw new Error(`Setting with key ${key} not found`);
+    }
     return this.settings.get(key);
   }
 }
