@@ -3,6 +3,7 @@ import { IUser } from "../models/user.model";
 import { getTodaysUserMealsByUserId } from "../services/userMeal.service";
 import { CountryCodeToNameEnum } from "../types/enums";
 import { getLocaleTimeInTimezone, getTimeInTimezone } from "./timezone";
+import { userPreferencesInstruction } from "./userPreferences";
 const Logger = logger("shared/utils/user");
 
 export const getUserLocalTime = (user: IUser): Date => {
@@ -11,10 +12,10 @@ export const getUserLocalTime = (user: IUser): Date => {
   return getTimeInTimezone(new Date(), timezone);
 };
 
-const timeAndLocationOfUser = (user: IUser) => {
+export const timeAndLocationOfUser = (user: IUser) => {
   const countryName =
     CountryCodeToNameEnum[
-    user.countryCode as keyof typeof CountryCodeToNameEnum
+      user.countryCode as keyof typeof CountryCodeToNameEnum
     ];
 
   const localDateTime = getLocaleTimeInTimezone(new Date(), user.timezone);
@@ -22,17 +23,23 @@ const timeAndLocationOfUser = (user: IUser) => {
   return `The user is from ${countryName}, and it's ${localDateTime} in ${countryName} right now. `;
 };
 
-const todaysMealsByUser = async (user: IUser): Promise<string> => {
+export const todaysMealsByUser = async (user: IUser): Promise<string> => {
   try {
     const userMeals = await getTodaysUserMealsByUserId(user.id);
     const mealDetails = userMeals.map((userMeal) => {
-      const mealTime = getLocaleTimeInTimezone(userMeal.createdAt, user.timezone, 'time');
+      const mealTime = getLocaleTimeInTimezone(
+        userMeal.createdAt,
+        user.timezone,
+        "time"
+      );
       return `${userMeal.name} at ${mealTime}`;
     });
     if (mealDetails.length === 0) {
       return "";
     }
-    return `The user has consumed the following meals today: ${mealDetails.join(", ")}`;
+    return `The user has consumed the following meals today: ${mealDetails.join(
+      ", "
+    )}`;
   } catch (error) {
     Logger("todaysMealsByUser").error(error);
     return "";
@@ -40,5 +47,22 @@ const todaysMealsByUser = async (user: IUser): Promise<string> => {
 };
 
 export const getInstructionForUser = async (user: IUser): Promise<string> => {
-  return timeAndLocationOfUser(user) + await todaysMealsByUser(user);
+  const instructionFetchers = [
+    timeAndLocationOfUser,
+    todaysMealsByUser,
+    userPreferencesInstruction,
+  ];
+
+  const instructions = await Promise.all(
+    instructionFetchers.map(async (fetchInstruction) => {
+      try {
+        return await fetchInstruction(user);
+      } catch (error) {
+        Logger("getInstructionForUser").error(error);
+        return "";
+      }
+    })
+  );
+
+  return instructions.join("");
 };
