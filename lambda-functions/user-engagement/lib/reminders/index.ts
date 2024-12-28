@@ -1,10 +1,10 @@
+import { subDays } from "date-fns";
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
 import User, { IUser } from "../../../../shared/models/user.model";
 import * as userEngagementService from "../../../../shared/services/userEngagement.service";
 import { UserEngagementMessageTypesEnum } from "../../../../shared/types/enums";
 import { IUserToSendReminders } from "../../../../shared/types/queueMessages";
-import { DateUtils } from "../../../../shared/utils/DateUtils";
 import { objectifyId } from "../../../../shared/utils/mongoose";
 import { enqueueUsersToSendEngagement } from "../../services/enqueue.service";
 
@@ -100,9 +100,11 @@ export const reminderFlow = async (timezone: string) => {
     const engagmentMessageIntervalInDays = settings.get(
       "user-engagement.interval-in-days"
     ) as number;
-    const reminderThresholdDate = new DateUtils()
-      .subtractDays(engagmentMessageIntervalInDays)
-      .toDate();
+    const reminderThresholdDate = subDays(
+      new Date(),
+      engagmentMessageIntervalInDays
+    );
+
     const currentDate = new Date();
 
     // Get users who haven't recieved any engament message in the last X days in the timezone
