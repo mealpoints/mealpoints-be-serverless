@@ -4,6 +4,7 @@ import * as messageService from "../../../../shared/services/message.service";
 import * as userService from "../../../../shared/services/user.service";
 import { WebhookTypesEnum } from "../../../../shared/types/enums";
 import { WhastappWebhookObject } from "../../../../shared/types/message";
+import { isProduction } from "../../../../shared/utils/environment";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { isUserRateLimited } from "../rate-limiter";
 import { processImageMessage } from "./imageMessage";
@@ -26,7 +27,8 @@ export const processInboundMessageWebhook = async (
     // Ensure user exists
     const user = await userService.ensureUserByContact(contact as string);
 
-    if (!(await isUserSubscribed(user))) {
+    // Only restrict in development. feature is not released in Prod yet.
+    if (!isProduction && !(await isUserSubscribed(user))) {
       return processNonCustomer(user);
     }
 
