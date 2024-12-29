@@ -114,6 +114,7 @@ export const reminderFlow = async (timezone: string) => {
         startDate: reminderThresholdDate,
         endDate: currentDate,
         timezone,
+        type: UserEngagementMessageTypesEnum.Reminder,
       });
 
     const usersToSendReminders = await getUsersToSendReminders(

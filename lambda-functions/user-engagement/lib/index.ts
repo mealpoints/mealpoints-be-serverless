@@ -2,6 +2,7 @@ import logger from "../../../shared/config/logger";
 import { UserEngagementMessageTypesEnum } from "../../../shared/types/enums";
 import { mealReportFlow } from "./meal-report";
 import { mealSummariesFlow } from "./meal-summaries";
+import { remindMealsViaTextFlow } from "./meal-via-text";
 import { reminderFlow } from "./reminders";
 const Logger = logger("lib/processUserEngagement");
 
@@ -20,6 +21,10 @@ export const executeFlow = async (
     }
     case UserEngagementMessageTypesEnum.MealReport: {
       await mealReportFlow(timezone);
+      break;
+    }
+    case UserEngagementMessageTypesEnum.RemindMealViaText: {
+      await remindMealsViaTextFlow(timezone);
       break;
     }
     default: {

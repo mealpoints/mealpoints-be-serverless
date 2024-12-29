@@ -11,9 +11,11 @@ import {
   createReminderToPostMealsOneTemplate,
   createReminderToPostMealsThreeTemplate,
   createReminderToPostMealsTwoTemplate,
+  createRemindToLogMealViaTextTemplate,
   IReminderToPostMealsOne,
   IReminderToPostMealsThree,
   IReminderToPostMealsTwo,
+  IRemindToLogMealViaText,
 } from "./reminder";
 import {
   createUserMealSummaryTemplate,
@@ -30,6 +32,7 @@ type WhatsappTemplateDataMap = {
   [WhatsappTemplateNameEnum.ReminderToPostMealsOne]: IReminderToPostMealsOne;
   [WhatsappTemplateNameEnum.ReminderToPostMealsTwo]: IReminderToPostMealsTwo;
   [WhatsappTemplateNameEnum.ReminderToPostMealsThree]: IReminderToPostMealsThree;
+  [WhatsappTemplateNameEnum.RemindMealViaText]: IRemindToLogMealViaText;
   [WhatsappTemplateNameEnum.MealReport]: IUserMealReportData;
   [WhatsappTemplateNameEnum.WelcomeMessage]: IWelcomeMessageData;
 };
@@ -50,6 +53,9 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
     }
     case WhatsappTemplateNameEnum.ReminderToPostMealsThree: {
       return createReminderToPostMealsThreeTemplate();
+    }
+    case WhatsappTemplateNameEnum.RemindMealViaText: {
+      return createRemindToLogMealViaTextTemplate();
     }
     case WhatsappTemplateNameEnum.MealReport: {
       return createUserMealReportTemplate(data as IUserMealReportData);
