@@ -193,3 +193,9 @@ export const BADGES: IBadges = {
     },
   },
 };
+
+export const CORS_OPTIONS = {
+  origin: ["http://localhost:5050", /\.getmealpoints\.com$/],
+  methods: "GET,POST,PUT,DELETE",
+  allowedHeaders: "Content-Type,Authorization",
+};
