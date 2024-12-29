@@ -8,7 +8,6 @@ import { MessageTemplateObject } from "../../types/message";
 export interface IReminderToPostMealsOne {}
 export interface IReminderToPostMealsTwo {}
 export interface IReminderToPostMealsThree {}
-export interface IRemindToLogMealViaText {}
 
 export const createReminderToPostMealsOneTemplate =
   (): MessageTemplateObject<ComponentTypesEnum> => {
@@ -36,17 +35,6 @@ export const createReminderToPostMealsThreeTemplate =
   (): MessageTemplateObject<ComponentTypesEnum> => {
     return {
       name: WhatsappTemplateNameEnum.ReminderToPostMealsThree,
-      language: {
-        policy: "deterministic",
-        code: LanguagesEnum.English,
-      },
-    };
-  };
-
-export const createRemindToLogMealViaTextTemplate =
-  (): MessageTemplateObject<ComponentTypesEnum> => {
-    return {
-      name: WhatsappTemplateNameEnum.RemindMealViaText,
       language: {
         policy: "deterministic",
         code: LanguagesEnum.English,
