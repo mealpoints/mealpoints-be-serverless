@@ -23,7 +23,7 @@ export const processFeatIntro_MealViaText = async (messageBody: IUser) => {
 
     if (messageResponse) {
       Logger("processFeatIntro_MealViaText").info(
-        `Successfully sent Feature Intro to user ${user.id} with contact ${user.contact}`
+        `Successfully sent Feature Intro to user ${user.id}`
       );
 
       await userEngagementMessageService.createUserEngagementMessage({
