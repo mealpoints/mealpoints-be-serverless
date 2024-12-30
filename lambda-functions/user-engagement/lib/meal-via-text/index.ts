@@ -16,7 +16,7 @@ async function getUsersForFeatIntro_MealViaText(
       "user-engagement.feat-intro.meal-via-text.max-reminders"
     ) as number;
 
-    const usersToRemind = await User.aggregate([
+    const usersToIntroduceFeature = await User.aggregate([
       {
         $match: {
           timezone: timezone,
@@ -92,7 +92,7 @@ async function getUsersForFeatIntro_MealViaText(
       },
     ]);
 
-    return usersToRemind;
+    return usersToIntroduceFeature;
   } catch (error) {
     Logger("getUsersForFeatIntro_MealViaText").error("%o", error);
     throw error;
