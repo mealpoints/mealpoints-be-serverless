@@ -33,7 +33,7 @@ export const processFeatIntro_MealViaText = async (messageBody: IUser) => {
       });
     }
   } catch (error) {
-    Logger("processFeatIntro_MealViaText").error("%o", error);
+    Logger("processFeatIntro_MealViaText").error(error);
     throw error;
   }
 };

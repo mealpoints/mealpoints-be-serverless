@@ -90,6 +90,12 @@ async function getUsersForFeatIntro_MealViaText(
           ],
         },
       },
+      {
+        $project: {
+          id: { $toString: "$_id" },
+          reminderCount: 1,
+        },
+      },
     ]);
 
     return usersToIntroduceFeature;
