@@ -7,6 +7,7 @@ import { SqsQueueService } from "../../shared/services/queue.service";
 import { SQSEventData } from "../../shared/utils/SQSEventData";
 import { processMealReport } from "./lib/meal-report";
 import { processMealSummary } from "./lib/meal-sumary";
+import { processFeatIntro_MealViaText } from "./lib/meal-via-text";
 import { processOnboardUser } from "./lib/onboard-user";
 import { processReminder } from "./lib/reminder";
 import { processWhatsappWebhook } from "./lib/whatsapp";
@@ -19,6 +20,8 @@ const messageProcessors = {
   [QUEUE_MESSAGE_GROUP_IDS.reminder]: processReminder,
   [QUEUE_MESSAGE_GROUP_IDS.meal_report]: processMealReport,
   [QUEUE_MESSAGE_GROUP_IDS.onboard_user]: processOnboardUser,
+  [QUEUE_MESSAGE_GROUP_IDS.feat_intro_meal_via_text]:
+    processFeatIntro_MealViaText,
 };
 
 export const handler = async (sqsEvent: SQSEvent) => {

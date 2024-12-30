@@ -16,7 +16,8 @@ export type SettingKey =
   | "user-engagement.flows"
   | "user-engagement.flows.window-in-minutes"
   | "user-engagement.interval-in-days"
-  | "subscription.exempt-contacts";
+  | "subscription.exempt-contacts"
+  | "user-engagement.feat-intro.meal-via-text.max-reminders";
 
 export interface ISetting extends Document {
   key: SettingKey;

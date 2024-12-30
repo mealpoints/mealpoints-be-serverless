@@ -4,6 +4,10 @@ import {
 } from "../../types/enums";
 import { MessageTemplateObject } from "../../types/message";
 import {
+  createFeatIntro_MealViaTextTemplate,
+  IFeatIntro_MealViaText,
+} from "./featIntro";
+import {
   createUserMealReportTemplate,
   IUserMealReportData,
 } from "./mealReport";
@@ -30,6 +34,7 @@ type WhatsappTemplateDataMap = {
   [WhatsappTemplateNameEnum.ReminderToPostMealsOne]: IReminderToPostMealsOne;
   [WhatsappTemplateNameEnum.ReminderToPostMealsTwo]: IReminderToPostMealsTwo;
   [WhatsappTemplateNameEnum.ReminderToPostMealsThree]: IReminderToPostMealsThree;
+  [WhatsappTemplateNameEnum.FeatIntro_MealViaText]: IFeatIntro_MealViaText;
   [WhatsappTemplateNameEnum.MealReport]: IUserMealReportData;
   [WhatsappTemplateNameEnum.WelcomeMessage]: IWelcomeMessageData;
 };
@@ -50,6 +55,9 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
     }
     case WhatsappTemplateNameEnum.ReminderToPostMealsThree: {
       return createReminderToPostMealsThreeTemplate();
+    }
+    case WhatsappTemplateNameEnum.FeatIntro_MealViaText: {
+      return createFeatIntro_MealViaTextTemplate();
     }
     case WhatsappTemplateNameEnum.MealReport: {
       return createUserMealReportTemplate(data as IUserMealReportData);
