@@ -1,4 +1,4 @@
-import { FilterQuery, PopulateOptions } from "mongoose";
+import { FilterQuery, PopulateOptions, QueryOptions } from "mongoose";
 import logger from "../config/logger";
 import * as razorpay from "../handlers/razorpay.handler";
 import Order, { IOrder, IOrderCreate } from "../models/order.model";
@@ -71,16 +71,25 @@ export const findAndUpdateOrder = async (
 
 export const findOrder = async (
   query: Partial<IOrder>,
-  populate?: PopulateOptions
+  options?: QueryOptions
 ) => {
   try {
-    Logger("findOrder").info("%o", query);
-    const order = await Order.findOne(query, undefined).populate(
-      populate?.path || ""
-    );
+    Logger("findOrder").info("");
+    const order = await Order.findOne(query, undefined, options);
     return order;
   } catch (error) {
     Logger("findOrder").error("%o", error);
+    throw error;
+  }
+};
+
+export const issueRefund = async (paymentId: string, amount?: number) => {
+  try {
+    Logger("issueRefund").info("%o", { paymentId, amount });
+    const refund = await razorpay.refundPayment(paymentId, amount);
+    return refund;
+  } catch (error) {
+    Logger("issueRefund").error("%o", error);
     throw error;
   }
 };

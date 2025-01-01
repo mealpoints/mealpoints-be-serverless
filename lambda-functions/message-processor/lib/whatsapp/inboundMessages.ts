@@ -8,6 +8,7 @@ import { isProduction } from "../../../../shared/utils/environment";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { isUserRateLimited } from "../rate-limiter";
 import { processImageMessage } from "./imageMessage";
+import { processInteractiveMessage } from "./interactiveMessage";
 import { processNonCustomer } from "./nonCustomer";
 import { processTextMessage } from "./textMessage";
 import { processUnknownMessage } from "./unknownMessage";
@@ -62,6 +63,10 @@ export const processInboundMessageWebhook = async (
 
       case WebhookTypesEnum.Image: {
         return processImageMessage(payload, user);
+      }
+
+      case WebhookTypesEnum.Interactive: {
+        return processInteractiveMessage(payload, user);
       }
 
       default: {

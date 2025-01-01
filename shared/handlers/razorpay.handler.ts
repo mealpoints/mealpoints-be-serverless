@@ -44,3 +44,19 @@ export const isSignatureValid = (
     .digest("hex");
   return signature === expectedSign;
 };
+
+export const refundPayment = async (paymentId: string, amount?: number) => {
+  Logger("refundPayment").info("");
+  try {
+    const refund = await razorpay.payments.refund(paymentId, {
+      receipt: uuidv4(),
+      speed: "optimum",
+      ...(amount && { amount: amount * 100 }), // Amount is needed only in case of partial refund.
+    });
+
+    return refund;
+  } catch (error) {
+    Logger("refundPayment").error("%o", error);
+    throw error;
+  }
+};

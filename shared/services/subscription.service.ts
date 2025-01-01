@@ -94,3 +94,37 @@ export const getSubscriptionById = async (
     throw error;
   }
 };
+
+export const getSubscriptionByUserId = async (userId: string) => {
+  Logger("getSubscriptionByUserId").info("");
+  try {
+    const subscription = await Subscription.findOne({ user: userId }).sort({
+      createdAt: -1,
+    });
+
+    return subscription;
+  } catch (error) {
+    Logger("getSubscriptionByUserId").error("%o", error);
+    throw error;
+  }
+};
+
+export const cancelSubscription = async (subscriptionId: string) => {
+  Logger("cancelSubscription").info("");
+  try {
+    const subscription = await Subscription.findByIdAndUpdate(
+      subscriptionId,
+      {
+        status: SubscriptionStatusEnum.Cancelled,
+        cancelledAt: new Date(),
+        comment: "Subscription cancelled by user",
+      },
+      { new: true }
+    );
+
+    return subscription;
+  } catch (error) {
+    Logger("cancelSubscription").error(error);
+    throw error;
+  }
+};
