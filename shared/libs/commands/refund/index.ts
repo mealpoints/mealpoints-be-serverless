@@ -42,7 +42,7 @@ export const refundRequested = async (user: IUser) => {
     // Confirm refund from user.
     await userMessages.confirmRefund(user);
   } catch (error) {
-    Logger("refundRequested").error("%o", error);
+    Logger("refundRequested").error(JSON.stringify(error));
     throw error;
   }
 };
@@ -89,7 +89,7 @@ export const refundConfirmed = async (user: IUser) => {
     // We then send a message to the user that the refund has been processed.
     await userMessages.refundProcessed(user);
   } catch (error) {
-    Logger("refundConfirmed").error("%o", error);
+    Logger("refundConfirmed").error(JSON.stringify(error));
     throw error;
   }
 };

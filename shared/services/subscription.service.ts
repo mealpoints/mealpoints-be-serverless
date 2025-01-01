@@ -104,7 +104,7 @@ export const getSubscriptionByUserId = async (userId: string) => {
 
     return subscription;
   } catch (error) {
-    Logger("getSubscriptionByUserId").error("%o", error);
+    Logger("getSubscriptionByUserId").error(JSON.stringify(error));
     throw error;
   }
 };

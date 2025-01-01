@@ -26,7 +26,7 @@ export const createOrder = async ({ amount, currency }: ICreateOrder) => {
     });
     return order;
   } catch (error) {
-    Logger("createOrder").error("%o", error);
+    Logger("createOrder").error(JSON.stringify(error));
     throw error;
   }
 };
@@ -56,7 +56,7 @@ export const refundPayment = async (paymentId: string, amount?: number) => {
 
     return refund;
   } catch (error) {
-    Logger("refundPayment").error("%o", error);
+    Logger("refundPayment").error(JSON.stringify(error));
     throw error;
   }
 };

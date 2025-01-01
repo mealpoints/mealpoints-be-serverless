@@ -32,7 +32,7 @@ export const processInteractiveMessage = async (
       }
     }
   } catch (error) {
-    Logger("processInteractiveMessage").error("%o", error);
+    Logger("processInteractiveMessage").error(JSON.stringify(error));
     await messageService.sendTextMessage({
       user: user.id,
       payload: USER_MESSAGES.errors.text_not_processed,

@@ -36,7 +36,7 @@ export const createOrder = async (data: ICreateOrder) => {
 
     return order;
   } catch (error) {
-    Logger("createOrder").error("%o", error);
+    Logger("createOrder").error(JSON.stringify(error));
     throw error;
   }
 };
@@ -47,7 +47,7 @@ export const getOrderById = async (orderId: string) => {
     const order = await Order.findById(orderId);
     return order;
   } catch (error) {
-    Logger("getOrderById").error("%o", error);
+    Logger("getOrderById").error(JSON.stringify(error));
     throw error;
   }
 };
@@ -64,7 +64,7 @@ export const findAndUpdateOrder = async (
     }).populate(populate?.path || "");
     return order;
   } catch (error) {
-    Logger("findAndUpdateOrder").error("%o", error);
+    Logger("findAndUpdateOrder").error(JSON.stringify(error));
     throw error;
   }
 };
@@ -78,7 +78,7 @@ export const findOrder = async (
     const order = await Order.findOne(query, undefined, options);
     return order;
   } catch (error) {
-    Logger("findOrder").error("%o", error);
+    Logger("findOrder").error(JSON.stringify(error));
     throw error;
   }
 };
@@ -89,7 +89,7 @@ export const issueRefund = async (paymentId: string, amount?: number) => {
     const refund = await razorpay.refundPayment(paymentId, amount);
     return refund;
   } catch (error) {
-    Logger("issueRefund").error("%o", error);
+    Logger("issueRefund").error(JSON.stringify(error));
     throw error;
   }
 };

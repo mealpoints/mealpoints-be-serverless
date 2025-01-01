@@ -41,7 +41,7 @@ export const buttonReply = async (
       }
     }
   } catch (error) {
-    Logger("buttonReply").error("%o", error);
+    Logger("buttonReply").error(JSON.stringify(error));
     throw error;
   }
 };
