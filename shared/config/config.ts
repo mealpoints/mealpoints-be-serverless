@@ -23,9 +23,9 @@ export const USER_MESSAGES = {
     feature_not_supported:
       "Sorry, we only accept food photos and text messages at the moment. The format of the message you sent is not supported. Please stay tuned for further updates.",
     user_not_subscribed: `Hi there! 
-      👋 Meal Points is a subscription-based service that offers personalized meal feedback and guidance to help you reach your health goals. 
-      🌟 Subscribe now at ${process.env.MEALPOINTS_BASE_URL} to get started! 
-      We’d love to have you join us! 😊.`,
+👋 Meal Points is a subscription-based service that offers personalized meal feedback and guidance to help you reach your health goals. 
+🌟 Subscribe now at ${process.env.MEALPOINTS_BASE_URL} to get started! 
+We’d love to have you join us! 😊.`,
   },
 };
 export const START_HOUR_OF_DAY = 3;
