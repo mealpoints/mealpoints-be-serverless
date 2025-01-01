@@ -1,14 +1,17 @@
 import logger from "../../shared/config/logger";
 import { ISetting, SettingValue } from "../../shared/models/setting.model";
+import { ISubscription } from "../../shared/models/subscription.model";
 import { IUser } from "../../shared/models/user.model";
 import * as settingService from "../../shared/services/setting.service";
+import * as subscriptionSerice from "../../shared/services/subscription.service";
 import * as userService from "../../shared/services/user.service";
 const Logger = logger("test/test_utils/DataService");
 
 export class DataService {
   private static instance: DataService;
-  private user: IUser | undefined = undefined;
-  private settings: Map<string, SettingValue> = new Map();
+  private _user: IUser | undefined = undefined;
+  private _settings: Map<string, SettingValue> = new Map();
+  private _subscription: ISubscription | null = null;
 
   // Private constructor to prevent direct instantiation
   private constructor() {}
@@ -26,6 +29,7 @@ export class DataService {
     try {
       await this.fetchUserById(contact);
       await this.fetchSettings();
+      await this.fetchSubscription();
     } catch (error) {
       Logger("seed").error(error);
       throw error;
@@ -37,7 +41,7 @@ export class DataService {
     try {
       const user = await userService.getUserByContact(contact);
       if (user) {
-        this.user = user;
+        this._user = user;
         Logger("fetchUserById").info(
           `User with contact number ${contact} fetched successfully.`
         );
@@ -56,7 +60,7 @@ export class DataService {
       // Fetch settings from the database
       const settingsArray = await settingService.getSettings();
       settingsArray.forEach((setting: ISetting) => {
-        this.settings.set(setting.key, setting.value);
+        this._settings.set(setting.key, setting.value);
       });
 
       Logger("fetchSettings").info("Settings fetched successfully.");
@@ -66,13 +70,42 @@ export class DataService {
     }
   }
 
+  // Get the subscription details of the user
+  public async fetchSubscription() {
+    try {
+      const subscription = await subscriptionSerice.getSubscriptionByUserId(
+        this._user?.id as string
+      );
+      this._subscription = subscription;
+    } catch (error) {
+      Logger("getSubscription").error(error);
+      throw error;
+    }
+  }
+
   // Get the stored user details
   public getUser(): IUser {
-    return this.user as IUser;
+    return this._user as IUser;
   }
 
   // Get the stored settings
   public getSettings() {
-    return this.settings;
+    return this._settings;
+  }
+
+  public getSubscription() {
+    return this._subscription;
+  }
+
+  get user(): IUser {
+    return this._user as IUser;
+  }
+
+  get settings() {
+    return this._settings;
+  }
+
+  get subscription() {
+    return this._subscription;
   }
 }

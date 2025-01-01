@@ -18,7 +18,10 @@ export const refundRequested = async (user: IUser) => {
       user.id
     );
 
-    if (!(await isValidSubscription(user, subscription))) return;
+    if (!(await isValidSubscription(user, subscription))) {
+      Logger("refundRequested").error("No subscription found");
+      throw new Error("No subscription found");
+    }
 
     // @ts-expect-error - We know that subscription exists
     const planId = subscription.plan;
