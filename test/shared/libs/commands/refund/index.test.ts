@@ -1,5 +1,8 @@
 import { refundPayment } from "../../../../../shared/handlers/razorpay.handler";
-import { refundConfirmed } from "../../../../../shared/libs/commands/refund";
+import {
+  refundConfirmed,
+  refundRejectedByUser,
+} from "../../../../../shared/libs/commands/refund";
 import { DataService } from "../../../../test_utils/DataService";
 
 jest.mock("../../../../../shared/handlers/razorpay.handler", () => ({
@@ -20,5 +23,11 @@ describe("refund flow", () => {
     });
 
     expect(await refundConfirmed(user)).not.toThrow();
+  });
+
+  it.only("refundRejected", async () => {
+    const user = DataService.getInstance().getUser();
+
+    expect(await refundRejectedByUser(user)).toBeUndefined();
   });
 });

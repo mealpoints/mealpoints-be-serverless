@@ -40,7 +40,7 @@ export const confirmRefund = async (user: IUser) => {
 
 export const refundRejectedByUserMessage = async (user: IUser) => {
   Logger("refundRejected").info("");
-  await messageService.sendInteractiveMessage({
+  await messageService.sendTextMessage({
     user: user.id,
     type: MessageTypesEnum.Text,
     payload: USER_MESSAGES.info.refund.rejected_by_user,
@@ -49,7 +49,7 @@ export const refundRejectedByUserMessage = async (user: IUser) => {
 
 export const refundProcessed = async (user: IUser) => {
   Logger("refundProcessed").info("");
-  await messageService.sendInteractiveMessage({
+  await messageService.sendTextMessage({
     user: user.id,
     type: MessageTypesEnum.Text,
     payload: USER_MESSAGES.info.refund.processed,
