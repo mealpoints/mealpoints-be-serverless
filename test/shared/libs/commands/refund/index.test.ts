@@ -1,3 +1,4 @@
+import { USER_MESSAGES } from "../../../../../shared/config/config";
 import { refundPayment } from "../../../../../shared/handlers/razorpay.handler";
 import {
   refundConfirmed,
@@ -6,7 +7,9 @@ import {
 } from "../../../../../shared/libs/commands/refund";
 import { confirmRefund } from "../../../../../shared/libs/commands/refund/userMessages";
 import { isValidSubscription } from "../../../../../shared/libs/commands/refund/validSubscription";
+import * as messageService from "../../../../../shared/services/message.service";
 import { findOrder } from "../../../../../shared/services/order.service";
+import { MessageTypesEnum } from "../../../../../shared/types/enums";
 import { DataService } from "../../../../test_utils/DataService";
 
 jest.mock("../../../../../shared/handlers/razorpay.handler", () => ({
@@ -28,6 +31,10 @@ jest.mock("../../../../../shared/libs/commands/refund/userMessages", () => ({
   confirmRefund: jest.fn(),
 }));
 
+jest.mock("../../../../../shared/services/message.service", () => ({
+  sendTextMessage: jest.fn(),
+}));
+
 describe("refund flow", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -41,17 +48,20 @@ describe("refund flow", () => {
       entity: "refund",
     });
 
+    (findOrder as jest.Mock).mockResolvedValue({
+      paymentId: "payment-id",
+    });
+
     expect(await refundConfirmed(user)).toBeUndefined();
   });
 
   it("refundRejected", async () => {
     const user = DataService.getInstance().getUser();
-
     expect(await refundRejectedByUser(user)).toBeUndefined();
   });
 });
 
-describe.only("refund requested flow", () => {
+describe("refund requested flow", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -63,6 +73,11 @@ describe.only("refund requested flow", () => {
     (findOrder as jest.Mock).mockResolvedValue(null);
 
     await expect(refundRequested(user)).rejects.toThrow("No order found");
+    expect(messageService.sendTextMessage).toHaveBeenCalledWith({
+      user: user.id,
+      payload: USER_MESSAGES.errors.text_not_processed,
+      type: MessageTypesEnum.Text,
+    });
   });
 
   it("should throw error if no subscription found", async () => {

@@ -39,6 +39,10 @@ export const refundRequested = async (user: IUser) => {
 
     if (!latestOrder) {
       Logger("refundRequested").error("No order found");
+      await sendInternalAlert({
+        message: `No order found for user ${user.id}`,
+        severity: "major",
+      });
       throw new Error("No order found");
     }
 

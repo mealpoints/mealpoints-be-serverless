@@ -14,8 +14,9 @@ export const USER_MESSAGES = {
     },
   },
   info: {
+    help: `Hello there, thank you for reaching out to Meal Points help! 🌟 This feature has not been fully implemented yet, but please feel free to contact us as ${SUPPORT.email} and we will promptly respond.`,
     refund: {
-      confirmation: `Please confirm if you would like to proceed with the refund? This will cancel your subscription.`,
+      confirmation: `Are you sure you would like to proceed with the refund? Please note that this action will cancel your subscription.`,
       success: `Your subscription has been cancelled. You will receive a refund in 3-5 business days.`,
       rejected_by_user: `Your refund request has been cancelled. If you need help, please contact us at ${SUPPORT.email}`,
       processed: `Your refund has been processed. I should be in your account in 3-5 business days. If you need any further assistance, please contact us at ${SUPPORT.email}`,

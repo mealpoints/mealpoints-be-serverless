@@ -10,10 +10,10 @@ export const doesMessageContainCommand = async (
   user: IUser
 ) => {
   Logger("doesMessageContainCommand").info("");
-  const isRefundRequested = containsCommand(message, "#refund");
-  const isHelpRequested = containsCommand(message, "#help");
-
   try {
+    const isRefundRequested = containsCommand(message, "#refund");
+    const isHelpRequested = containsCommand(message, "#help");
+
     if (isRefundRequested) {
       await refundRequested(user);
       return true;
