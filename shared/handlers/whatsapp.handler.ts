@@ -9,7 +9,6 @@ import * as path from "node:path";
 import logger from "../config/logger";
 import { ComponentTypesEnum } from "../types/enums";
 import {
-  InteractiveMessageBodyOptions,
   InteractiveMessageRequestBody,
   ITemplateMessageRequestBody,
   MessageTemplateObject,
@@ -75,7 +74,7 @@ export const sendMessage = async (
 
 export const sendInteractiveMessage = async (
   phoneNumber: string,
-  data: InteractiveMessageBodyOptions
+  data: InteractiveMessageRequestBody["interactive"]
 ): Promise<AxiosResponse> => {
   Logger("sendInteractiveMessage").info("");
 
@@ -84,36 +83,8 @@ export const sendInteractiveMessage = async (
     messaging_product: "whatsapp",
     to: phoneNumber,
     type: "interactive",
-    interactive: {
-      type: "cta_url",
-      action: {
-        name: "cta_url",
-        parameters: {
-          display_text: data.action.displayText,
-          url: data.action.url,
-        },
-      },
-    },
+    interactive: data,
   };
-
-  if (data.header) {
-    body.interactive.header = {
-      type: "text",
-      text: data.header,
-    };
-  }
-
-  if (data.body) {
-    body.interactive.body = {
-      text: data.body,
-    };
-  }
-
-  if (data.footer) {
-    body.interactive.footer = {
-      text: data.footer,
-    };
-  }
 
   return await axiosInstance.post(`/${INSTANCE_ID}/messages`, body);
 };

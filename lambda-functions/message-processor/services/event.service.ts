@@ -20,7 +20,7 @@ export class EventService<T> {
         await this.processMessageFunction(message.body as T);
         messagesToDelete.push(message);
       } catch (error) {
-        Logger("handler").error(error);
+        Logger("handler").error(JSON.stringify(error));
       }
     });
 

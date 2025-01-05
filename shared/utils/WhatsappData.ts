@@ -1,5 +1,5 @@
 import { WebhookTypesEnum } from "../types/enums";
-import { WhastappWebhookObject } from "../types/message";
+import { InteractiveObject, WhastappWebhookObject } from "../types/message";
 
 export type WebhookMessageType = "inboundMessage" | "statusUpdate" | undefined;
 
@@ -98,6 +98,11 @@ export class WhatsappData {
     if (this._webhookType !== WebhookTypesEnum.Image) return undefined;
     return this.data.entry[0].changes[0].value.messages?.[0].image
       ?.id as string;
+  }
+
+  get interactiveMessageContent(): InteractiveObject | undefined {
+    if (this._webhookType !== WebhookTypesEnum.Interactive) return undefined;
+    return this.data.entry[0].changes[0].value.messages?.[0].interactive;
   }
 
   public isMessageFromWatsappPhoneNumberId(

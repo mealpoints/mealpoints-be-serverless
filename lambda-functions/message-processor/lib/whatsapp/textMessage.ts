@@ -2,6 +2,7 @@ import * as _ from "lodash";
 import { USER_MESSAGES } from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
+import { doesMessageContainCommand } from "../../../../shared/libs/commands";
 import { IUser } from "../../../../shared/models/user.model";
 import * as messageService from "../../../../shared/services/message.service";
 import * as openAIService from "../../../../shared/services/openAI.service";
@@ -31,6 +32,9 @@ export const processTextMessage = async (
 
   try {
     try {
+      // Check if user has entered a command
+      if (await doesMessageContainCommand(userMessage as string, user)) return;
+
       const result = await openAIService.ask(userMessage as string, user, {
         messageType: OpenAIMessageTypesEnum.Text,
         assistantId,

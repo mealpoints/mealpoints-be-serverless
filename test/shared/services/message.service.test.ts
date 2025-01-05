@@ -69,7 +69,7 @@ describe("Message Service", () => {
     });
   });
 
-  it("should send Interactive Message", async () => {
+  it("should send Interactive CTA Message", async () => {
     const dataService = DataService.getInstance();
     const userId = dataService.getUser().id;
 
@@ -77,12 +77,67 @@ describe("Message Service", () => {
       user: userId,
       type: MessageTypesEnum.Interactive,
       interactive: {
-        header: "Your report is ready",
-        body: "Click below to view the report",
-        footer: "Powered by Meal Points",
+        type: "cta_url",
+        header: {
+          type: "text",
+          text: "Interactive Message",
+        },
+        body: {
+          text: "This is an interactive message",
+        },
+        footer: {
+          text: "Footer",
+        },
         action: {
-          displayText: "View Report",
-          url: "https://google.com",
+          name: "cta_url",
+          parameters: {
+            display_text: "Click here",
+            url: "https://www.google.com",
+          },
+        },
+      },
+    });
+
+    Logger("sendInteractiveMessage").info(JSON.stringify(response.data));
+    expect(response.data).toBeDefined();
+  });
+
+  it("should send Interactive reply Message", async () => {
+    const dataService = DataService.getInstance();
+    const userId = dataService.getUser().id;
+
+    const response = await messageService.sendInteractiveMessage({
+      user: userId,
+      type: MessageTypesEnum.Interactive,
+      interactive: {
+        type: "button",
+        header: {
+          type: "text",
+          text: "Interactive Message with Reply",
+        },
+        body: {
+          text: "This is an interactive message with reply",
+        },
+        footer: {
+          text: "Footer",
+        },
+        action: {
+          buttons: [
+            {
+              type: "reply",
+              reply: {
+                id: "1",
+                title: "Yes",
+              },
+            },
+            {
+              type: "reply",
+              reply: {
+                id: "2",
+                title: "No",
+              },
+            },
+          ],
         },
       },
     });

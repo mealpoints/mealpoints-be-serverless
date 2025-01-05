@@ -919,11 +919,16 @@ export enum OrderStatusEnum {
 
 export enum SubscriptionStatusEnum {
   Active = "active",
-  Canceled = "canceled",
+  Cancelled = "cancelled",
   Expired = "expired",
 }
 
 export enum PlanTypeEnum {
   OneTime = "one-time",
   Recurring = "recurring",
+}
+
+export enum ButtonReplyEnum {
+  RefundConfirmed = "refund_confirmed",
+  RefundRejected = "refund_rejected",
 }

@@ -11,7 +11,7 @@ import SentMessage, {
 } from "../models/sentMessage.model";
 import { ComponentTypesEnum, StatusEnum } from "../types/enums";
 import {
-  InteractiveMessageBodyOptions,
+  InteractiveMessageRequestBody,
   MessageTemplateObject,
 } from "../types/message";
 import * as userService from "./user.service";
@@ -153,13 +153,12 @@ export const sendInteractiveMessage = async (
 
     const response = await whatsappHandler.sendInteractiveMessage(
       user.contact,
-      messageData.interactive as InteractiveMessageBodyOptions
+      messageData.interactive as InteractiveMessageRequestBody["interactive"]
     );
 
     // Store Sent Message
     await createSentMessage({
       ...messageData,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
       wamid: response.data.messages[0].id,
     });
 

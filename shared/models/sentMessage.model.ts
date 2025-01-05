@@ -5,7 +5,7 @@ import {
   StatusEnum,
 } from "../types/enums";
 import {
-  InteractiveMessageBodyOptions,
+  InteractiveMessageRequestBody,
   MessageTemplateObject,
 } from "../types/message";
 
@@ -13,7 +13,7 @@ export interface ISentMessage extends Document {
   id: string;
   user: string;
   payload?: string;
-  interactive?: InteractiveMessageBodyOptions;
+  interactive?: InteractiveMessageRequestBody["interactive"];
   template?: MessageTemplateObject<ComponentTypesEnum>;
   type: MessageTypesEnum;
   status: StatusEnum;
@@ -25,7 +25,7 @@ export interface ISentMessage extends Document {
 export interface ISentMessageCreate {
   user: string;
   payload?: string;
-  interactive?: InteractiveMessageBodyOptions;
+  interactive?: InteractiveMessageRequestBody["interactive"];
   template?: MessageTemplateObject<ComponentTypesEnum>;
   type: MessageTypesEnum;
   wamid?: string;

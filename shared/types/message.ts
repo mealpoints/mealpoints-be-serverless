@@ -1,5 +1,6 @@
 import {
   ButtonPositionEnum,
+  ButtonReplyEnum,
   ButtonTypesEnum,
   ComponentTypesEnum,
   ConversationTypesEnum,
@@ -94,14 +95,16 @@ type ImageObject = {
   mime_type: ImageMediaTypesEnum;
 };
 
-type ButtonReplyObject = {
+export type ButtonReplyObject = {
+  type: "button_reply";
   button_reply: {
-    id: string;
+    id: ButtonReplyEnum;
     title: string;
   };
 };
 
-type ListReplyObject = {
+export type ListReplyObject = {
+  type: "list_reply";
   list_reply: {
     id: string;
     title: string;
@@ -109,9 +112,7 @@ type ListReplyObject = {
   };
 };
 
-type InteractiveObject = {
-  type: ButtonReplyObject | ListReplyObject;
-};
+export type InteractiveObject = ButtonReplyObject | ListReplyObject;
 
 type ProductItemsObject = {
   product_retailer_id: string;
@@ -237,45 +238,63 @@ export type InteractiveMessageRequestBody = {
   recipient_type: "individual";
   to: string;
   type: "interactive";
-  interactive: InteractiveMessageRequestBody_Interactive;
+  interactive: InteractiveCTAObject | InteractiveReplyObject;
 };
 
-export type InteractiveMessageRequestBody_Interactive = {
+export type InteractiveReplyObject = {
+  type: "button";
+  header?: {
+    type: "text" | "image" | "video" | "document";
+    text?: string;
+    image?: {
+      id?: string; // Media ID from uploaded media
+      link?: string; // URL link to the media
+    };
+    video?: {
+      id?: string; // Media ID from uploaded media
+      link?: string; // URL link to the media
+    };
+    document?: {
+      id?: string; // Media ID from uploaded media
+      link?: string; // URL link to the media
+    };
+  };
+  body: {
+    text: string; // Maximum 1024 characters
+  };
+  footer?: {
+    text: string; // Maximum 60 characters
+  };
+  action: {
+    buttons: {
+      type: "reply";
+      reply: {
+        id: ButtonReplyEnum; // Unique identifier for the button, max 256 characters
+        title: string; // Button label text, max 20 characters
+      };
+    }[];
+  };
+};
+
+export type InteractiveCTAObject = {
   type: "cta_url";
-  header?: InteractiveMessageRequestBody_Header;
-  body?: InteractiveMessageRequestBody_Body;
-  footer?: InteractiveMessageRequestBody_Footer;
-  action: InteractiveMessageRequestBody_Action;
-};
-
-export type InteractiveMessageRequestBody_Header = {
-  type: "text";
-  text: string;
-};
-
-export type InteractiveMessageRequestBody_Body = {
-  text: string;
-};
-
-export type InteractiveMessageRequestBody_Footer = {
-  text: string;
-};
-
-export type InteractiveMessageRequestBody_Action = {
-  name: "cta_url";
-  parameters: InteractiveMessageRequestBody_ActionParameters;
-};
-
-export type InteractiveMessageRequestBody_ActionParameters = {
-  display_text: string;
-  url: string;
-};
-
-export type InteractiveMessageBodyOptions = {
-  header?: string;
-  body?: string;
-  footer?: string;
-  action: { displayText: string; url: string };
+  header?: {
+    type: "text";
+    text: string;
+  };
+  body?: {
+    text: string;
+  };
+  footer?: {
+    text: string;
+  };
+  action: {
+    name: "cta_url";
+    parameters: {
+      display_text: string;
+      url: string;
+    };
+  };
 };
 
 export type ParametersObject<T extends ParametersTypesEnum> = {

@@ -26,7 +26,7 @@ export const createOrder = async ({ amount, currency }: ICreateOrder) => {
     });
     return order;
   } catch (error) {
-    Logger("createOrder").error("%o", error);
+    Logger("createOrder").error(JSON.stringify(error));
     throw error;
   }
 };
@@ -43,4 +43,20 @@ export const isSignatureValid = (
     .update(sign.toString())
     .digest("hex");
   return signature === expectedSign;
+};
+
+export const refundPayment = async (paymentId: string, amount?: number) => {
+  Logger("refundPayment").info("");
+  try {
+    const refund = await razorpay.payments.refund(paymentId, {
+      receipt: uuidv4(),
+      speed: "optimum",
+      ...(amount && { amount: amount * 100 }), // Amount is needed only in case of partial refund.
+    });
+
+    return refund;
+  } catch (error) {
+    Logger("refundPayment").error(JSON.stringify(error));
+    throw error;
+  }
 };
