@@ -41,8 +41,11 @@ userSchema.pre<IUser>("save", function (next) {
 });
 
 userSchema.virtual("fullName").get(function (this: IUser) {
-  // Combine firstName and lastName, filtering out null, undefined, and empty strings, then join with a space (" ").
-  return [this.firstName, this.lastName].filter(Boolean).join(" ");
+  const fullname = [this.firstName?.trim(), this.lastName?.trim()]
+    .filter(Boolean)
+    .join(" ");
+
+  return fullname || undefined;
 });
 
 userSchema.set("toJSON", {
