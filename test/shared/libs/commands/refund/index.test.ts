@@ -1,16 +1,30 @@
 import { USER_MESSAGES } from "../../../../../shared/config/config";
-import { refundPayment } from "../../../../../shared/handlers/razorpay.handler";
 import {
   refundConfirmed,
   refundRejectedByUser,
   refundRequested,
 } from "../../../../../shared/libs/commands/refund";
-import { confirmRefund } from "../../../../../shared/libs/commands/refund/userMessages";
+import {
+  confirmRefund,
+  refundProcessed,
+} from "../../../../../shared/libs/commands/refund/userMessages";
 import { isValidSubscription } from "../../../../../shared/libs/commands/refund/validSubscription";
+import { sendInternalAlert } from "../../../../../shared/libs/internal-alerts";
 import * as messageService from "../../../../../shared/services/message.service";
-import { findOrder } from "../../../../../shared/services/order.service";
+import {
+  findOrder,
+  issueRefund,
+} from "../../../../../shared/services/order.service";
+import {
+  getSubscriptionByUserId,
+  updateSubscriptionById,
+} from "../../../../../shared/services/subscription.service";
 import { MessageTypesEnum } from "../../../../../shared/types/enums";
 import { DataService } from "../../../../test_utils/DataService";
+
+jest.mock("../../../../../shared/libs/internal-alerts", () => ({
+  sndInternalAlert: jest.fn(),
+}));
 
 jest.mock("../../../../../shared/handlers/razorpay.handler", () => ({
   refundPayment: jest.fn(),
@@ -18,6 +32,7 @@ jest.mock("../../../../../shared/handlers/razorpay.handler", () => ({
 
 jest.mock("../../../../../shared/services/order.service", () => ({
   findOrder: jest.fn(),
+  issueRefund: jest.fn(),
 }));
 
 jest.mock(
@@ -29,30 +44,73 @@ jest.mock(
 
 jest.mock("../../../../../shared/libs/commands/refund/userMessages", () => ({
   confirmRefund: jest.fn(),
+  refundProcessed: jest.fn(),
 }));
 
 jest.mock("../../../../../shared/services/message.service", () => ({
   sendTextMessage: jest.fn(),
 }));
 
+jest.mock("../../../../../shared/services/subscription.service", () => ({
+  getSubscriptionByUserId: jest.fn(),
+  updateSubscriptionById: jest.fn(),
+}));
+
 describe("refund flow", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-  it("refundConfirmed", async () => {
+  it("refundConfirmed -  happy path", async () => {
     const user = DataService.getInstance().getUser();
 
-    // Mock successfull refund
-    (refundPayment as jest.Mock).mockResolvedValue({
-      id: "refund-id",
-      entity: "refund",
+    (getSubscriptionByUserId as jest.Mock).mockResolvedValue({
+      planId: "plan-id",
     });
 
     (findOrder as jest.Mock).mockResolvedValue({
       paymentId: "payment-id",
     });
 
+    (issueRefund as jest.Mock).mockResolvedValue({
+      id: "refund-id",
+    });
+
+    (updateSubscriptionById as jest.Mock).mockResolvedValue({
+      status: "cancelled",
+    });
+
+    (refundProcessed as jest.Mock).mockResolvedValue({});
+
     expect(await refundConfirmed(user)).toBeUndefined();
+  });
+
+  it("refundConfirmed -  failed requests", async () => {
+    const user = DataService.getInstance().getUser();
+
+    (getSubscriptionByUserId as jest.Mock).mockRejectedValue(
+      new Error("error")
+    );
+
+    (findOrder as jest.Mock).mockResolvedValue({
+      paymentId: "payment-id",
+    });
+
+    (issueRefund as jest.Mock).mockResolvedValue({
+      id: "refund-id",
+    });
+
+    (updateSubscriptionById as jest.Mock).mockResolvedValue({
+      status: "cancelled",
+    });
+
+    (refundProcessed as jest.Mock).mockResolvedValue({});
+
+    await expect(refundConfirmed(user)).rejects.toThrow("error");
+
+    expect(sendInternalAlert).toHaveBeenCalledWith({
+      message: `Refund failed for user ${user.id}`,
+      severity: "major",
+    });
   });
 
   it("refundRejected", async () => {

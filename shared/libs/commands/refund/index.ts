@@ -79,10 +79,7 @@ export const refundConfirmed = async (user: IUser) => {
 
     if (!refund) {
       Logger("refundConfirmed").error("Refund failed");
-      await sendInternalAlert({
-        message: `Refund failed for user ${user.id}`,
-        severity: "major",
-      });
+
       throw new Error("Refund failed");
     }
 
@@ -97,6 +94,10 @@ export const refundConfirmed = async (user: IUser) => {
     await userMessages.refundProcessed(user);
   } catch (error) {
     Logger("refundConfirmed").error(JSON.stringify(error));
+    await sendInternalAlert({
+      message: `Refund failed for user ${user.id}`,
+      severity: "major",
+    });
     throw error;
   }
 };
