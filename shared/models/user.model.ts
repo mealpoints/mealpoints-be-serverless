@@ -41,8 +41,11 @@ userSchema.pre<IUser>("save", function (next) {
 });
 
 userSchema.virtual("fullName").get(function (this: IUser) {
-  if (!this.firstName && !this.lastName) return;
-  return `${this.firstName} ${this.lastName}`.trim();
+  const fullname = [this.firstName?.trim(), this.lastName?.trim()]
+    .filter(Boolean)
+    .join(" ");
+
+  return fullname || undefined;
 });
 
 userSchema.set("toJSON", {
