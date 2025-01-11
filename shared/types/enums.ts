@@ -35,6 +35,7 @@ export enum UserEngagementMessageTypesEnum {
   MealReport = "meal_report",
   Welcome = "welcome",
   FeatIntro_MealViaText = "feat_intro_meal_via_text",
+  SubscriptionCheck = "subscription_check",
 }
 
 export enum ParametersTypesEnum {

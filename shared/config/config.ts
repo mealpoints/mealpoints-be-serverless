@@ -21,6 +21,9 @@ export const USER_MESSAGES = {
       rejected_by_user: `Your refund request has been cancelled. If you need help, please contact us at ${SUPPORT.email}`,
       processed: `Your refund has been processed. I should be in your account in 3-5 business days. If you need any further assistance, please contact us at ${SUPPORT.email}`,
     },
+    subscriptions: {
+      expired: `Your subscription has expired. You can renew or buy new plan at ${process.env.MEALPOINTS_BASE_URL}.`,
+    },
     feature_not_supported:
       "Sorry, we only accept food photos and text messages at the moment. The format of the message you sent is not supported. Please stay tuned for further updates.",
     user_not_subscribed: `Hi there! 
@@ -39,6 +42,7 @@ export const QUEUE_MESSAGE_GROUP_IDS = {
   meal_report: "meal_report",
   onboard_user: "onboard_user",
   feat_intro_meal_via_text: "feat_intro_meal_via_text",
+  subscription_expired: "subscription_expired",
 };
 
 export const DEFAULT_GEO_INFO = {

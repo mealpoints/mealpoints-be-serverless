@@ -10,6 +10,7 @@ import { processMealSummary } from "./lib/meal-sumary";
 import { processFeatIntro_MealViaText } from "./lib/meal-via-text";
 import { processOnboardUser } from "./lib/onboard-user";
 import { processReminder } from "./lib/reminder";
+import { processSubscriptionExpired } from "./lib/subscription-expired";
 import { processWhatsappWebhook } from "./lib/whatsapp";
 import { EventService } from "./services/event.service";
 const Logger = logger("handler");
@@ -20,6 +21,7 @@ const messageProcessors = {
   [QUEUE_MESSAGE_GROUP_IDS.reminder]: processReminder,
   [QUEUE_MESSAGE_GROUP_IDS.meal_report]: processMealReport,
   [QUEUE_MESSAGE_GROUP_IDS.onboard_user]: processOnboardUser,
+  [QUEUE_MESSAGE_GROUP_IDS.subscription_expired]: processSubscriptionExpired,
   [QUEUE_MESSAGE_GROUP_IDS.feat_intro_meal_via_text]:
     processFeatIntro_MealViaText,
 };

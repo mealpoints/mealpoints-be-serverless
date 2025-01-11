@@ -115,7 +115,7 @@ export const featIntro_MealsViaTextFlow = async (timezone: string) => {
     );
 
     Logger("featIntro_MealsViaTextFlow").info(
-      `Found ${usersToFeatIntro_MealViaText.length} users to send reminders`
+      `Found ${usersToFeatIntro_MealViaText.length} users to introduce meal-via-text feature`
     );
     await enqueueUsersToSendEngagement(
       usersToFeatIntro_MealViaText,
