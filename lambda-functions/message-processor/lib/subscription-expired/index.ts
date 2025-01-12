@@ -1,22 +1,26 @@
 import { USER_MESSAGES } from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
 import { sendInternalAlert } from "../../../../shared/libs/internal-alerts";
-import { IUser } from "../../../../shared/models/user.model";
 import * as messageService from "../../../../shared/services/message.service";
 import * as subscriptionService from "../../../../shared/services/subscription.service";
 import {
   MessageTypesEnum,
   SubscriptionStatusEnum,
 } from "../../../../shared/types/enums";
+import { IUserWithSubscriptionId } from "../../../../shared/types/queueMessages";
+import { objectifyId } from "../../../../shared/utils/mongoose";
 const Logger = logger("user-engagement/subscription-check");
 
-export const processSubscriptionExpired = async (user: IUser) => {
+export const processSubscriptionExpired = async (
+  messageBody: IUserWithSubscriptionId
+) => {
   Logger("processSubscriptionExpired").info("");
+  const user = messageBody;
   try {
     try {
       await subscriptionService.updateSubscription(
         {
-          user: user.id,
+          user: objectifyId(user.id),
           status: SubscriptionStatusEnum.Active,
         },
         {
@@ -25,8 +29,7 @@ export const processSubscriptionExpired = async (user: IUser) => {
       );
     } catch (error) {
       Logger("processSubscriptionExpired").error(
-        `Failed to mark user subscription as expired`,
-        JSON.stringify(error)
+        `Failed to mark user subscription as expired :` + JSON.stringify(error)
       );
       await sendInternalAlert({
         message: `Failed to mark subscription as expired for user with id ${user.id}`,

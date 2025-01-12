@@ -16,3 +16,8 @@ export interface IUserToSendReminders {
   user: IUser;
   remindersCount: number;
 }
+
+export interface IUserWithSubscriptionId extends Partial<IUser> {
+  id: string;
+  subscriptionId: string;
+}
