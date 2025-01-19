@@ -922,6 +922,7 @@ export enum SubscriptionStatusEnum {
   Active = "active",
   Cancelled = "cancelled",
   Expired = "expired",
+  Paused = "paused",
 }
 
 export enum PlanTypeEnum {

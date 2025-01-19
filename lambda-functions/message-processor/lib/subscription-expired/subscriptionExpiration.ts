@@ -17,13 +17,6 @@ export const handleSubscriptionExpiration = async (userId: string) => {
   Logger("handleSubscriptionExpiration").info("");
   try {
     await updateUserSubscriptionAsExpired(userId);
-
-    // TODO: replace with WA template message
-    await messageService.sendTextMessage({
-      user: userId,
-      type: MessageTypesEnum.Text,
-      payload: USER_MESSAGES.info.subscriptions.expired,
-    });
   } catch (error) {
     Logger("handleSubscriptionExpiration").error(JSON.stringify(error));
     throw error;
@@ -47,7 +40,7 @@ export const handleRecurringSubsExpiration = async (
         )
       : 1;
 
-    // TODO: create two WA templates, and use them 
+    // TODO: create two WA templates, and use them
     // eslint-disable-next-line unicorn/prefer-ternary
     if (totalSubscriptionsBoughtInPlan >= possibleSubscriptionsInPlan) {
       await messageService.sendTextMessage({
@@ -77,9 +70,7 @@ export const updateUserSubscriptionAsExpired = async (userId: string) => {
       }
     );
   } catch (error) {
-    Logger("updateUserSubscriptionAsExpired").error(
-      `Failed to mark user subscription as expired :` + JSON.stringify(error)
-    );
+    Logger("updateUserSubscriptionAsExpired").error(JSON.stringify(error));
     await sendInternalAlert({
       message: `Failed to mark subscription as expired for user with id ${userId}`,
       severity: "major",

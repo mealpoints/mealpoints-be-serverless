@@ -1,5 +1,4 @@
 import logger from "../../../../shared/config/logger";
-import { sendInternalAlert } from "../../../../shared/libs/internal-alerts";
 import * as planService from "../../../../shared/services/plan.service";
 import { PlanTypeEnum } from "../../../../shared/types/enums";
 import { IUserWithSubscription } from "../../../../shared/types/queueMessages";
@@ -20,13 +19,8 @@ export const processSubscriptionExpired = async (
     );
 
     if (!usersCurrentPlan) {
-      // QA: Do we even need this checks ?
-      await sendInternalAlert({
-        message: `Internal error: Plan Not Found. Resulting in Failed to mark subscription as expired for user with id ${user.id} and subscription with id ${user.subscription.id}`,
-        severity: "major",
-      });
       throw new Error(
-        "Internal error: Plan Not Found. Failed to mark subscription as expired"
+        `Plan Not Found for ${user.id}. Failed to mark subscription as expired`
       );
     }
 
