@@ -38,6 +38,7 @@ export enum UserEngagementMessageTypesEnum {
 }
 
 export enum ParametersTypesEnum {
+  Action = "action",
   Currency = "currency",
   DateTime = "date_time",
   Document = "document",
@@ -57,6 +58,7 @@ export enum InteractiveTypesEnum {
 export enum ButtonTypesEnum {
   QuickReply = "quick_reply",
   URL = "url",
+  Flow = "flow",
 }
 
 export enum ButtonPositionEnum {
@@ -546,6 +548,10 @@ export enum CurrencyCodesEnum {
   XFU = "XFU",
 }
 
+export enum WhatsappFlowEnum {
+  UserPreferencesV1 = "user_preferences_v1",
+}
+
 export enum WhatsappTemplateNameEnum {
   UserMealSummary = "user_meal_summary",
   ReminderToPostMealsOne = "reminder_to_post_meals_1",
@@ -554,6 +560,7 @@ export enum WhatsappTemplateNameEnum {
   FeatIntro_MealViaText = "feature_intro_meal_via_text",
   MealReport = "user_meal_report",
   WelcomeMessage = "welcome_message",
+  UserPreferencesV1 = "user_preferences_v1",
 }
 
 export enum CountryCodeToDefaultTimezoneEnum {

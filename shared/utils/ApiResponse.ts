@@ -88,8 +88,6 @@ class ApiResponse {
   // 500 Internal Server Error
   static ServerError(
     response: Response,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    error: any,
     message: string = "Internal server error"
   ): Response {
     return response.status(500).json({ message });

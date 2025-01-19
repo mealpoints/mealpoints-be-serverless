@@ -4,6 +4,7 @@ export const SUPPORT = {
 
 export const USER_MESSAGES = {
   errors: {
+    something_went_wrong: `Oops! Something went wrong. Please try again in some time. If you need help, please contact us at ${SUPPORT.email}`,
     image_not_processed: `Sorry, I was unable to process the image. Please try again in some time. If you need help, please contact us at ${SUPPORT.email}`,
     text_not_processed: `Sorry, I was unable to process your message. Please try again in some time. If you need help, please contact us at ${SUPPORT.email}`,
     rate_limit_exceeded: `You have reached the daily message limit. Please try again tomorrow. If you need help, please contact us at ${SUPPORT.email}`,

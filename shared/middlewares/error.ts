@@ -11,5 +11,5 @@ export const errorHandler = (
   response: Response
 ) => {
   Logger("errorHandler").error(error);
-  return ApiResponse.ServerError(response, error);
+  return ApiResponse.ServerError(response);
 };

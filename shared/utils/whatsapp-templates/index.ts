@@ -24,6 +24,10 @@ import {
   IUserMealSummaryData,
 } from "./userMealSummary";
 import {
+  createUserPreferencesV1Template,
+  IUserPreferencesV1Data,
+} from "./userPreferences";
+import {
   createWelcomeMessageTemplate,
   IWelcomeMessageData,
 } from "./welcomeMessage";
@@ -37,6 +41,7 @@ type WhatsappTemplateDataMap = {
   [WhatsappTemplateNameEnum.FeatIntro_MealViaText]: IFeatIntro_MealViaText;
   [WhatsappTemplateNameEnum.MealReport]: IUserMealReportData;
   [WhatsappTemplateNameEnum.WelcomeMessage]: IWelcomeMessageData;
+  [WhatsappTemplateNameEnum.UserPreferencesV1]: IUserPreferencesV1Data;
 };
 
 export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
@@ -64,6 +69,9 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
     }
     case WhatsappTemplateNameEnum.WelcomeMessage: {
       return createWelcomeMessageTemplate();
+    }
+    case WhatsappTemplateNameEnum.UserPreferencesV1: {
+      return createUserPreferencesV1Template();
     }
     default: {
       throw new Error("Template not found");

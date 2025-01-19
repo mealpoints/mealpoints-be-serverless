@@ -1,6 +1,7 @@
 import logger from "../../../shared/config/logger";
 import * as messageService from "../../../shared/services/message.service";
 import {
+  ButtonReplyEnum,
   MessageTypesEnum,
   WhatsappTemplateNameEnum,
 } from "../../../shared/types/enums";
@@ -67,6 +68,23 @@ describe("Message Service", () => {
       Logger("sendTemplateMessage").info(JSON.stringify(response.data));
       expect(response.data).toBeDefined();
     });
+
+    it("should send flow template", async () => {
+      const dataService = DataService.getInstance();
+      const userId = dataService.getUser().id;
+
+      const response = await messageService.sendTemplateMessage({
+        user: userId,
+        type: MessageTypesEnum.Template,
+        template: createWhatsappTemplate(
+          WhatsappTemplateNameEnum.UserPreferencesV1,
+          {}
+        ),
+      });
+
+      Logger("sendTemplateMessage").info(JSON.stringify(response.data.error));
+      expect(response.data).toBeDefined();
+    });
   });
 
   it("should send Interactive CTA Message", async () => {
@@ -126,14 +144,14 @@ describe("Message Service", () => {
             {
               type: "reply",
               reply: {
-                id: "1",
+                id: ButtonReplyEnum.RefundConfirmed,
                 title: "Yes",
               },
             },
             {
               type: "reply",
               reply: {
-                id: "2",
+                id: ButtonReplyEnum.RefundRejected,
                 title: "No",
               },
             },
