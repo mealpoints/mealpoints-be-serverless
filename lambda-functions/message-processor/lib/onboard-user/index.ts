@@ -21,11 +21,12 @@ const Logger = logger("lib/onboard-user");
 interface IProcessOnboardUser extends Omit<IOrder, "user" | "plan"> {
   user: IUser;
   plan: IPlan;
+  recurringGroupId?: string;
 }
 
 export const processOnboardUser = async (data: IProcessOnboardUser) => {
   Logger("processOnboardUser").info("%o", data);
-  const { user, plan } = data;
+  const { user, plan, recurringGroupId } = data;
   const order: IOrder = { ...data, user: user.id, plan: plan.id };
 
   try {
@@ -44,11 +45,11 @@ export const processOnboardUser = async (data: IProcessOnboardUser) => {
 
       return;
     }
-
-    const recurringGroup =
-      plan.type === PlanTypeEnum.Recurring
-        ? new mongoose.Types.ObjectId().toString()
-        : undefined;
+    let recurringGroup: string | undefined = undefined;
+    if (plan.type === PlanTypeEnum.Recurring) {
+      recurringGroup =
+        recurringGroupId ?? new mongoose.Types.ObjectId().toString();
+    }
 
     // Create Subscription
     await activateSubscription({

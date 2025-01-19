@@ -5,6 +5,7 @@ export const validatePaymentSchema = z.object({
     orderId: z.string(),
     paymentId: z.string(),
     signature: z.string(),
+    recurringGroupId: z.string().optional(),
   }),
 });
 
