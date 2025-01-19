@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import logger from "../../../../shared/config/logger";
 import { sendInternalAlert } from "../../../../shared/libs/internal-alerts";
 import { activateSubscription } from "../../../../shared/libs/subscription";
@@ -9,6 +10,7 @@ import * as subscriptionService from "../../../../shared/services/subscription.s
 import * as userEngagementMessageService from "../../../../shared/services/userEngagement.service";
 import {
   MessageTypesEnum,
+  PlanTypeEnum,
   UserEngagementMessageTypesEnum,
   WhatsappTemplateNameEnum,
 } from "../../../../shared/types/enums";
@@ -43,11 +45,17 @@ export const processOnboardUser = async (data: IProcessOnboardUser) => {
       return;
     }
 
+    const recurringGroup =
+      plan.type === PlanTypeEnum.Recurring
+        ? new mongoose.Types.ObjectId().toString()
+        : undefined;
+
     // Create Subscription
     await activateSubscription({
       user,
       plan,
       order,
+      recurringGroup,
     });
 
     const messageResponse = await messageService.sendTemplateMessage({

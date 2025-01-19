@@ -929,6 +929,11 @@ export enum PlanTypeEnum {
   Recurring = "recurring",
 }
 
+export enum PlanDurationUnitEnum {
+  Weeks = "weeks",
+  Months = "months",
+}
+
 export enum ButtonReplyEnum {
   RefundConfirmed = "refund_confirmed",
   RefundRejected = "refund_rejected",

@@ -1,3 +1,4 @@
+import { ISubscription } from "../models/subscription.model";
 import { IUser } from "../models/user.model";
 import { WhastappWebhookObject } from "./message";
 
@@ -17,7 +18,7 @@ export interface IUserToSendReminders {
   remindersCount: number;
 }
 
-export interface IUserWithSubscriptionId extends Partial<IUser> {
+export interface IUserWithSubscription extends Partial<IUser> {
   id: string;
-  subscriptionId: string;
+  subscription: ISubscription;
 }

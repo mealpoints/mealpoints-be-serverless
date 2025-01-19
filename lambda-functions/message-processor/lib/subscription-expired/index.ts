@@ -1,47 +1,38 @@
-import { USER_MESSAGES } from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
 import { sendInternalAlert } from "../../../../shared/libs/internal-alerts";
-import * as messageService from "../../../../shared/services/message.service";
-import * as subscriptionService from "../../../../shared/services/subscription.service";
+import * as planService from "../../../../shared/services/plan.service";
+import { PlanTypeEnum } from "../../../../shared/types/enums";
+import { IUserWithSubscription } from "../../../../shared/types/queueMessages";
 import {
-  MessageTypesEnum,
-  SubscriptionStatusEnum,
-} from "../../../../shared/types/enums";
-import { IUserWithSubscriptionId } from "../../../../shared/types/queueMessages";
-import { objectifyId } from "../../../../shared/utils/mongoose";
+  handleRecurringSubsExpiration,
+  handleSubscriptionExpiration,
+} from "./subscriptionExpiration";
 const Logger = logger("user-engagement/subscription-check");
 
 export const processSubscriptionExpired = async (
-  messageBody: IUserWithSubscriptionId
+  messageBody: IUserWithSubscription
 ) => {
   Logger("processSubscriptionExpired").info("");
   const user = messageBody;
   try {
-    try {
-      await subscriptionService.updateSubscription(
-        {
-          user: objectifyId(user.id),
-          status: SubscriptionStatusEnum.Active,
-        },
-        {
-          status: SubscriptionStatusEnum.Expired,
-        }
-      );
-    } catch (error) {
-      Logger("processSubscriptionExpired").error(
-        `Failed to mark user subscription as expired :` + JSON.stringify(error)
-      );
+    const usersCurrentPlan = await planService.getPlanById(
+      user.subscription.plan
+    );
+
+    if (!usersCurrentPlan) {
+      // QA: Do we even need this checks ?
       await sendInternalAlert({
-        message: `Failed to mark subscription as expired for user with id ${user.id}`,
+        message: `Internal error: Plan Not Found. Resulting in Failed to mark subscription as expired for user with id ${user.id} and subscription with id ${user.subscription.id}`,
         severity: "major",
       });
-      throw error;
+      throw new Error(
+        "Internal error: Plan Not Found. Failed to mark subscription as expired"
+      );
     }
-    await messageService.sendTextMessage({
-      user: user.id,
-      type: MessageTypesEnum.Text,
-      payload: USER_MESSAGES.info.subscriptions.expired,
-    });
+
+    await (usersCurrentPlan?.type == PlanTypeEnum.OneTime
+      ? handleSubscriptionExpiration(user.id)
+      : handleRecurringSubsExpiration(user, usersCurrentPlan));
   } catch (error) {
     Logger("processSubscriptionExpired").error(JSON.stringify(error));
     throw error;

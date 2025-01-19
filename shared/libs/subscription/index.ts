@@ -14,18 +14,20 @@ interface IActivateSubscription {
   user: IUser;
   plan: IPlan;
   order: IOrder;
+  recurringGroup?: string;
 }
 
 export const activateSubscription = async (data: IActivateSubscription) => {
   Logger("activateSubscription").info("");
   try {
-    const { user, plan, order } = data;
+    const { user, plan, order, recurringGroup } = data;
 
     const { startDate, endDate } = getSubscriptionStartAndEndDates(order, plan);
 
     const subscription = await subscriptionService.createSubscription({
       user: user.id,
       plan: plan.id,
+      recurringGroup,
       status: SubscriptionStatusEnum.Active,
       startedAt: startDate,
       expiresAt: endDate,

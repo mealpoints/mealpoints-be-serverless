@@ -7,14 +7,14 @@ import { SqsQueueService } from "../../../shared/services/queue.service";
 import {
   IUserToSendReminders,
   IUserToSendSummaries,
-  IUserWithSubscriptionId,
+  IUserWithSubscription,
 } from "../../../shared/types/queueMessages";
 
 const Logger = logger("user-engagement/enqueue.service");
 
 export const enqueueUsersToSendEngagement = async (
   usersToEngage: (
-    | IUserWithSubscriptionId
+    | IUserWithSubscription
     | IUserToSendSummaries
     | IUserToSendReminders
     | IUser

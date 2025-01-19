@@ -5,6 +5,7 @@ export interface ISubscription extends Document {
   id: string;
   user: string;
   plan: string;
+  recurringGroup?: string;
   status: SubscriptionStatusEnum;
   startedAt: Date;
   expiresAt: Date;
@@ -17,6 +18,7 @@ export interface ISubscription extends Document {
 export interface ISubscriptionCreate {
   user: string;
   plan: string;
+  recurringGroup?: string;
   status: SubscriptionStatusEnum;
   startedAt: Date;
   expiresAt: Date;
@@ -28,6 +30,7 @@ const SubscriptionSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     plan: { type: Schema.Types.ObjectId, ref: "Plan", required: true },
+    recurringGroup: { type: Schema.Types.ObjectId },
     status: {
       type: String,
       enum: Object.values(SubscriptionStatusEnum),

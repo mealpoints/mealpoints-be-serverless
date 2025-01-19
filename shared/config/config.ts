@@ -22,7 +22,7 @@ export const USER_MESSAGES = {
       processed: `Your refund has been processed. I should be in your account in 3-5 business days. If you need any further assistance, please contact us at ${SUPPORT.email}`,
     },
     subscriptions: {
-      expired: `Your subscription has expired. You can renew or buy new plan at ${process.env.MEALPOINTS_BASE_URL}.`,
+      expired: `Your subscription has expired. You can buy new plan at ${process.env.MEALPOINTS_BASE_URL}.`,
     },
     feature_not_supported:
       "Sorry, we only accept food photos and text messages at the moment. The format of the message you sent is not supported. Please stay tuned for further updates.",

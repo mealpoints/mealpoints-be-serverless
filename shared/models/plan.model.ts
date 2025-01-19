@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { PlanTypeEnum } from "../types/enums";
+import { PlanDurationUnitEnum, PlanTypeEnum } from "../types/enums";
 import { returnAsFloat } from "../utils/mongoose";
 
 interface IPrice {
@@ -14,12 +14,12 @@ export interface IPlan extends Document {
   type: PlanTypeEnum;
   duration: {
     value: number;
-    unit: "weeks" | "months";
+    unit: PlanDurationUnitEnum;
   };
   currency: string;
   billingCycle?: {
     value: number; // Length of one billing cycle.
-    unit: "weeks" | "months"; // Billing cycle unit.
+    unit: PlanDurationUnitEnum; // Billing cycle unit.
   };
   currentPrice: IPrice;
   referencePrice?: IPrice;
@@ -39,7 +39,7 @@ const PlanSchema = new Schema<IPlan>(
       value: { type: Number, required: true },
       unit: {
         type: String,
-        enum: ["weeks", "months"],
+        enum: Object.values(PlanDurationUnitEnum),
         required: true,
       },
     },
@@ -48,7 +48,7 @@ const PlanSchema = new Schema<IPlan>(
       value: { type: Number },
       unit: {
         type: String,
-        enum: ["weeks", "months"],
+        enum: Object.values(PlanDurationUnitEnum),
       },
     },
     currentPrice: {

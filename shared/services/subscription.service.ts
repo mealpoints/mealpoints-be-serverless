@@ -39,6 +39,19 @@ export const updateSubscriptionById = async (
   }
 };
 
+export const findSubscriptions = async (
+  filter: FilterQuery<ISubscription>
+): Promise<ISubscription[] | []> => {
+  Logger("findSubscriptions").info("");
+  try {
+    const subscriptions = await Subscription.find(filter);
+    return subscriptions;
+  } catch (error) {
+    Logger("findSubscriptions").error(error);
+    throw error;
+  }
+};
+
 export const updateSubscription = async (
   filter: FilterQuery<ISubscription>,
   data: Partial<ISubscription>
@@ -125,6 +138,20 @@ export const cancelSubscription = async (subscriptionId: string) => {
     return subscription;
   } catch (error) {
     Logger("cancelSubscription").error(error);
+    throw error;
+  }
+};
+
+export const expiredSubscriptionsInGroup = async (groupId: string) => {
+  Logger("expiredSubscriptionsInGroup").info("");
+  try {
+    const count = await Subscription.countDocuments({
+      group: groupId,
+      status: SubscriptionStatusEnum.Expired,
+    });
+    return count;
+  } catch (error) {
+    Logger("expiredSubscriptionsInGroup").error(error);
     throw error;
   }
 };
