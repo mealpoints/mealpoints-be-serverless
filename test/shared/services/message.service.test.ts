@@ -77,7 +77,7 @@ describe("Message Service", () => {
         user: userId,
         type: MessageTypesEnum.Template,
         template: createWhatsappTemplate(
-          WhatsappTemplateNameEnum.UserPreferencesV1,
+          WhatsappTemplateNameEnum.OnboardingV1,
           {}
         ),
       });

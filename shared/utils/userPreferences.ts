@@ -12,12 +12,14 @@ export const descriptivePreferenceFields: {
   [K in keyof Partial<IUserPreferences>]: DescriptionFunction<K>;
 } = {
   birthYear: (value) => `They were born in ${value}.`,
+  birthDate: (value) => `Their birthdate is ${value?.toLocaleDateString()}.`,
   gender: (value) => `They identify as ${value}.`,
   height: (value) => `Their height is ${value?.value} ${value?.unit}.`,
   currentWeight: (value) =>
     `Their current weight is ${value?.value} ${value?.unit}.`,
   goalWeight: (value) => `Their goal weight is ${value?.value} ${value?.unit}.`,
   goal: (value) => `Their stated goal is: "${value}".`,
+  physicalActivity: (value) => `Their physical activity level is ${value}.`,
   medicalConditions: (value) =>
     `They have the following medical conditions: "${value}".`,
   exerciseRoutine: (value) => `Their exercise routine is: "${value}".`,

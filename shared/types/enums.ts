@@ -550,6 +550,7 @@ export enum CurrencyCodesEnum {
 
 export enum WhatsappFlowEnum {
   UserPreferencesV1 = "user_preferences_v1",
+  OnboardingV1 = "Message templates_onboarding_v1_UTILITY_52d4d", // For some reason, it is stored like this Meta's system
 }
 
 export enum WhatsappTemplateNameEnum {
@@ -561,6 +562,7 @@ export enum WhatsappTemplateNameEnum {
   MealReport = "user_meal_report",
   WelcomeMessage = "welcome_message",
   UserPreferencesV1 = "user_preferences_v1",
+  OnboardingV1 = "onboarding_v1",
 }
 
 export enum CountryCodeToDefaultTimezoneEnum {
@@ -892,6 +894,14 @@ export enum ExerciseRoutineEnum {
   Light = "Light",
   Moderate = "Moderate",
   Intense = "Intense",
+}
+
+export enum PhysicalActivityEnum {
+  Sedentary = "Sedentary",
+  Light = "Light",
+  Moderate = "Moderate",
+  Active = "Active",
+  VeryActive = "Very Active",
 }
 
 export enum SleepPatternsEnum {
