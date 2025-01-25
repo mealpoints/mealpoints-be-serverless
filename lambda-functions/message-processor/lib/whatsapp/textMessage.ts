@@ -3,15 +3,16 @@ import { USER_MESSAGES } from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
 import { doesMessageContainCommand } from "../../../../shared/libs/commands";
+import { createUserMeal } from "../../../../shared/libs/userMeals";
 import { IUser } from "../../../../shared/models/user.model";
 import * as messageService from "../../../../shared/services/message.service";
 import * as openAIService from "../../../../shared/services/openAI.service";
-import * as userMealService from "../../../../shared/services/userMeal.service";
 import {
   MessageTypesEnum,
   OpenAIMessageTypesEnum,
 } from "../../../../shared/types/enums";
 import { WhastappWebhookObject } from "../../../../shared/types/message";
+import { IOpenAIMealResponse } from "../../../../shared/types/openai";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { getOpenAiInstructions } from "../../../../shared/utils/openai";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
@@ -35,18 +36,18 @@ export const processTextMessage = async (
       // Check if user has entered a command
       if (await doesMessageContainCommand(userMessage as string, user)) return;
 
-      const result = await openAIService.ask(userMessage as string, user, {
+      const result = (await openAIService.ask(userMessage as string, user, {
         messageType: OpenAIMessageTypesEnum.Text,
         assistantId,
         additionalInstructions: await getOpenAiInstructions(user),
-      });
+      })) as string | IOpenAIMealResponse;
 
       const message = _.isObject(result) ? result.message : result;
 
       // Store meal if mealData is present
       if (_.isObject(result) && result.data?.meal_name) {
         const data = result.data;
-        await userMealService.createUserMeal({
+        await createUserMeal({
           user: user.id,
           name: data.meal_name,
           score: data.score,

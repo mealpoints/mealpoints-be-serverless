@@ -2,6 +2,7 @@ import logger from "../../../../../shared/config/logger";
 import SettingsSingleton from "../../../../../shared/config/settings";
 import { IUser } from "../../../../../shared/models/user.model";
 import * as messageService from "../../../../../shared/services/message.service";
+import * as nutritionBudgetService from "../../../../../shared/services/nutritionBudget.service";
 import * as openAIService from "../../../../../shared/services/openAI.service";
 import {
   GenderEnum,
@@ -95,11 +96,15 @@ export const onboardingV1 = async (
       screen_0_Physical_Activity_4,
     } = parsedReply;
 
-    const currentWeight = getNumber(screen_0_Current_Weight_3 as string);
+    const currentWeight = getNumber(
+      screen_0_Current_Weight_3 as string
+    ) as number;
     const height = getNumber(screen_0_Height_2 as string);
-    const targetWeight = getNumber(screen_1_Target_Weight_0 as string);
+    const targetWeight = getNumber(
+      screen_1_Target_Weight_0 as string
+    ) as number;
     const birthDate = getDate(screen_0_Birthdate_0 as string);
-    const targetDate = getDate(screen_1_Target_Date_1 as string);
+    const targetDate = getDate(screen_1_Target_Date_1 as string) as Date;
     const gender = getGender(screen_0_Gender_1 as string);
     const physicalActivity = getPhysicalActivity(
       screen_0_Physical_Activity_4 as string
@@ -125,6 +130,17 @@ export const onboardingV1 = async (
       messageType: OpenAIMessageTypesEnum.Text,
       assistantId,
     })) as IWeightLossTargetResponse;
+
+    await nutritionBudgetService.createNutritionBudget({
+      user: user.id,
+      calories: response.target.calories,
+      protein: response.target.protein,
+      fat: response.target.fats,
+      carbohydrates: response.target.carbs,
+      targetWeight,
+      targetDate,
+      currentWeight,
+    });
 
     await messageService.sendTextMessage({
       user: user.id,

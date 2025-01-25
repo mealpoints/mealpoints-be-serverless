@@ -4,10 +4,10 @@ import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
 import * as awsHandler from "../../../../shared/handlers/aws.handler";
 import * as whatsappHandler from "../../../../shared/handlers/whatsapp.handler";
+import { createUserMeal } from "../../../../shared/libs/userMeals";
 import { IUser } from "../../../../shared/models/user.model";
 import * as messageService from "../../../../shared/services/message.service";
 import * as openAIService from "../../../../shared/services/openAI.service";
-import * as userMealService from "../../../../shared/services/userMeal.service";
 import {
   MessageTypesEnum,
   OpenAIMessageTypesEnum,
@@ -77,7 +77,7 @@ const fetchImage = async (imageId: string): Promise<string> => {
 };
 
 const storeMeal = async (user: IUser, s3Path: string, data: MealData) => {
-  await userMealService.createUserMeal({
+  await createUserMeal({
     user: user.id,
     image: s3Path,
     name: data.meal_name,
@@ -128,7 +128,7 @@ const updateReceivedMessage = async (
   );
 };
 
-// FIXME: 
+// FIXME:
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const handleOpenAIUploadError = (
   userId: string,

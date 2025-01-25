@@ -1,6 +1,7 @@
 import logger from "../../../../shared/config/logger";
 import { isUserSubscribed } from "../../../../shared/libs/subscription";
 import * as messageService from "../../../../shared/services/message.service";
+import * as nutritionBudgetService from "../../../../shared/services/nutritionBudget.service";
 import * as userService from "../../../../shared/services/user.service";
 import { WebhookTypesEnum } from "../../../../shared/types/enums";
 import { WhastappWebhookObject } from "../../../../shared/types/message";
@@ -10,6 +11,7 @@ import { isUserRateLimited } from "../rate-limiter";
 import { processImageMessage } from "./imageMessage";
 import { processInteractiveMessage } from "./interactiveMessage";
 import { processNonCustomer } from "./nonCustomer";
+import { requestNutritionBudget } from "./requestNutritionBudget";
 import { processTextMessage } from "./textMessage";
 import { processUnknownMessage } from "./unknownMessage";
 
@@ -31,6 +33,11 @@ export const processInboundMessageWebhook = async (
     // Only restrict in development. feature is not released in Prod yet.
     if (!isProduction && !(await isUserSubscribed(user))) {
       return processNonCustomer(user);
+    }
+
+    // Make sure User's Nutrition Budget is exists
+    if (!nutritionBudgetService.getNutritionBudgetByUser(user.id)) {
+      return requestNutritionBudget(user);
     }
 
     const existingMessage = await messageService.findRecievedMessage({
