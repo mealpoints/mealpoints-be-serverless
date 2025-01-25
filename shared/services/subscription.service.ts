@@ -78,7 +78,6 @@ export const getActiveSubscription = async (
       {
         user: userId,
         status: SubscriptionStatusEnum.Active,
-        expiresAt: { $gte: new Date() },
       },
       undefined,
       { populate }
