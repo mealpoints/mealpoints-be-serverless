@@ -6,6 +6,7 @@ export type SettingKey =
   | "openai.assistant.meal-summary"
   | "openai.assistant.global-instruction"
   | "openai.assistant.meal-reports"
+  | "openai.assistant.goal-setting-coach"
   | "blacklist"
   | "ui.home.plan"
   | "rate-limit.message-limit-per-day"

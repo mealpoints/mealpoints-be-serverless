@@ -39,4 +39,17 @@ export interface IOpenAIMealResponse {
   data?: MealData;
 }
 
-export type OpenAIResponse = string | IOpenAIMealResponse;
+export interface IWeightLossTargetResponse {
+  target: {
+    calories: number; // The target daily calorie intake.
+    protein: number; // The target daily protein intake in grams.
+    fats: number; // The target daily fat intake in grams.
+    carbs: number; // The target daily carbohydrate intake in grams.
+  };
+  message: string; // A message regarding the weight loss target and advice.
+}
+
+export type OpenAIResponse =
+  | string
+  | IOpenAIMealResponse
+  | IWeightLossTargetResponse;

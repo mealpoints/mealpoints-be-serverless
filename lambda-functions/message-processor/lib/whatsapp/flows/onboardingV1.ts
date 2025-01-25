@@ -1,9 +1,16 @@
 import logger from "../../../../../shared/config/logger";
+import SettingsSingleton from "../../../../../shared/config/settings";
 import { IUser } from "../../../../../shared/models/user.model";
+import * as messageService from "../../../../../shared/services/message.service";
+import * as openAIService from "../../../../../shared/services/openAI.service";
 import {
   GenderEnum,
+  MessageTypesEnum,
+  OpenAIMessageTypesEnum,
   PhysicalActivityEnum,
 } from "../../../../../shared/types/enums";
+import { IWeightLossTargetResponse } from "../../../../../shared/types/openai";
+import { convertToHumanReadableMessage } from "../../../../../shared/utils/string";
 import { getDate, getNumber } from "./utils";
 
 const Logger = logger("flowReply/onboardingV1");
@@ -98,14 +105,31 @@ export const onboardingV1 = async (
       screen_0_Physical_Activity_4 as string
     );
 
-    console.log({
+    const prompt = JSON.stringify({
       currentWeight,
       height,
       targetWeight,
-      birthDate,
-      targetDate,
+      birthDate: birthDate?.toLocaleDateString(),
+      currentDate: new Date().toLocaleDateString(),
+      targetDate: targetDate?.toLocaleDateString(),
       gender,
       physicalActivity,
+    });
+
+    const settings = await SettingsSingleton.getInstance();
+    const assistantId = settings.get(
+      "openai.assistant.goal-setting-coach"
+    ) as string;
+
+    const response = (await openAIService.ask(prompt, user, {
+      messageType: OpenAIMessageTypesEnum.Text,
+      assistantId,
+    })) as IWeightLossTargetResponse;
+
+    await messageService.sendTextMessage({
+      user: user.id,
+      payload: convertToHumanReadableMessage(response.message),
+      type: MessageTypesEnum.Text,
     });
   } catch (error) {
     Logger("onboardingV1").error(error);

@@ -4,6 +4,7 @@ export function convertToHumanReadableMessage(input: string): string {
     .replaceAll(String.raw`\'`, "'") // Replace escaped single quotes with actual single quotes
     .replaceAll(String.raw`\"`, '"') // Replace escaped double quotes with actual double quotes
     .replaceAll(String.raw`\t`, "\t") // Replace escaped tabs with actual tabs
+    .replaceAll(String.raw`**`, "*")
     .trim(); // Remove any leading or trailing whitespace
 }
 
