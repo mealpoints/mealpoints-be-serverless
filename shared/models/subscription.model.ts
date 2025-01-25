@@ -5,10 +5,10 @@ export interface ISubscription extends Document {
   id: string;
   user: string;
   plan: string;
-  recurringGroup?: string;
   status: SubscriptionStatusEnum;
   startedAt: Date;
   expiresAt: Date;
+  billingCycleCount?: number;
   comment?: string;
   cancelledAt?: Date;
   createdAt: Date;
@@ -18,10 +18,10 @@ export interface ISubscription extends Document {
 export interface ISubscriptionCreate {
   user: string;
   plan: string;
-  recurringGroup?: string;
   status: SubscriptionStatusEnum;
   startedAt: Date;
   expiresAt: Date;
+  billingCycleCount?: number;
   cancelledAt?: Date;
   comment?: string;
 }
@@ -30,7 +30,6 @@ const SubscriptionSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     plan: { type: Schema.Types.ObjectId, ref: "Plan", required: true },
-    recurringGroup: { type: Schema.Types.ObjectId },
     status: {
       type: String,
       enum: Object.values(SubscriptionStatusEnum),
@@ -38,6 +37,7 @@ const SubscriptionSchema = new Schema(
     },
     startedAt: { type: Date, required: true },
     expiresAt: { type: Date, required: true },
+    billingCycleCount: { type: Number },
     cancelledAt: { type: Date },
     comment: { type: String },
   },

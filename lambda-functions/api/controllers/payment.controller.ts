@@ -71,7 +71,6 @@ interface IValidatePaymentRequest extends Request {
     orderId: string;
     paymentId: string;
     signature: string;
-    recurringGroupId: string;
   };
 }
 
@@ -82,7 +81,6 @@ export const validatePayment = catchAsync(
       orderId: paymentGatewayOrderId,
       paymentId,
       signature,
-      recurringGroupId,
     } = request.body;
 
     // Validate payment
@@ -114,15 +112,10 @@ export const validatePayment = catchAsync(
       return ApiResponse.NotFound(response, "Order not found");
     }
 
-    const orderCopy = {
-      ...order,
-      recurringGroupId,
-    };
-
     const queueService = new SqsQueueService(queue);
     await queueService.enqueueMessage({
       queueUrl: process.env.AWS_SQS_URL as string,
-      messageBody: JSON.stringify({ body: orderCopy }),
+      messageBody: JSON.stringify({ body: order }),
       messageGroupId: QUEUE_MESSAGE_GROUP_IDS.onboard_user,
       messageDeduplicationId: order.id,
     });

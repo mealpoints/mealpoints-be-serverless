@@ -31,7 +31,7 @@ async function getUsersWithExpiredSubscription(
         {
           $unwind: "$subscriptions",
         },
-        // 4. Match users with expired subscriptions
+        // 4. Match users with expired subscriptions, but not marked as expired
         {
           $match: {
             "subscriptions.status": SubscriptionStatusEnum.Active,

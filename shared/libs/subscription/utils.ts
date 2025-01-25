@@ -29,13 +29,14 @@ export const getSubscriptionStartAndEndDates = (
   };
 };
 
-export const getPossibleSubscriptionsCountInPlan = (plan: IPlan): number => {
+export const getMaxPossibleBillingCycleCountInPlan = (plan: IPlan): number => {
   const { duration, billingCycle } = plan;
 
   if (!duration || !billingCycle) {
     return 1;
   }
 
+  // converted months into weeks for ease of calculation
   const durationInWeeks =
     duration.unit === PlanDurationUnitEnum.Months
       ? duration.value * 4

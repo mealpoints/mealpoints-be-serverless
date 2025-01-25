@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import logger from "../../../../shared/config/logger";
 import { sendInternalAlert } from "../../../../shared/libs/internal-alerts";
 import { activateSubscription } from "../../../../shared/libs/subscription";
@@ -10,7 +9,6 @@ import * as subscriptionService from "../../../../shared/services/subscription.s
 import * as userEngagementMessageService from "../../../../shared/services/userEngagement.service";
 import {
   MessageTypesEnum,
-  PlanTypeEnum,
   UserEngagementMessageTypesEnum,
   WhatsappTemplateNameEnum,
 } from "../../../../shared/types/enums";
@@ -21,12 +19,11 @@ const Logger = logger("lib/onboard-user");
 interface IProcessOnboardUser extends Omit<IOrder, "user" | "plan"> {
   user: IUser;
   plan: IPlan;
-  recurringGroupId?: string;
 }
 
 export const processOnboardUser = async (data: IProcessOnboardUser) => {
   Logger("processOnboardUser").info("%o", data);
-  const { user, plan, recurringGroupId } = data;
+  const { user, plan } = data;
   const order: IOrder = { ...data, user: user.id, plan: plan.id };
 
   try {
@@ -45,18 +42,12 @@ export const processOnboardUser = async (data: IProcessOnboardUser) => {
 
       return;
     }
-    let recurringGroup: string | undefined = undefined;
-    if (plan.type === PlanTypeEnum.Recurring) {
-      recurringGroup =
-        recurringGroupId ?? new mongoose.Types.ObjectId().toString();
-    }
 
     // Create Subscription
     await activateSubscription({
       user,
       plan,
       order,
-      recurringGroup,
     });
 
     const messageResponse = await messageService.sendTemplateMessage({

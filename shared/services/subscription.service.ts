@@ -141,17 +141,3 @@ export const cancelSubscription = async (subscriptionId: string) => {
     throw error;
   }
 };
-
-export const expiredSubscriptionsInGroup = async (groupId: string) => {
-  Logger("expiredSubscriptionsInGroup").info("");
-  try {
-    const count = await Subscription.countDocuments({
-      group: groupId,
-      status: SubscriptionStatusEnum.Expired,
-    });
-    return count;
-  } catch (error) {
-    Logger("expiredSubscriptionsInGroup").error(error);
-    throw error;
-  }
-};
