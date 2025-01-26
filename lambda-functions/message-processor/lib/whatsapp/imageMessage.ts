@@ -4,7 +4,7 @@ import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
 import * as awsHandler from "../../../../shared/handlers/aws.handler";
 import * as whatsappHandler from "../../../../shared/handlers/whatsapp.handler";
-import { createUserMeal } from "../../../../shared/libs/userMeals";
+import { processUserMeal } from "../../../../shared/libs/userMeals";
 import { IUser } from "../../../../shared/models/user.model";
 import * as messageService from "../../../../shared/services/message.service";
 import * as openAIService from "../../../../shared/services/openAI.service";
@@ -13,11 +13,10 @@ import {
   OpenAIMessageTypesEnum,
 } from "../../../../shared/types/enums";
 import { WhastappWebhookObject } from "../../../../shared/types/message";
-import { IOpenAIMealResponse, MealData } from "../../../../shared/types/openai";
+import { IOpenAIMealResponse } from "../../../../shared/types/openai";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { getOpenAiInstructions } from "../../../../shared/utils/openai";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
-import { getUserLocalTime } from "../../../../shared/utils/user";
 const Logger = logger("lib/whatsapp/imageMessage");
 
 export const processImageMessage = async (
@@ -50,13 +49,20 @@ export const processImageMessage = async (
       cleanupLocalFile(imageFilePath);
 
       await updateReceivedMessage(payload, s3Path);
-      await messageService.sendTextMessage({
-        user: user.id,
-        payload: convertToHumanReadableMessage(openaiResponse.message),
-        type: MessageTypesEnum.Text,
-      });
+
       if (openaiResponse.data?.meal_name) {
-        await storeMeal(user, s3Path, openaiResponse.data);
+        await processUserMeal({
+          user: user,
+          image: s3Path,
+          openAIMealresponse: openaiResponse,
+        });
+      } else {
+        // the result it not a meal
+        await messageService.sendTextMessage({
+          user: user.id,
+          payload: convertToHumanReadableMessage(openaiResponse.message),
+          type: MessageTypesEnum.Text,
+        });
       }
     } catch (error) {
       await messageService.sendTextMessage({
@@ -74,17 +80,6 @@ export const processImageMessage = async (
 
 const fetchImage = async (imageId: string): Promise<string> => {
   return await whatsappHandler.getImageSentViaMessage(imageId);
-};
-
-const storeMeal = async (user: IUser, s3Path: string, data: MealData) => {
-  await createUserMeal({
-    user: user.id,
-    image: s3Path,
-    name: data.meal_name,
-    score: data.score,
-    macros: data.macros,
-    localTime: getUserLocalTime(user),
-  });
 };
 
 const uploadImageToS3 = async (

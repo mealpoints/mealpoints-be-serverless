@@ -16,3 +16,18 @@ export function isValidJsonString(string_: string): boolean {
     return false; // It's not valid JSON
   }
 }
+
+export function createProgressBar(
+  current: number | undefined = 0,
+  target: number,
+  barLength: number = 10
+): string {
+  const percentage = Math.min((current / target) * 100, 100); // Cap at 100%
+  const filledLength = Math.round((barLength * percentage) / 100);
+  const unfilledLength = barLength - filledLength;
+
+  const filledBar = "▓".repeat(filledLength);
+  const unfilledBar = "▒".repeat(unfilledLength);
+
+  return `${filledBar}${unfilledBar}`;
+}

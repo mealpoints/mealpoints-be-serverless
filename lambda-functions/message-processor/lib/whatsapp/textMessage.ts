@@ -3,7 +3,7 @@ import { USER_MESSAGES } from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
 import { doesMessageContainCommand } from "../../../../shared/libs/commands";
-import { createUserMeal } from "../../../../shared/libs/userMeals";
+import { processUserMeal } from "../../../../shared/libs/userMeals";
 import { IUser } from "../../../../shared/models/user.model";
 import * as messageService from "../../../../shared/services/message.service";
 import * as openAIService from "../../../../shared/services/openAI.service";
@@ -16,7 +16,6 @@ import { IOpenAIMealResponse } from "../../../../shared/types/openai";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { getOpenAiInstructions } from "../../../../shared/utils/openai";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
-import { getUserLocalTime } from "../../../../shared/utils/user";
 
 const Logger = logger("lib/whatsapp/textMessage");
 
@@ -46,21 +45,18 @@ export const processTextMessage = async (
 
       // Store meal if mealData is present
       if (_.isObject(result) && result.data?.meal_name) {
-        const data = result.data;
-        await createUserMeal({
+        await processUserMeal({
+          user: user,
+          openAIMealresponse: result,
+        });
+      } else {
+        // the result it not a meal
+        await messageService.sendTextMessage({
           user: user.id,
-          name: data.meal_name,
-          score: data.score,
-          macros: data.macros,
-          localTime: getUserLocalTime(user),
+          payload: convertToHumanReadableMessage(message),
+          type: MessageTypesEnum.Text,
         });
       }
-
-      await messageService.sendTextMessage({
-        user: user.id,
-        payload: convertToHumanReadableMessage(message),
-        type: MessageTypesEnum.Text,
-      });
     } catch (error) {
       await messageService.sendTextMessage({
         user: user.id,
