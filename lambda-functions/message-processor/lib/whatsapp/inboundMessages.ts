@@ -36,7 +36,10 @@ export const processInboundMessageWebhook = async (
     }
 
     // Make sure User's Nutrition Budget is exists
-    if (!(await nutritionBudgetService.getNutritionBudgetByUser(user.id))) {
+    if (
+      !(await nutritionBudgetService.getNutritionBudgetByUser(user.id)) &&
+      webhookType !== WebhookTypesEnum.Interactive // This is to make sure that the when the user creates a budget via the interactive message, the user is not stopped (stuck in a loop)
+    ) {
       return await requestNutritionBudget(user);
     }
 
