@@ -29,21 +29,36 @@ export const getSubscriptionStartAndEndDates = (
   };
 };
 
+const convertToWeeks = (unit: PlanDurationUnitEnum, value: number): number => {
+  switch (unit) {
+    case PlanDurationUnitEnum.Months: {
+      return value * 4;
+    } // Approximation: 1 month ≈ 4 weeks
+    case PlanDurationUnitEnum.Weeks: {
+      return value;
+    }
+    default: {
+      return 0;
+    }
+  }
+};
+
 export const getMaxPossibleBillingCycleCountInPlan = (plan: IPlan): number => {
   const { duration, billingCycle } = plan;
 
-  if (!duration || !billingCycle) {
+  if (!duration || !billingCycle || !duration.value || !billingCycle.value) {
     return 1;
   }
 
-  // converted months into weeks for ease of calculation
-  const durationInWeeks =
-    duration.unit === PlanDurationUnitEnum.Months
-      ? duration.value * 4
-      : duration.value;
-  const billingCycleInWeeks = PlanDurationUnitEnum.Months
-    ? billingCycle.value * 4
-    : billingCycle.value;
+  const durationInWeeks = convertToWeeks(duration.unit, duration.value);
+  const billingCycleInWeeks = convertToWeeks(
+    billingCycle.unit,
+    billingCycle.value
+  );
+
+  if (durationInWeeks === 0 || billingCycleInWeeks === 0) {
+    return 1;
+  }
 
   return Math.ceil(durationInWeeks / billingCycleInWeeks) || 1;
 };
