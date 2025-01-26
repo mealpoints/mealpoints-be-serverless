@@ -24,7 +24,7 @@ export const dailyBudgetStatus = (
   );
 
   return `
-  *📊 Today’s Goals::*
+  📊 Today’s Goals
 🔥 Calories: ${caloriesStatus} (${calories.consumed || 0}/${
     calories.target
   } kcal)
