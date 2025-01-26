@@ -12,7 +12,6 @@ import {
 } from "../../../../../shared/types/message";
 import { WhatsappData } from "../../../../../shared/utils/WhatsappData";
 import { IOnboardingV1ParsedReply, onboardingV1 } from "../flows/onboardingV1";
-import { userPreferences } from "../flows/userPreferences";
 
 const Logger = logger("lib/whatsapp/interactiveMessage/flowReply");
 
@@ -27,11 +26,6 @@ export const flowReply = async (
     const parsedReply = JSON.parse(nfm_reply.response_json);
 
     switch (parsedReply.flow_token) {
-      case WhatsappFlowEnum.UserPreferencesV1: {
-        Logger("flowReply").info("UserPreferencesV1");
-        await userPreferences(parsedReply, user);
-        break;
-      }
       case WhatsappFlowEnum.OnboardingV1: {
         Logger("flowReply").info("OnboardingV1");
         await onboardingV1(parsedReply as IOnboardingV1ParsedReply, user);

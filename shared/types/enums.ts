@@ -549,7 +549,6 @@ export enum CurrencyCodesEnum {
 }
 
 export enum WhatsappFlowEnum {
-  UserPreferencesV1 = "user_preferences_v1",
   OnboardingV1 = "onboarding_v1",
 }
 
@@ -561,7 +560,6 @@ export enum WhatsappTemplateNameEnum {
   FeatIntro_MealViaText = "feature_intro_meal_via_text",
   MealReport = "user_meal_report",
   WelcomeMessage = "welcome_message",
-  UserPreferencesV1 = "user_preferences_v1",
   OnboardingV1 = "onboarding_v1",
   MissingNutritionBudget = "missing_nutrition_budget",
 }
