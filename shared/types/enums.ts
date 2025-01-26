@@ -550,7 +550,7 @@ export enum CurrencyCodesEnum {
 
 export enum WhatsappFlowEnum {
   UserPreferencesV1 = "user_preferences_v1",
-  OnboardingV1 = "Message templates_onboarding_v1_UTILITY_52d4d", // For some reason, it is stored like this Meta's system
+  OnboardingV1 = "onboarding_v1",
 }
 
 export enum WhatsappTemplateNameEnum {
@@ -563,6 +563,7 @@ export enum WhatsappTemplateNameEnum {
   WelcomeMessage = "welcome_message",
   UserPreferencesV1 = "user_preferences_v1",
   OnboardingV1 = "onboarding_v1",
+  MissingNutritionBudget = "missing_nutrition_budget",
 }
 
 export enum CountryCodeToDefaultTimezoneEnum {

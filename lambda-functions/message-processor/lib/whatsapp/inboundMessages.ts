@@ -32,12 +32,12 @@ export const processInboundMessageWebhook = async (
 
     // Only restrict in development. feature is not released in Prod yet.
     if (!isProduction && !(await isUserSubscribed(user))) {
-      return processNonCustomer(user);
+      return await processNonCustomer(user);
     }
 
     // Make sure User's Nutrition Budget is exists
-    if (!nutritionBudgetService.getNutritionBudgetByUser(user.id)) {
-      return requestNutritionBudget(user);
+    if (!(await nutritionBudgetService.getNutritionBudgetByUser(user.id))) {
+      return await requestNutritionBudget(user);
     }
 
     const existingMessage = await messageService.findRecievedMessage({

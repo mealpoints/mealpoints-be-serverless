@@ -23,7 +23,7 @@ export const getNutritionBudgetByUser = async (
   userId: string
 ): Promise<INutritionBudget | null> => {
   try {
-    Logger("getNutritionBudgetByUser").info(userId);
+    Logger("getNutritionBudgetByUser").info("");
 
     const nutritionBudget = await NutritionBudget.findOne({
       user: userId,

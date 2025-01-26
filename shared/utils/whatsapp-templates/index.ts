@@ -11,6 +11,10 @@ import {
   createUserMealReportTemplate,
   IUserMealReportData,
 } from "./mealReport";
+import {
+  createMissingNutritionBudgetTemplate,
+  IMissingNutritionBudgetData,
+} from "./missingNutritionBudget";
 import { createOnboardingV1Template, IOnboardingV1Data } from "./onboardingV1";
 import {
   createReminderToPostMealsOneTemplate,
@@ -44,6 +48,7 @@ type WhatsappTemplateDataMap = {
   [WhatsappTemplateNameEnum.WelcomeMessage]: IWelcomeMessageData;
   [WhatsappTemplateNameEnum.UserPreferencesV1]: IUserPreferencesV1Data;
   [WhatsappTemplateNameEnum.OnboardingV1]: IOnboardingV1Data;
+  [WhatsappTemplateNameEnum.MissingNutritionBudget]: IMissingNutritionBudgetData;
 };
 
 export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
@@ -77,6 +82,9 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
     }
     case WhatsappTemplateNameEnum.OnboardingV1: {
       return createOnboardingV1Template();
+    }
+    case WhatsappTemplateNameEnum.MissingNutritionBudget: {
+      return createMissingNutritionBudgetTemplate();
     }
     default: {
       throw new Error("Template not found");
