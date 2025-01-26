@@ -1,5 +1,5 @@
-import mongoose, { Document, Schema } from "mongoose";
-import { NutritionalData } from "../types/openai";
+import mongoose, { Document } from "mongoose";
+import { Macros } from "../types/openai";
 import { PaginateModel, paginatePlugin } from "../utils/mongoosePlugins";
 
 export interface IUserMeal extends Document {
@@ -9,11 +9,12 @@ export interface IUserMeal extends Document {
   name: string;
   score: {
     value: number;
-    total: number;
+    max: number;
   };
-  macros: NutritionalData;
+  macros: Macros;
   localTime: Date;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IUserMealCreate {
@@ -22,23 +23,45 @@ export interface IUserMealCreate {
   name: string;
   score: {
     value: number;
-    total: number;
+    max: number;
   };
+  macros: Macros;
   localTime: Date;
-  macros: NutritionalData;
 }
 
-const UserMealSchema: Schema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: "User" },
-  name: { type: String },
-  image: { type: String },
-  score: { type: Object },
-  macros: { type: Object },
-  localTime: { type: Date, required: true },
-  createdAt: { type: Date, default: Date.now },
+const ScoreSchema = new mongoose.Schema({
+  value: { type: Number, required: true },
+  max: { type: Number, required: true },
 });
 
+// Define the Macros schema
+const MacrosSchema = new mongoose.Schema({
+  calories: { type: Number, required: true },
+  protein: { type: Number, required: true },
+  fat: { type: Number, required: true },
+  carbohydrates: { type: Number, required: true },
+});
+
+// Define the main MealResponse schema
+const UserMealSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    name: { type: String, required: true },
+    score: { type: ScoreSchema, required: true },
+    macros: { type: MacrosSchema, required: true },
+    localTime: { type: Date, required: true },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+// Export the model
+module.exports = mongoose.model("UserMeal", UserMealSchema);
+
 UserMealSchema.plugin(paginatePlugin);
+
+UserMealSchema.index({ user: 1 });
 
 UserMealSchema.set("toJSON", {
   virtuals: true,

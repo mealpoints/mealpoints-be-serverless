@@ -1,4 +1,5 @@
 import { IDailyNutritionTracker } from "../../models/dailyNutritionTracker.model";
+import { Food } from "../../types/openai";
 import {
   convertToHumanReadableMessage,
   createProgressBar,
@@ -9,16 +10,21 @@ export const dailyBudgetStatus = (
 ) => {
   const { calories, protein, fat, carbohydrates } = dailyNutritionTracker;
 
-  const caloriesStatus = createProgressBar(calories.consumed, calories.target);
-  const proteinStatus = createProgressBar(protein.consumed, protein.target);
-  const fatStatus = createProgressBar(fat.consumed, fat.target);
+  const caloriesStatus = createProgressBar(
+    calories.consumed,
+    calories.target,
+    7
+  );
+  const proteinStatus = createProgressBar(protein.consumed, protein.target, 7);
+  const fatStatus = createProgressBar(fat.consumed, fat.target, 7);
   const carbohydratesStatus = createProgressBar(
     carbohydrates.consumed,
-    carbohydrates.target
+    carbohydrates.target,
+    7
   );
 
   return `
-  *📊 Nutritional Progress:*
+  *📊 Today’s Goals::*
 🔥 Calories: ${caloriesStatus} (${calories.consumed || 0}/${
     calories.target
   } kcal)
@@ -32,13 +38,26 @@ export const dailyBudgetStatus = (
 };
 
 export const formatMessage = (
-  message: string,
+  mealResponse: Food,
   dailyNutritionTracker?: IDailyNutritionTracker
 ) => {
+  const { meal, suggestion } = mealResponse;
+
   let response = "";
   if (dailyNutritionTracker) {
     response += dailyBudgetStatus(dailyNutritionTracker);
   }
-  response += convertToHumanReadableMessage(message);
+
+  const mealData = `
+🥗 You had ${meal.name}
+~${meal.macros.calories} kcal, ${meal.macros.protein}g protein | ${
+    meal.macros.carbohydrates
+  }g carbs | ${meal.macros.fat}g fats
+
+💡 Tip to Elevate It: ${convertToHumanReadableMessage(suggestion)} 🌟
+  `;
+
+  response += mealData;
+
   return response;
 };

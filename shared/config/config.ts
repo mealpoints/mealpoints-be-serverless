@@ -35,7 +35,6 @@ export const START_HOUR_OF_DAY = 3;
 // TODO: Convert this to enum later
 export const QUEUE_MESSAGE_GROUP_IDS = {
   whatsapp_messages: "whatsapp_messages",
-  meal_summary: "meal_summary",
   reminder: "reminder",
   meal_report: "meal_report",
   onboard_user: "onboard_user",

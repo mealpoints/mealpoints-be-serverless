@@ -13,7 +13,7 @@ import {
   OpenAIMessageTypesEnum,
 } from "../../../../shared/types/enums";
 import { WhastappWebhookObject } from "../../../../shared/types/message";
-import { IOpenAIMealResponse } from "../../../../shared/types/openai";
+import { MealResponse } from "../../../../shared/types/openai";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { getOpenAiInstructions } from "../../../../shared/utils/openai";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
@@ -44,23 +44,22 @@ export const processImageMessage = async (
         messageType: OpenAIMessageTypesEnum.Image,
         assistantId,
         additionalInstructions: await getOpenAiInstructions(user),
-      })) as IOpenAIMealResponse; // We know that the response is a meal response in JSON format
+      })) as MealResponse;
 
       cleanupLocalFile(imageFilePath);
 
       await updateReceivedMessage(payload, s3Path);
 
-      if (openaiResponse.data?.meal_name) {
+      if (openaiResponse.type === "food") {
         await processUserMeal({
           user: user,
           image: s3Path,
           openAIMealresponse: openaiResponse,
         });
       } else {
-        // the result it not a meal
         await messageService.sendTextMessage({
           user: user.id,
-          payload: convertToHumanReadableMessage(openaiResponse.message),
+          payload: convertToHumanReadableMessage(openaiResponse.nonFoodMessage),
           type: MessageTypesEnum.Text,
         });
       }

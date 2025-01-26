@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import { USER_MESSAGES } from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
@@ -12,7 +11,7 @@ import {
   OpenAIMessageTypesEnum,
 } from "../../../../shared/types/enums";
 import { WhastappWebhookObject } from "../../../../shared/types/message";
-import { IOpenAIMealResponse } from "../../../../shared/types/openai";
+import { MealResponse } from "../../../../shared/types/openai";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { getOpenAiInstructions } from "../../../../shared/utils/openai";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
@@ -39,21 +38,17 @@ export const processTextMessage = async (
         messageType: OpenAIMessageTypesEnum.Text,
         assistantId,
         additionalInstructions: await getOpenAiInstructions(user),
-      })) as string | IOpenAIMealResponse;
+      })) as MealResponse;
 
-      const message = _.isObject(result) ? result.message : result;
-
-      // Store meal if mealData is present
-      if (_.isObject(result) && result.data?.meal_name) {
+      if (result.type === "food") {
         await processUserMeal({
           user: user,
           openAIMealresponse: result,
         });
       } else {
-        // the result it not a meal
         await messageService.sendTextMessage({
           user: user.id,
-          payload: convertToHumanReadableMessage(message),
+          payload: convertToHumanReadableMessage(result.nonFoodMessage),
           type: MessageTypesEnum.Text,
         });
       }

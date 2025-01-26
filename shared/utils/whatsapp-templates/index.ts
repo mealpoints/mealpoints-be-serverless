@@ -25,17 +25,12 @@ import {
   IReminderToPostMealsTwo,
 } from "./reminder";
 import {
-  createUserMealSummaryTemplate,
-  IUserMealSummaryData,
-} from "./userMealSummary";
-import {
   createWelcomeMessageTemplate,
   IWelcomeMessageData,
 } from "./welcomeMessage";
 
 // Mapping the enum values to their respective data types
 type WhatsappTemplateDataMap = {
-  [WhatsappTemplateNameEnum.UserMealSummary]: IUserMealSummaryData;
   [WhatsappTemplateNameEnum.ReminderToPostMealsOne]: IReminderToPostMealsOne;
   [WhatsappTemplateNameEnum.ReminderToPostMealsTwo]: IReminderToPostMealsTwo;
   [WhatsappTemplateNameEnum.ReminderToPostMealsThree]: IReminderToPostMealsThree;
@@ -51,9 +46,6 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
   data: WhatsappTemplateDataMap[T]
 ): MessageTemplateObject<ComponentTypesEnum> => {
   switch (templateName) {
-    case WhatsappTemplateNameEnum.UserMealSummary: {
-      return createUserMealSummaryTemplate(data as IUserMealSummaryData);
-    }
     case WhatsappTemplateNameEnum.ReminderToPostMealsOne: {
       return createReminderToPostMealsOneTemplate();
     }

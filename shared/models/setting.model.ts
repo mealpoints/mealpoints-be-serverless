@@ -3,7 +3,6 @@ import { Document, Schema, model } from "mongoose";
 export type SettingValue = string | boolean | number | string[] | number[];
 export type SettingKey =
   | "openai.assistant.mealpoints-core"
-  | "openai.assistant.meal-summary"
   | "openai.assistant.global-instruction"
   | "openai.assistant.meal-reports"
   | "openai.assistant.goal-setting-coach"

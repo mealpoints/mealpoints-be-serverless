@@ -30,7 +30,6 @@ export enum MessageTypesEnum {
 }
 
 export enum UserEngagementMessageTypesEnum {
-  Summary = "summary",
   Reminder = "reminder",
   MealReport = "meal_report",
   Welcome = "welcome",
@@ -553,7 +552,6 @@ export enum WhatsappFlowEnum {
 }
 
 export enum WhatsappTemplateNameEnum {
-  UserMealSummary = "user_meal_summary",
   ReminderToPostMealsOne = "reminder_to_post_meals_1",
   ReminderToPostMealsTwo = "reminder_to_post_meals_2",
   ReminderToPostMealsThree = "reminder_to_post_meals_3",

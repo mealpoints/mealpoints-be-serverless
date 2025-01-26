@@ -68,7 +68,10 @@ export const processMealReport = async (user: IUser): Promise<void> => {
     const twoWeeksAgo = subDays(oneWeekAgo, 7);
 
     const previousWeekMealReport =
-      await mealReportService.getPreviousWeekMealReportForUser(user.id, twoWeeksAgo);
+      await mealReportService.getPreviousWeekMealReportForUser(
+        user.id,
+        twoWeeksAgo
+      );
 
     const previousWeekAverageScore: number | undefined =
       (previousWeekMealReport && previousWeekMealReport.summary.averageScore) ||
@@ -113,8 +116,8 @@ export const processMealReport = async (user: IUser): Promise<void> => {
     });
 
     if (messageResponse) {
-      Logger("processMealSummary").info(
-        `Successfully sent meal summary to user ${user.id}`
+      Logger("processMealReport").info(
+        `Successfully sent meal report to user ${user.id}`
       );
 
       await userEngagementMessageService.createUserEngagementMessage({

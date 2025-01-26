@@ -2,6 +2,7 @@ import logger from "../../config/logger";
 import { IDailyNutritionTracker } from "../../models/dailyNutritionTracker.model";
 import * as dailyNutritionTrackerService from "../../services/dailyNutritionTracker.service";
 import * as nutritionBudgetService from "../../services/nutritionBudget.service";
+import { Macros } from "../../types/openai";
 
 const Logger = logger("dailyNutritionTracker.service");
 
@@ -43,14 +44,6 @@ export const initDailyNutritionTracker = async (user: string) => {
   }
 };
 
-interface IUpdateDailyNutritionTrackerWithMeal {
-  user: string;
-  calories: number;
-  protein: number;
-  fat: number;
-  carbohydrates: number;
-}
-
 export const ensureDailyNutritionTrackerExists = async (
   user: string
 ): Promise<IDailyNutritionTracker> => {
@@ -75,24 +68,29 @@ export const ensureDailyNutritionTrackerExists = async (
   }
 };
 
-export const updateDailyNutritionTrackerWithMeal = async (
-  data: IUpdateDailyNutritionTrackerWithMeal
-) => {
+interface IUpdateDailyNutritionTrackerWithMeal {
+  user: string;
+  macros: Macros;
+}
+
+export const updateDailyNutritionTrackerWithMeal = async ({
+  user,
+  macros,
+}: IUpdateDailyNutritionTrackerWithMeal) => {
   Logger("updateDailyNutritionTrackerWithMeal").info("");
   try {
-    const dailyNutritionTracker = await ensureDailyNutritionTrackerExists(
-      data.user
-    );
+    const dailyNutritionTracker = await ensureDailyNutritionTrackerExists(user);
 
     // Update consumed nutrition
     dailyNutritionTracker.calories.consumed =
-      (dailyNutritionTracker.calories.consumed || 0) + data.calories;
+      (dailyNutritionTracker.calories.consumed || 0) + macros.calories;
     dailyNutritionTracker.protein.consumed =
-      (dailyNutritionTracker.protein.consumed || 0) + data.protein;
+      (dailyNutritionTracker.protein.consumed || 0) + macros.protein;
     dailyNutritionTracker.fat.consumed =
-      (dailyNutritionTracker.fat.consumed || 0) + data.fat;
+      (dailyNutritionTracker.fat.consumed || 0) + macros.fat;
     dailyNutritionTracker.carbohydrates.consumed =
-      (dailyNutritionTracker.carbohydrates.consumed || 0) + data.carbohydrates;
+      (dailyNutritionTracker.carbohydrates.consumed || 0) +
+      macros.carbohydrates;
 
     const updatedDailyNutritionTracker =
       await dailyNutritionTrackerService.updateDailyNutritionTracker(
