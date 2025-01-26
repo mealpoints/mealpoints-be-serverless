@@ -49,8 +49,8 @@ export const formatMessage = (
   }
 
   const mealData = `
-🥗 You had ${meal.name}
-~${meal.macros.calories} kcal, ${meal.macros.protein}g protein | ${
+🥗 You had ${meal.name} (${meal.score.value}/${meal.score.max})
+~${meal.macros.calories} kcal | ${meal.macros.protein}g protein | ${
     meal.macros.carbohydrates
   }g carbs | ${meal.macros.fat}g fats
 
