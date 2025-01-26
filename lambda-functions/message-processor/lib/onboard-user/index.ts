@@ -9,6 +9,7 @@ import * as subscriptionService from "../../../../shared/services/subscription.s
 import * as userEngagementMessageService from "../../../../shared/services/userEngagement.service";
 import {
   MessageTypesEnum,
+  SubscriptionStatusEnum,
   UserEngagementMessageTypesEnum,
   WhatsappTemplateNameEnum,
 } from "../../../../shared/types/enums";
@@ -28,11 +29,11 @@ export const processOnboardUser = async (data: IProcessOnboardUser) => {
 
   try {
     // Make sure the user does not have an active subscription
-    const activeSubscription = await subscriptionService.getActiveSubscription(
+    const lastSubscription = await subscriptionService.getSubscriptionByUserId(
       user.id
     );
-    if (activeSubscription) {
-      Logger("activateSubscription").info(
+    if (lastSubscription?.status === SubscriptionStatusEnum.Active) {
+      Logger("processOnboardUser").info(
         "User already has an active subscription"
       );
       await sendInternalAlert({
@@ -48,8 +49,10 @@ export const processOnboardUser = async (data: IProcessOnboardUser) => {
       user,
       plan,
       order,
+      lastSubscription,
     });
 
+    // TODO: Send Separate Template Messages for renewals
     const messageResponse = await messageService.sendTemplateMessage({
       user: user.id,
       type: MessageTypesEnum.Template,

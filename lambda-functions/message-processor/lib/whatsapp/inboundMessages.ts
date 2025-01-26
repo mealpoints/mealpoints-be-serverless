@@ -9,7 +9,7 @@ import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { isUserRateLimited } from "../rate-limiter";
 import { processImageMessage } from "./imageMessage";
 import { processInteractiveMessage } from "./interactiveMessage";
-import { processNonCustomer } from "./nonCustomer";
+import { handleNonSubscribedUser } from "./nonSubscribedUser";
 import { processTextMessage } from "./textMessage";
 import { processUnknownMessage } from "./unknownMessage";
 
@@ -29,8 +29,9 @@ export const processInboundMessageWebhook = async (
     const user = await userService.ensureUserByContact(contact as string);
 
     // Only restrict in development. feature is not released in Prod yet.
-    if (!isProduction && !(await isUserSubscribed(user))) {
-      return processNonCustomer(user);
+    const { isSubscribed, subscription } = await isUserSubscribed(user);
+    if (!isProduction && !isSubscribed) {
+      return handleNonSubscribedUser(user, subscription);
     }
 
     const existingMessage = await messageService.findRecievedMessage({

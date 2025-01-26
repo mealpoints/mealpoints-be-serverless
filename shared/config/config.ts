@@ -21,10 +21,12 @@ export const USER_MESSAGES = {
       rejected_by_user: `Your refund request has been cancelled. If you need help, please contact us at ${SUPPORT.email}`,
       processed: `Your refund has been processed. I should be in your account in 3-5 business days. If you need any further assistance, please contact us at ${SUPPORT.email}`,
     },
-    subscriptions: {
+    subscription: {
       expired: `Your subscription has expired. You can buy new plan at ${process.env.MEALPOINTS_BASE_URL}.`,
+      paused: (planId: string, contact: string) =>
+        `Your current subscription for the chosen plan has been expired. Please renew your subscription at ${process.env.MEALPOINTS_BASE_URL}?plantID=${planId}&contact=${contact} OR contact us at ${SUPPORT.email} if you need any further assistance.`,
     },
-    feature_not_supported:
+    feature_not_supported:  
       "Sorry, we only accept food photos and text messages at the moment. The format of the message you sent is not supported. Please stay tuned for further updates.",
     user_not_subscribed: `Hi there! 
 👋 Meal Points is a subscription-based service that offers personalized meal feedback and guidance to help you reach your health goals. 
