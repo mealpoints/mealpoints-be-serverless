@@ -1,6 +1,7 @@
 import logger from "../../../shared/config/logger";
 import * as messageService from "../../../shared/services/message.service";
 import {
+  ButtonReplyEnum,
   MessageTypesEnum,
   WhatsappTemplateNameEnum,
 } from "../../../shared/types/enums";
@@ -32,39 +33,20 @@ describe("Message Service", () => {
       }
     });
 
-    it("should send Template Message", async () => {
+    it("should send flow template", async () => {
       const dataService = DataService.getInstance();
       const userId = dataService.getUser().id;
+
       const response = await messageService.sendTemplateMessage({
         user: userId,
         type: MessageTypesEnum.Template,
         template: createWhatsappTemplate(
-          WhatsappTemplateNameEnum.UserMealSummary,
-          {
-            duration: "7 days.",
-            averageMealScore: "8.5",
-            totalCalories: "2000",
-            topMealName: "Pizza",
-            topMealScore: "9.5",
-            topMealCalories: "500",
-            topMealProtein: "20g",
-            topMealFat: "10g",
-            topMealCarbs: "50g",
-            topMealFiber: "5g",
-            topMealSugars: "10g",
-            analysisOne:
-              "Your protein intake was excellent, with a nice balance from both plant and animal sources.",
-            analysisTwo:
-              "Fiber goals were consistently met, keeping digestion on track and promoting fullness.",
-            analysisThree:
-              "Healthy fats from nuts, avocado, and fish supported heart health and sustained energy.",
-            motivation:
-              "Keep up the variety of colourful veggies and protein-rich meals for balanced nutrition!You are doing great! Keep it up!",
-          }
+          WhatsappTemplateNameEnum.OnboardingV1,
+          {}
         ),
       });
 
-      Logger("sendTemplateMessage").info(JSON.stringify(response.data));
+      Logger("sendTemplateMessage").info(JSON.stringify(response.data.error));
       expect(response.data).toBeDefined();
     });
   });
@@ -126,14 +108,14 @@ describe("Message Service", () => {
             {
               type: "reply",
               reply: {
-                id: "1",
+                id: ButtonReplyEnum.RefundConfirmed,
                 title: "Yes",
               },
             },
             {
               type: "reply",
               reply: {
-                id: "2",
+                id: ButtonReplyEnum.RefundRejected,
                 title: "No",
               },
             },

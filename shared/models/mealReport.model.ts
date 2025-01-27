@@ -57,8 +57,6 @@ export interface IMealReport extends Document {
     protein: NutrientInfo;
     fat: NutrientInfo;
     carbohydrates: NutrientInfo;
-    fiber: NutrientInfo;
-    sugars: NutrientInfo;
   };
   summary: {
     averageScore: number;
@@ -95,8 +93,6 @@ export interface IMealReportCreate {
     protein: NutrientInfo;
     fat: NutrientInfo;
     carbohydrates: NutrientInfo;
-    fiber: NutrientInfo;
-    sugars: NutrientInfo;
   };
   summary: {
     averageScore: number;
@@ -148,8 +144,6 @@ const mealReportSchema = new Schema({
     protein: nutrientInfoSchema,
     fat: nutrientInfoSchema,
     carbohydrates: nutrientInfoSchema,
-    fiber: nutrientInfoSchema,
-    sugars: nutrientInfoSchema,
   },
   summary: {
     averageScore: { type: Number, required: true },

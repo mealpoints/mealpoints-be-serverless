@@ -4,6 +4,7 @@ import {
   GenderEnum,
   HeightUnitEnum,
   LanguagesEnum,
+  PhysicalActivityEnum,
   SleepPatternsEnum,
   StressLevelsEnum,
   WeightUnitEnum,
@@ -13,6 +14,7 @@ export interface IUserPreferences extends Document {
   id: string;
   user: string;
   birthYear?: number;
+  birthDate?: Date;
   gender?: GenderEnum;
   height?: {
     value: number;
@@ -28,6 +30,7 @@ export interface IUserPreferences extends Document {
   };
   goal?: string;
   medicalConditions?: string;
+  physicalActivity?: PhysicalActivityEnum;
   exerciseRoutine?: ExerciseRoutineEnum;
   sleepPatterns?: SleepPatternsEnum;
   stressLevels?: StressLevelsEnum;
@@ -44,6 +47,7 @@ export interface IUserPreferences extends Document {
 export interface IUserPreferencesCreate {
   user: string;
   birthYear?: number;
+  birthDate?: Date;
   gender?: GenderEnum;
   height?: {
     value: number;
@@ -59,6 +63,7 @@ export interface IUserPreferencesCreate {
   };
   goal?: string;
   medicalConditions?: string;
+  physicalActivity?: PhysicalActivityEnum;
   exerciseRoutine?: ExerciseRoutineEnum;
   sleepPatterns?: SleepPatternsEnum;
   stressLevels?: StressLevelsEnum;
@@ -74,6 +79,7 @@ const userPreferencesSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     birthYear: { type: Number, min: 1900 },
+    birthDate: { type: Date },
     gender: { type: String, enum: Object.values(GenderEnum) },
     height: {
       value: { type: Number, min: 0 },
@@ -88,6 +94,10 @@ const userPreferencesSchema = new Schema(
       unit: { type: String, enum: Object.values(WeightUnitEnum) },
     },
     goal: { type: String },
+    physicalActivity: {
+      type: String,
+      enum: Object.values(PhysicalActivityEnum),
+    },
     medicalConditions: { type: String },
     exerciseRoutine: { type: String, enum: Object.values(ExerciseRoutineEnum) },
     sleepPatterns: { type: String, enum: Object.values(SleepPatternsEnum) },

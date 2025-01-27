@@ -6,10 +6,8 @@ import { IPlan } from "../../../../shared/models/plan.model";
 import { IUser } from "../../../../shared/models/user.model";
 import * as messageService from "../../../../shared/services/message.service";
 import * as subscriptionService from "../../../../shared/services/subscription.service";
-import * as userEngagementMessageService from "../../../../shared/services/userEngagement.service";
 import {
   MessageTypesEnum,
-  UserEngagementMessageTypesEnum,
   WhatsappTemplateNameEnum,
 } from "../../../../shared/types/enums";
 import { createWhatsappTemplate } from "../../../../shared/utils/whatsapp-templates";
@@ -50,22 +48,14 @@ export const processOnboardUser = async (data: IProcessOnboardUser) => {
       order,
     });
 
-    const messageResponse = await messageService.sendTemplateMessage({
+    await messageService.sendTemplateMessage({
       user: user.id,
       type: MessageTypesEnum.Template,
       template: createWhatsappTemplate(
-        WhatsappTemplateNameEnum.WelcomeMessage,
+        WhatsappTemplateNameEnum.OnboardingV1,
         {}
       ),
     });
-
-    if (messageResponse) {
-      await userEngagementMessageService.createUserEngagementMessage({
-        user: user.id,
-        content: `Template: ${WhatsappTemplateNameEnum.WelcomeMessage}`,
-        type: UserEngagementMessageTypesEnum.Welcome,
-      });
-    }
 
     return;
   } catch {

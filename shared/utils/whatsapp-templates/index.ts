@@ -12,6 +12,11 @@ import {
   IUserMealReportData,
 } from "./mealReport";
 import {
+  createMissingNutritionBudgetTemplate,
+  IMissingNutritionBudgetData,
+} from "./missingNutritionBudget";
+import { createOnboardingV1Template, IOnboardingV1Data } from "./onboardingV1";
+import {
   createReminderToPostMealsOneTemplate,
   createReminderToPostMealsThreeTemplate,
   createReminderToPostMealsTwoTemplate,
@@ -20,23 +25,20 @@ import {
   IReminderToPostMealsTwo,
 } from "./reminder";
 import {
-  createUserMealSummaryTemplate,
-  IUserMealSummaryData,
-} from "./userMealSummary";
-import {
   createWelcomeMessageTemplate,
   IWelcomeMessageData,
 } from "./welcomeMessage";
 
 // Mapping the enum values to their respective data types
 type WhatsappTemplateDataMap = {
-  [WhatsappTemplateNameEnum.UserMealSummary]: IUserMealSummaryData;
   [WhatsappTemplateNameEnum.ReminderToPostMealsOne]: IReminderToPostMealsOne;
   [WhatsappTemplateNameEnum.ReminderToPostMealsTwo]: IReminderToPostMealsTwo;
   [WhatsappTemplateNameEnum.ReminderToPostMealsThree]: IReminderToPostMealsThree;
   [WhatsappTemplateNameEnum.FeatIntro_MealViaText]: IFeatIntro_MealViaText;
   [WhatsappTemplateNameEnum.MealReport]: IUserMealReportData;
   [WhatsappTemplateNameEnum.WelcomeMessage]: IWelcomeMessageData;
+  [WhatsappTemplateNameEnum.OnboardingV1]: IOnboardingV1Data;
+  [WhatsappTemplateNameEnum.MissingNutritionBudget]: IMissingNutritionBudgetData;
 };
 
 export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
@@ -44,9 +46,6 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
   data: WhatsappTemplateDataMap[T]
 ): MessageTemplateObject<ComponentTypesEnum> => {
   switch (templateName) {
-    case WhatsappTemplateNameEnum.UserMealSummary: {
-      return createUserMealSummaryTemplate(data as IUserMealSummaryData);
-    }
     case WhatsappTemplateNameEnum.ReminderToPostMealsOne: {
       return createReminderToPostMealsOneTemplate();
     }
@@ -64,6 +63,12 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
     }
     case WhatsappTemplateNameEnum.WelcomeMessage: {
       return createWelcomeMessageTemplate();
+    }
+    case WhatsappTemplateNameEnum.OnboardingV1: {
+      return createOnboardingV1Template();
+    }
+    case WhatsappTemplateNameEnum.MissingNutritionBudget: {
+      return createMissingNutritionBudgetTemplate();
     }
     default: {
       throw new Error("Template not found");

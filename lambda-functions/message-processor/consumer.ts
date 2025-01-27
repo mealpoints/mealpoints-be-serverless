@@ -6,7 +6,6 @@ import { queue } from "../../shared/config/queue";
 import { SqsQueueService } from "../../shared/services/queue.service";
 import { SQSEventData } from "../../shared/utils/SQSEventData";
 import { processMealReport } from "./lib/meal-report";
-import { processMealSummary } from "./lib/meal-sumary";
 import { processFeatIntro_MealViaText } from "./lib/meal-via-text";
 import { processOnboardUser } from "./lib/onboard-user";
 import { processReminder } from "./lib/reminder";
@@ -16,7 +15,6 @@ const Logger = logger("handler");
 
 const messageProcessors = {
   [QUEUE_MESSAGE_GROUP_IDS.whatsapp_messages]: processWhatsappWebhook,
-  [QUEUE_MESSAGE_GROUP_IDS.meal_summary]: processMealSummary,
   [QUEUE_MESSAGE_GROUP_IDS.reminder]: processReminder,
   [QUEUE_MESSAGE_GROUP_IDS.meal_report]: processMealReport,
   [QUEUE_MESSAGE_GROUP_IDS.onboard_user]: processOnboardUser,

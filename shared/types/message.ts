@@ -95,6 +95,15 @@ type ImageObject = {
   mime_type: ImageMediaTypesEnum;
 };
 
+export type NFMReplyObject = {
+  type: "nfm_reply";
+  nfm_reply: {
+    name: "flow";
+    body: "Sent";
+    response_json: string;
+  };
+};
+
 export type ButtonReplyObject = {
   type: "button_reply";
   button_reply: {
@@ -112,7 +121,10 @@ export type ListReplyObject = {
   };
 };
 
-export type InteractiveObject = ButtonReplyObject | ListReplyObject;
+export type InteractiveObject =
+  | ButtonReplyObject
+  | ListReplyObject
+  | NFMReplyObject;
 
 type ProductItemsObject = {
   product_retailer_id: string;
@@ -305,6 +317,11 @@ export type SimpleTextObject = {
   text: string;
 };
 
+export type ActionButtonParametersObject = {
+  type: ParametersTypesEnum.Action;
+  action: unknown;
+};
+
 export type TextParametersObject = ParametersObject<ParametersTypesEnum.Text> &
   SimpleTextObject;
 
@@ -318,6 +335,7 @@ export type ComponentObject<T extends ComponentTypesEnum> = {
     | ImageParametersObject
     | TextParametersObject
     | VideoParametersObject
+    | ActionButtonParametersObject
   )[];
 };
 
