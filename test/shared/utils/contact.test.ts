@@ -6,6 +6,11 @@ describe("ensureContactFormat", () => {
     expect(ensureContactFormat("+49-151-12345678")).toBe("4915112345678");
   });
 
+  test("shuld handle contact numbers with + prefix", () => {
+    expect(ensureContactFormat("+917022928829")).toBe("917022928829");
+    expect(ensureContactFormat("+4915112345678")).toBe("4915112345678");
+  });
+
   test("should return undefined for invalid inputs", () => {
     expect(ensureContactFormat("abc123")).toBeUndefined();
     expect(ensureContactFormat("12345")).toBeUndefined();

@@ -35,17 +35,13 @@ export const getMetadata = (meals: IUserMeal[]): IMealReport["metadata"] => {
   let totalProtein: number = 0;
   let totalFat: number = 0;
   let totalCarbohydrates: number = 0;
-  let totalFiber: number = 0;
-  let totalSugars: number = 0;
 
   // Calculate totals
   meals.forEach((meal: IUserMeal) => {
-    totalCalories += meal.macros.calories.value;
-    totalProtein += meal.macros.protein.value;
-    totalFat += meal.macros.fat.value;
-    totalCarbohydrates += meal.macros.carbohydrates.value;
-    totalFiber += meal.macros.fiber.value;
-    totalSugars += meal.macros.sugars.value;
+    totalCalories += meal.macros.calories;
+    totalProtein += meal.macros.protein;
+    totalFat += meal.macros.fat;
+    totalCarbohydrates += meal.macros.carbohydrates;
   });
 
   const metadata = {
@@ -68,16 +64,6 @@ export const getMetadata = (meals: IUserMeal[]): IMealReport["metadata"] => {
       value: totalCarbohydrates,
       unit: "g",
       target: 300, // Temp values as we do not set targets yet. We will not use this in the FE.
-    },
-    fiber: {
-      value: totalFiber,
-      unit: "g",
-      target: 30, // Temp values as we do not set targets yet. We will not use this in the FE.
-    },
-    sugars: {
-      value: totalSugars,
-      unit: "g",
-      target: 40, // Temp values as we do not set targets yet. We will not use this in the FE.
     },
   };
   return metadata;

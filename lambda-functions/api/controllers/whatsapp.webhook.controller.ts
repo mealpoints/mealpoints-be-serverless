@@ -3,14 +3,17 @@ import { QUEUE_MESSAGE_GROUP_IDS } from "../../../shared/config/config";
 import logger from "../../../shared/config/logger";
 import { queue } from "../../../shared/config/queue";
 import { isContactBlacklisted } from "../../../shared/libs/blacklist";
+import { handleWhatsAppFlowMessage } from "../../../shared/libs/whatsapp/flow";
 import { SqsQueueService } from "../../../shared/services/queue.service";
 import { WhastappWebhookObject } from "../../../shared/types/message";
 import ApiResponse from "../../../shared/utils/ApiResponse";
 import { WhatsappData } from "../../../shared/utils/WhatsappData";
 import { catchAsync } from "../../../shared/utils/catchAsync";
+import { decryptRequest, encryptResponse } from "./utils/encryption.whatsapp";
 const Logger = logger("whatsapp.webhook.controller");
 
 const whatsappVerificationKey = process.env.WHATSAPP_VERIFICATION_KEY as string;
+const whatsappPrivateKey = process.env.WHATSAPP_PRIVATE_PEM as string;
 
 export const readMessage = catchAsync(
   async (request: Request, response: Response) => {
@@ -57,5 +60,25 @@ export const verifyWebhook = catchAsync(
     }
 
     return ApiResponse.CustomResponse(response, 200, hubChallenge);
+  }
+);
+
+export const readFlowMessage = catchAsync(
+  (request: Request, response: Response) => {
+    Logger("readFlowMessage").info(JSON.stringify(request.body));
+
+    const { aesKeyBuffer, initialVectorBuffer, decryptedBody } = decryptRequest(
+      request.body,
+      whatsappPrivateKey
+    );
+
+    const responseToMeta = handleWhatsAppFlowMessage(decryptedBody);
+
+    // We are using the CustomResponse to make sure the response stays base64 encoded
+    return ApiResponse.CustomResponse(
+      response,
+      200,
+      encryptResponse(responseToMeta, aesKeyBuffer, initialVectorBuffer)
+    );
   }
 );

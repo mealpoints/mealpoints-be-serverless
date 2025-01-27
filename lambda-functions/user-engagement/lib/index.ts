@@ -1,7 +1,6 @@
 import logger from "../../../shared/config/logger";
 import { UserEngagementMessageTypesEnum } from "../../../shared/types/enums";
 import { mealReportFlow } from "./meal-report";
-import { mealSummariesFlow } from "./meal-summaries";
 import { featIntro_MealsViaTextFlow } from "./meal-via-text";
 import { reminderFlow } from "./reminders";
 import { subscriptionCheckFlow } from "./subscription-check";
@@ -12,10 +11,6 @@ export const executeFlow = async (
   timezone: string
 ) => {
   switch (flowName) {
-    case UserEngagementMessageTypesEnum.Summary: {
-      await mealSummariesFlow(timezone);
-      break;
-    }
     case UserEngagementMessageTypesEnum.Reminder: {
       await reminderFlow(timezone);
       break;

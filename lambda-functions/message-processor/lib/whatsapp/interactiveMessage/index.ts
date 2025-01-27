@@ -7,6 +7,7 @@ import { WhastappWebhookObject } from "../../../../../shared/types/message";
 import { WhatsappData } from "../../../../../shared/utils/WhatsappData";
 import { processUnknownMessage } from "../unknownMessage";
 import { buttonReply } from "./buttonReply";
+import { flowReply } from "./flowReply";
 
 const Logger = logger("lib/whatsapp/interactiveMessage");
 
@@ -21,6 +22,10 @@ export const processInteractiveMessage = async (
     switch (interactiveMessageContent?.type) {
       case "button_reply": {
         await buttonReply(payload, user);
+        return;
+      }
+      case "nfm_reply": {
+        await flowReply(payload, user);
         return;
       }
       default: {

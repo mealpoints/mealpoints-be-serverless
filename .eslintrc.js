@@ -39,6 +39,7 @@ module.exports = {
         "unicorn/numeric-separators-style": "off",
         "unicorn/no-array-for-each": "off",
         "unicorn/no-null": "off",
+        "unicorn/prefer-ternary": "off",
         "unicorn/filename-case": [
             "warn",
             {

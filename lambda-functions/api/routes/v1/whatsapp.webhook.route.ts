@@ -11,4 +11,6 @@ router.post(
 );
 router.get("/", whatsappWebhookController.verifyWebhook);
 
+router.post("/flow", whatsappWebhookController.readFlowMessage);
+
 export default router;
