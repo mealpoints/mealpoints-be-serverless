@@ -49,6 +49,7 @@ const UserMealSchema = new mongoose.Schema(
     name: { type: String, required: true },
     score: { type: ScoreSchema, required: true },
     macros: { type: MacrosSchema, required: true },
+    image: { type: String },
     localTime: { type: Date, required: true },
   },
   {
