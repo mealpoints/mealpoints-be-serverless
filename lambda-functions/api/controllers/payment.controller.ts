@@ -33,7 +33,7 @@ export const createOrder = catchAsync(
     }
 
     // Ensure user by contact
-    const user = await userService.ensureUserByContact(contact);
+    const user = await userService.ensureUserByContact(formattedContact);
     if (!user) {
       return ApiResponse.ServerError(response, "Failed to create user");
     }
