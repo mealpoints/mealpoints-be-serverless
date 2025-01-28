@@ -23,9 +23,15 @@ export const USER_MESSAGES = {
       processed: `Your refund has been processed. I should be in your account in 3-5 business days. If you need any further assistance, please contact us at ${SUPPORT.email}`,
     },
     subscription: {
-      expired: `Your subscription has expired. You can buy new plan at ${process.env.MEALPOINTS_BASE_URL}.`,
-      paused: (planId: string, contact: string) =>
-        `Your current subscription for the chosen plan has been expired. Please renew your subscription at ${process.env.MEALPOINTS_BASE_URL}?planID=${planId}&contact=${contact} OR contact us at ${SUPPORT.email} if you need any further assistance.`,
+      expired: `Your journey doesn’t stop here. Every meal is still a chance to push forward, to fuel greatness, to be your best.
+
+We’re rooting for you. Always.`,
+      expired_header: `Your subscription ran out. Your goals didn’t.`,
+      paused: `Your current subscription for the chosen plan has been expired. Please renew your subscription using the link below OR contact us at ${SUPPORT.email} if you need any further assistance.`,
+      paused_header: `Subscription Paused`,
+      not_subscribed: `Every meal is a chance to level up, but you need the right plan to crush it. Don’t wait—commit to yourself today. 
+Click the link below to grab your plan and make every bite count.`,
+      not_subscribed_header: "You’re not in the game yet",
     },
     feature_not_supported:
       "Sorry, we only accept food photos and text messages at the moment. The format of the message you sent is not supported. Please stay tuned for further updates.",

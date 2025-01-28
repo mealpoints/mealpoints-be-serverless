@@ -27,21 +27,77 @@ export const handleNonSubscribedUser = async (
   };
 
   if (!subscription) {
-    await sendMessage(USER_MESSAGES.info.user_not_subscribed);
+    await messageService.sendInteractiveMessage({
+      user: userId,
+      type: MessageTypesEnum.Interactive,
+      interactive: {
+        type: "cta_url",
+        header: {
+          type: "text",
+          text: USER_MESSAGES.info.subscription.not_subscribed_header,
+        },
+        body: {
+          text: USER_MESSAGES.info.subscription.not_subscribed,
+        },
+        action: {
+          name: "cta_url",
+          parameters: {
+            display_text: "Click here",
+            url: `${process.env.MEALPOINTS_BASE_URL}`,
+          },
+        },
+      },
+    });
     return;
   }
 
   switch (subscription.status) {
     case SubscriptionStatusEnum.Expired: {
-      await sendMessage(USER_MESSAGES.info.subscription.expired);
+      await messageService.sendInteractiveMessage({
+        user: userId,
+        type: MessageTypesEnum.Interactive,
+        interactive: {
+          type: "cta_url",
+          header: {
+            type: "text",
+            text: USER_MESSAGES.info.subscription.expired_header,
+          },
+          body: {
+            text: USER_MESSAGES.info.subscription.expired,
+          },
+          action: {
+            name: "cta_url",
+            parameters: {
+              display_text: "Click here",
+              url: `${process.env.MEALPOINTS_BASE_URL}`,
+            },
+          },
+        },
+      });
       break;
     }
     case SubscriptionStatusEnum.Paused: {
-      const renewalMessage = USER_MESSAGES.info.subscription.paused(
-        subscription.plan,
-        user.contact
-      );
-      await sendMessage(renewalMessage);
+      await messageService.sendInteractiveMessage({
+        user: userId,
+        type: MessageTypesEnum.Interactive,
+        interactive: {
+          type: "cta_url",
+          header: {
+            type: "text",
+            text: USER_MESSAGES.info.subscription.paused_header,
+          },
+          body: {
+            text: USER_MESSAGES.info.subscription.paused,
+          },
+          action: {
+            name: "cta_url",
+            parameters: {
+              display_text: "Click here",
+              url: `${process.env.MEALPOINTS_BASE_URL}?planId=${subscription.plan}&contact=${user.contact}`,
+            },
+          },
+        },
+      });
       break;
     }
     default: {
