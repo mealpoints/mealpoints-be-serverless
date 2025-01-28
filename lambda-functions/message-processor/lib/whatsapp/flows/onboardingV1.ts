@@ -4,11 +4,14 @@ import { IUser } from "../../../../../shared/models/user.model";
 import * as messageService from "../../../../../shared/services/message.service";
 import * as nutritionBudgetService from "../../../../../shared/services/nutritionBudget.service";
 import * as openAIService from "../../../../../shared/services/openAI.service";
+import * as userPreferencesService from "../../../../../shared/services/userPreferences.service";
 import {
   GenderEnum,
+  HeightUnitEnum,
   MessageTypesEnum,
   OpenAIMessageTypesEnum,
   PhysicalActivityEnum,
+  WeightUnitEnum,
 } from "../../../../../shared/types/enums";
 import { IWeightLossTargetResponse } from "../../../../../shared/types/openai";
 import { convertToHumanReadableMessage } from "../../../../../shared/utils/string";
@@ -103,12 +106,12 @@ export const onboardingV1 = async (
     const targetWeight = getNumber(
       screen_1_Target_Weight_0 as string
     ) as number;
-    const birthDate = getDate(screen_0_Birthdate_0 as string);
+    const birthDate = getDate(screen_0_Birthdate_0 as string) as Date;
     const targetDate = getDate(screen_1_Target_Date_1 as string) as Date;
-    const gender = getGender(screen_0_Gender_1 as string);
+    const gender = getGender(screen_0_Gender_1 as string) as GenderEnum;
     const physicalActivity = getPhysicalActivity(
       screen_0_Physical_Activity_4 as string
-    );
+    ) as PhysicalActivityEnum;
 
     const prompt = JSON.stringify({
       currentWeight,
@@ -117,6 +120,25 @@ export const onboardingV1 = async (
       birthDate: birthDate?.toLocaleDateString(),
       currentDate: new Date().toLocaleDateString(),
       targetDate: targetDate?.toLocaleDateString(),
+      gender,
+      physicalActivity,
+    });
+
+    await userPreferencesService.createUserPreferences({
+      user: user.id,
+      birthDate,
+      height: {
+        value: height as number,
+        unit: HeightUnitEnum.CM,
+      },
+      currentWeight: {
+        value: currentWeight,
+        unit: WeightUnitEnum.KG,
+      },
+      goalWeight: {
+        value: targetWeight,
+        unit: WeightUnitEnum.KG,
+      },
       gender,
       physicalActivity,
     });

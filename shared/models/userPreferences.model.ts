@@ -39,7 +39,7 @@ export interface IUserPreferences extends Document {
   foodPreferences?: string;
   excludedFoods?: string;
   diet?: string;
-  language: LanguagesEnum;
+  language?: LanguagesEnum;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -72,7 +72,7 @@ export interface IUserPreferencesCreate {
   foodPreferences?: string;
   excludedFoods?: string;
   diet?: string;
-  language: LanguagesEnum;
+  language?: LanguagesEnum;
 }
 
 const userPreferencesSchema = new Schema(

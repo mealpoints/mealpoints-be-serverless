@@ -32,7 +32,7 @@ export const flowReply = async (
         break;
       }
       default: {
-        Logger("flowReply").info("default");
+        Logger("flowReply").error("flow not found");
         await messageService.sendTextMessage({
           user: user.id,
           payload: USER_MESSAGES.errors.something_went_wrong,
