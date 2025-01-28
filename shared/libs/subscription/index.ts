@@ -1,3 +1,4 @@
+import * as messageService from "../../../shared/services/message.service";
 import logger from "../../config/logger";
 import SettingsSingleton from "../../config/settings";
 import { IOrder } from "../../models/order.model";
@@ -5,7 +6,12 @@ import { IPlan } from "../../models/plan.model";
 import { ISubscription } from "../../models/subscription.model";
 import { IUser } from "../../models/user.model";
 import * as subscriptionService from "../../services/subscription.service";
-import { SubscriptionStatusEnum } from "../../types/enums";
+import {
+  MessageTypesEnum,
+  SubscriptionStatusEnum,
+  WhatsappTemplateNameEnum,
+} from "../../types/enums";
+import { createWhatsappTemplate } from "../../utils/whatsapp-templates";
 import { getSubscriptionStartAndEndDates } from "./utils";
 
 const Logger = logger("lib/subscription");
@@ -38,6 +44,14 @@ export const activateSubscription = async (data: IActivateSubscription) => {
           expiresAt: endDate,
         }
       );
+      await messageService.sendTemplateMessage({
+        user: user.id,
+        type: MessageTypesEnum.Template,
+        template: createWhatsappTemplate(
+          WhatsappTemplateNameEnum.SubscriptionRenewedV1,
+          {}
+        ),
+      });
     } else {
       newSubscription = await subscriptionService.createSubscription({
         user: user.id,
@@ -45,6 +59,14 @@ export const activateSubscription = async (data: IActivateSubscription) => {
         status: SubscriptionStatusEnum.Active,
         startedAt: startDate,
         expiresAt: endDate,
+      });
+      await messageService.sendTemplateMessage({
+        user: user.id,
+        type: MessageTypesEnum.Template,
+        template: createWhatsappTemplate(
+          WhatsappTemplateNameEnum.OnboardingV1,
+          {}
+        ),
       });
     }
 

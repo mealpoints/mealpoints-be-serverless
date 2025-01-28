@@ -4,14 +4,8 @@ import { activateSubscription } from "../../../../shared/libs/subscription";
 import { IOrder } from "../../../../shared/models/order.model";
 import { IPlan } from "../../../../shared/models/plan.model";
 import { IUser } from "../../../../shared/models/user.model";
-import * as messageService from "../../../../shared/services/message.service";
 import * as subscriptionService from "../../../../shared/services/subscription.service";
-import {
-  MessageTypesEnum,
-  SubscriptionStatusEnum,
-  WhatsappTemplateNameEnum,
-} from "../../../../shared/types/enums";
-import { createWhatsappTemplate } from "../../../../shared/utils/whatsapp-templates";
+import { SubscriptionStatusEnum } from "../../../../shared/types/enums";
 
 const Logger = logger("lib/onboard-user");
 
@@ -48,15 +42,6 @@ export const processOnboardUser = async (data: IProcessOnboardUser) => {
       plan,
       order,
       lastSubscription,
-    });
-
-    await messageService.sendTemplateMessage({
-      user: user.id,
-      type: MessageTypesEnum.Template,
-      template: createWhatsappTemplate(
-        WhatsappTemplateNameEnum.OnboardingV1,
-        {}
-      ),
     });
 
     return;

@@ -24,6 +24,7 @@ import {
   IReminderToPostMealsThree,
   IReminderToPostMealsTwo,
 } from "./reminder";
+import { ISubscriptionRenewedV1Data } from "./subscriptionRenewedV1";
 import {
   createWelcomeMessageTemplate,
   IWelcomeMessageData,
@@ -38,6 +39,7 @@ type WhatsappTemplateDataMap = {
   [WhatsappTemplateNameEnum.MealReport]: IUserMealReportData;
   [WhatsappTemplateNameEnum.WelcomeMessage]: IWelcomeMessageData;
   [WhatsappTemplateNameEnum.OnboardingV1]: IOnboardingV1Data;
+  [WhatsappTemplateNameEnum.SubscriptionRenewedV1]: ISubscriptionRenewedV1Data;
   [WhatsappTemplateNameEnum.MissingNutritionBudget]: IMissingNutritionBudgetData;
 };
 

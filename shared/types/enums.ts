@@ -560,6 +560,7 @@ export enum WhatsappTemplateNameEnum {
   MealReport = "user_meal_report",
   WelcomeMessage = "welcome_message",
   OnboardingV1 = "onboarding_v1",
+  SubscriptionRenewedV1 = "subscription_renewed_v1",
   MissingNutritionBudget = "missing_nutrition_budget",
 }
 
