@@ -5,7 +5,6 @@ import * as nutritionBudgetService from "../../../../shared/services/nutritionBu
 import * as userService from "../../../../shared/services/user.service";
 import { WebhookTypesEnum } from "../../../../shared/types/enums";
 import { WhastappWebhookObject } from "../../../../shared/types/message";
-import { isProduction } from "../../../../shared/utils/environment";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { isUserRateLimited } from "../rate-limiter";
 import { processImageMessage } from "./imageMessage";
@@ -30,8 +29,7 @@ export const processInboundMessageWebhook = async (
     // Ensure user exists
     const user = await userService.ensureUserByContact(contact as string);
 
-    // Only restrict in development. feature is not released in Prod yet.
-    if (!isProduction && !(await isUserSubscribed(user))) {
+    if (await isUserSubscribed(user)) {
       return await processNonCustomer(user);
     }
 
