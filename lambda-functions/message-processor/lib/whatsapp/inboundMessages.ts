@@ -29,7 +29,7 @@ export const processInboundMessageWebhook = async (
     // Ensure user exists
     const user = await userService.ensureUserByContact(contact as string);
 
-    if (await isUserSubscribed(user)) {
+    if (!(await isUserSubscribed(user))) {
       return await processNonCustomer(user);
     }
 
