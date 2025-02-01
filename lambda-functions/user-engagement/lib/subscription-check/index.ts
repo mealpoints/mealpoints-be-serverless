@@ -38,6 +38,11 @@ async function getUsersWithExpiredSubscription(
             "subscriptions.expiresAt": { $lte: new Date() },
           },
         },
+        {
+          $addFields: {
+            "subscriptions.id": "$subscriptions._id",
+          },
+        },
         // 5. Project the userId, subsId and planId
         {
           $project: {

@@ -1,7 +1,9 @@
 import { add } from "date-fns";
+import logger from "../../config/logger";
 import { IOrder } from "../../models/order.model";
 import { IPlan } from "../../models/plan.model";
 import { PlanDurationUnitEnum, PlanTypeEnum } from "../../types/enums";
+const Logger = logger("lib/subscription");
 
 export const getSubscriptionStartAndEndDates = (
   order: IOrder,
@@ -44,9 +46,11 @@ const convertToWeeks = (unit: PlanDurationUnitEnum, value: number): number => {
 };
 
 export const getMaxPossibleBillingCycleCountInPlan = (plan: IPlan): number => {
+  Logger("getMaxPossibleBillingCycleCountInPlan").info(JSON.stringify(plan));
   const { duration, billingCycle } = plan;
 
   if (!duration || !billingCycle || !duration.value || !billingCycle.value) {
+    Logger("getMaxPossibleBillingCycleCountInPlan").info("Missing plan data returning 1");
     return 1;
   }
 

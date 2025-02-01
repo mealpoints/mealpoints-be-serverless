@@ -1,4 +1,4 @@
-import { subDays } from "date-fns";
+import { subDays, subHours } from "date-fns";
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
 import User, { IUser } from "../../../../shared/models/user.model";
@@ -65,6 +65,8 @@ async function getUsersForFeatIntro_MealViaText(
          * 1. atleast one meal in last X days
          * 2. haven't logged any meal without image yet
          * 3. haven't received maxRemindToLogMealViaText
+         * 4. haven't received any reminder in last 22 hours (to avoid repeated reminders in line due to cron jobs cycle & window size)
+         * 5. haven't logged any meal in last 3 hours ()
          */
         $match: {
           $and: [
@@ -86,6 +88,25 @@ async function getUsersForFeatIntro_MealViaText(
             },
             {
               reminderCount: { $lte: maxRemindToLogMealViaText },
+            },
+            {
+              engagements: {
+                $not: {
+                  $elemMatch: {
+                    type: UserEngagementMessageTypesEnum.FeatIntro_MealViaText,
+                    createdAt: { $gte: subHours(new Date(), 22) },
+                  },
+                },
+              },
+            },
+            {
+              meals: {
+                $not: {
+                  $elemMatch: {
+                    createdAt: { $gte: subHours(new Date(), 3) },
+                  },
+                },
+              },
             },
           ],
         },

@@ -26,6 +26,7 @@ export const activateSubscription = async (data: IActivateSubscription) => {
       user: user.id,
       plan: plan.id,
       status: SubscriptionStatusEnum.Active,
+      billingCycleCount: 1,
       startedAt: startDate,
       expiresAt: endDate,
     });
@@ -53,6 +54,7 @@ export const renewSubscription = async (data: IRenewSubscription) => {
     const renewedSubscription =
       await subscriptionService.updateSubscriptionById(subscription.id, {
         status: SubscriptionStatusEnum.Active,
+        billingCycleCount: (subscription.billingCycleCount || 0) + 1,
         expiresAt: endDate,
       });
 
