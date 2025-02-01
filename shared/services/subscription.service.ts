@@ -107,7 +107,7 @@ export const getSubscriptionById = async (
   }
 };
 
-export const getSubscriptionByUserId = async (userId: string) => {
+export const getSubscriptionByUserId = async (userId: string): Promise<ISubscription | null> => {
   Logger("getSubscriptionByUserId").info("");
   try {
     const subscription = await Subscription.findOne({ user: userId }).sort({
