@@ -81,16 +81,12 @@ export const updateDailyNutritionTrackerWithMeal = async ({
   try {
     const dailyNutritionTracker = await ensureDailyNutritionTrackerExists(user);
 
-    // Update consumed nutrition
-    dailyNutritionTracker.calories.consumed =
-      (dailyNutritionTracker.calories.consumed || 0) + macros.calories;
-    dailyNutritionTracker.protein.consumed =
-      (dailyNutritionTracker.protein.consumed || 0) + macros.protein;
-    dailyNutritionTracker.fat.consumed =
-      (dailyNutritionTracker.fat.consumed || 0) + macros.fat;
-    dailyNutritionTracker.carbohydrates.consumed =
-      (dailyNutritionTracker.carbohydrates.consumed || 0) +
-      macros.carbohydrates;
+    const nutrients = ["calories", "protein", "fat", "carbohydrates"] as const;
+    nutrients.forEach((nutrient) => {
+      dailyNutritionTracker[nutrient].consumed = Math.round(
+        (dailyNutritionTracker[nutrient].consumed || 0) + macros[nutrient]
+      );
+    });
 
     const updatedDailyNutritionTracker =
       await dailyNutritionTrackerService.updateDailyNutritionTracker(

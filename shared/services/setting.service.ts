@@ -52,3 +52,13 @@ export const deleteSetting = async (key: string) => {
     throw error;
   }
 };
+
+export const addToSettingArray = async (key: string, value: unknown) => {
+  Logger("addToSettingArray").info("");
+  try {
+    await Setting.findOneAndUpdate({ key }, { $push: { value } }).exec();
+  } catch (error) {
+    Logger("addToSettingArray").error(error);
+    throw error;
+  }
+};

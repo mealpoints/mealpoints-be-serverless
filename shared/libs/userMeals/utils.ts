@@ -24,7 +24,7 @@ export const dailyBudgetStatus = (
   );
 
   return `
-  📊 Today’s Goals
+📊 Today’s Goals
 🔥 Calories: ${caloriesStatus} (${calories.consumed || 0}/${
     calories.target
   } kcal)
@@ -32,9 +32,7 @@ export const dailyBudgetStatus = (
 🫒 Fat: ${fatStatus} (${fat.consumed || 0}/${fat.target} g)
 🍞 Carbs: ${carbohydratesStatus} (${carbohydrates.consumed || 0}/${
     carbohydrates.target
-  } g)
-  
-`;
+  } g)`;
 };
 
 export const formatMessage = (
@@ -43,21 +41,15 @@ export const formatMessage = (
 ) => {
   const { meal, suggestion } = mealResponse;
 
-  let response = "";
-  if (dailyNutritionTracker) {
-    response += dailyBudgetStatus(dailyNutritionTracker);
-  }
-
-  const mealData = `
+  const response = `
 🥗 ${meal.name} (${meal.score.value}/${meal.score.max})
 ~${meal.macros.calories} kcal | ${meal.macros.protein}g protein | ${
     meal.macros.carbohydrates
   }g carbs | ${meal.macros.fat}g fats
+${dailyNutritionTracker && dailyBudgetStatus(dailyNutritionTracker)}
 
-💡 Tip to Elevate It: ${convertToHumanReadableMessage(suggestion)} 🌟
+💡 Tip to Elevate It: ${convertToHumanReadableMessage(suggestion)}
   `;
-
-  response += mealData;
 
   return response;
 };
