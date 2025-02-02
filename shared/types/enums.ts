@@ -34,6 +34,7 @@ export enum UserEngagementMessageTypesEnum {
   MealReport = "meal_report",
   Welcome = "welcome",
   FeatIntro_MealViaText = "feat_intro_meal_via_text",
+  SubscriptionCheck = "subscription_check",
 }
 
 export enum ParametersTypesEnum {
@@ -559,6 +560,7 @@ export enum WhatsappTemplateNameEnum {
   MealReport = "user_meal_report",
   WelcomeMessage = "welcome_message",
   OnboardingV1 = "onboarding_v1",
+  SubscriptionRenewedV1 = "subscription_renewed_v1",
   MissingNutritionBudget = "missing_nutrition_budget",
 }
 
@@ -935,11 +937,17 @@ export enum SubscriptionStatusEnum {
   Active = "active",
   Cancelled = "cancelled",
   Expired = "expired",
+  Paused = "paused",
 }
 
 export enum PlanTypeEnum {
   OneTime = "one-time",
   Recurring = "recurring",
+}
+
+export enum PlanDurationUnitEnum {
+  Weeks = "weeks",
+  Months = "months",
 }
 
 export enum ButtonReplyEnum {

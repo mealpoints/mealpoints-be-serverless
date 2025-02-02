@@ -21,13 +21,13 @@ export const activateSubscription = async (data: IActivateSubscription) => {
   Logger("activateSubscription").info("");
   try {
     const { user, plan, order } = data;
-
     const { startDate, endDate } = getSubscriptionStartAndEndDates(order, plan);
 
     const subscription = await subscriptionService.createSubscription({
       user: user.id,
       plan: plan.id,
       status: SubscriptionStatusEnum.Active,
+      billingCycleCount: 1,
       startedAt: startDate,
       expiresAt: endDate,
     });
@@ -48,20 +48,20 @@ interface IRenewSubscription {
 // TODO: This function is not tested even once!
 export const renewSubscription = async (data: IRenewSubscription) => {
   Logger("renewSubscription").info("%o", data);
-
-  const { order, plan, subscription } = data;
   try {
+    const { order, plan, subscription } = data;
     const { endDate } = getSubscriptionStartAndEndDates(order, plan);
 
     const renewedSubscription =
       await subscriptionService.updateSubscriptionById(subscription.id, {
         status: SubscriptionStatusEnum.Active,
+        billingCycleCount: (subscription.billingCycleCount || 0) + 1,
         expiresAt: endDate,
       });
 
     return renewedSubscription;
   } catch (error) {
-    Logger("renewSubscription").error(error);
+    Logger("renewSubscription").error("%o", error);
     throw error;
   }
 };
@@ -75,25 +75,31 @@ export const isUserSubscribed = async (user: IUser) => {
       "subscription.exempt-contacts"
     ) as string[];
     if (exemptContacts.includes(user.contact)) {
-      return true;
+      return { isSubscribed: true, subscription: null };
     }
 
-    const activeSubscription = await subscriptionService.getActiveSubscription(
+    const lastSubscription = await subscriptionService.getSubscriptionByUserId(
       user.id
     );
 
     // We will exempt users who are created before 2025-30-01.
     // This is to ensure that the users who are created before the subscription system was implemented are not blocked.
     // In the future we will remove this check and only rely on exempt-contacts
-    if (!activeSubscription && user.createdAt < new Date("2025-01-30")) {
+    if (!lastSubscription && user.createdAt < new Date("2025-01-30")) {
       await settingService.addToSettingArray(
         "subscription.exempt-contacts",
         user.contact
       );
-      return true;
+      return { isSubscribed: true, subscription: null };
     }
 
-    return !!activeSubscription;
+    if (!lastSubscription) {
+      return { isSubscribed: false, subscription: null };
+    }
+
+    return lastSubscription.status === SubscriptionStatusEnum.Active
+      ? { isSubscribed: true, subscription: lastSubscription }
+      : { isSubscribed: false, subscription: lastSubscription };
   } catch (error) {
     Logger("isUserSubscribed").error(error);
     throw error;

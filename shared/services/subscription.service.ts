@@ -39,6 +39,19 @@ export const updateSubscriptionById = async (
   }
 };
 
+export const findSubscriptions = async (
+  filter: FilterQuery<ISubscription>
+): Promise<ISubscription[] | []> => {
+  Logger("findSubscriptions").info("");
+  try {
+    const subscriptions = await Subscription.find(filter);
+    return subscriptions;
+  } catch (error) {
+    Logger("findSubscriptions").error(error);
+    throw error;
+  }
+};
+
 export const updateSubscription = async (
   filter: FilterQuery<ISubscription>,
   data: Partial<ISubscription>
@@ -65,7 +78,6 @@ export const getActiveSubscription = async (
       {
         user: userId,
         status: SubscriptionStatusEnum.Active,
-        expiresAt: { $gte: new Date() },
       },
       undefined,
       { populate }
@@ -95,7 +107,7 @@ export const getSubscriptionById = async (
   }
 };
 
-export const getSubscriptionByUserId = async (userId: string) => {
+export const getSubscriptionByUserId = async (userId: string): Promise<ISubscription | null> => {
   Logger("getSubscriptionByUserId").info("");
   try {
     const subscription = await Subscription.findOne({ user: userId }).sort({

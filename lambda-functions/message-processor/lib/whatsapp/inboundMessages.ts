@@ -9,7 +9,7 @@ import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { isUserRateLimited } from "../rate-limiter";
 import { processImageMessage } from "./imageMessage";
 import { processInteractiveMessage } from "./interactiveMessage";
-import { processNonCustomer } from "./nonCustomer";
+import { handleNonSubscribedUser } from "./nonSubscribedUser";
 import { requestNutritionBudget } from "./requestNutritionBudget";
 import { processTextMessage } from "./textMessage";
 import { processUnknownMessage } from "./unknownMessage";
@@ -29,8 +29,10 @@ export const processInboundMessageWebhook = async (
     // Ensure user exists
     const user = await userService.ensureUserByContact(contact as string);
 
-    if (!(await isUserSubscribed(user))) {
-      return await processNonCustomer(user);
+    // Only restrict in development. feature is not released in Prod yet.
+    const { isSubscribed, subscription } = await isUserSubscribed(user);
+    if (!isSubscribed) {
+      return handleNonSubscribedUser(user, subscription);
     }
 
     // Make sure User's Nutrition Budget is exists

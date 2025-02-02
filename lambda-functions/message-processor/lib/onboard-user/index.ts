@@ -1,6 +1,9 @@
 import logger from "../../../../shared/config/logger";
 import { sendInternalAlert } from "../../../../shared/libs/internal-alerts";
-import { activateSubscription } from "../../../../shared/libs/subscription";
+import {
+  activateSubscription,
+  renewSubscription,
+} from "../../../../shared/libs/subscription";
 import { IOrder } from "../../../../shared/models/order.model";
 import { IPlan } from "../../../../shared/models/plan.model";
 import { IUser } from "../../../../shared/models/user.model";
@@ -8,6 +11,7 @@ import * as messageService from "../../../../shared/services/message.service";
 import * as subscriptionService from "../../../../shared/services/subscription.service";
 import {
   MessageTypesEnum,
+  SubscriptionStatusEnum,
   WhatsappTemplateNameEnum,
 } from "../../../../shared/types/enums";
 import { createWhatsappTemplate } from "../../../../shared/utils/whatsapp-templates";
@@ -26,11 +30,11 @@ export const processOnboardUser = async (data: IProcessOnboardUser) => {
 
   try {
     // Make sure the user does not have an active subscription
-    const activeSubscription = await subscriptionService.getActiveSubscription(
+    const lastSubscription = await subscriptionService.getSubscriptionByUserId(
       user.id
     );
-    if (activeSubscription) {
-      Logger("activateSubscription").info(
+    if (lastSubscription?.status === SubscriptionStatusEnum.Active) {
+      Logger("processOnboardUser").info(
         "User already has an active subscription"
       );
       await sendInternalAlert({
@@ -41,20 +45,30 @@ export const processOnboardUser = async (data: IProcessOnboardUser) => {
       return;
     }
 
-    // Create Subscription
-    await activateSubscription({
-      user,
-      plan,
-      order,
-    });
+    const isRenewal =
+      lastSubscription?.status === SubscriptionStatusEnum.Paused;
+    const templateName = isRenewal
+      ? WhatsappTemplateNameEnum.SubscriptionRenewedV1
+      : WhatsappTemplateNameEnum.OnboardingV1;
+
+    if (isRenewal) {
+      await renewSubscription({
+        plan,
+        order,
+        subscription: lastSubscription,
+      });
+    } else {
+      await activateSubscription({
+        user,
+        plan,
+        order,
+      });
+    }
 
     await messageService.sendTemplateMessage({
       user: user.id,
       type: MessageTypesEnum.Template,
-      template: createWhatsappTemplate(
-        WhatsappTemplateNameEnum.OnboardingV1,
-        {}
-      ),
+      template: createWhatsappTemplate(templateName, {}),
     });
 
     return;

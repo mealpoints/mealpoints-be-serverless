@@ -17,6 +17,9 @@ async function getUsersToSendReminders(
 ): Promise<IUserToSendReminders[]> {
   Logger("getUsersToSendReminders").info("");
 
+  const settings = await SettingsSingleton.getInstance();
+  const maxReminders = settings.get("user-engagement.max-reminders") as number;
+
   const userIds = usersWithoutEngagementMessage.map((user: IUser) =>
     objectifyId(user.id)
   );
@@ -64,6 +67,12 @@ async function getUsersToSendReminders(
           },
         ],
         as: "reminders",
+      },
+    },
+    // filter with max-reminders
+    {
+      $match: {
+        reminders: { $size: { $lt: maxReminders } },
       },
     },
     {

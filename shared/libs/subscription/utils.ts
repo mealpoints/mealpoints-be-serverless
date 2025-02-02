@@ -1,7 +1,9 @@
 import { add } from "date-fns";
+import logger from "../../config/logger";
 import { IOrder } from "../../models/order.model";
 import { IPlan } from "../../models/plan.model";
-import { PlanTypeEnum } from "../../types/enums";
+import { PlanDurationUnitEnum, PlanTypeEnum } from "../../types/enums";
+const Logger = logger("lib/subscription");
 
 export const getSubscriptionStartAndEndDates = (
   order: IOrder,
@@ -19,12 +21,48 @@ export const getSubscriptionStartAndEndDates = (
   }
 
   const endDate = add(startDate, {
-    weeks: duration.unit === "weeks" ? duration.value : 0,
-    months: duration.unit === "months" ? duration.value : 0,
+    weeks: duration.unit === PlanDurationUnitEnum.Weeks ? duration.value : 0,
+    months: duration.unit === PlanDurationUnitEnum.Months ? duration.value : 0,
   });
 
   return {
     startDate,
     endDate,
   };
+};
+
+const convertToWeeks = (unit: PlanDurationUnitEnum, value: number): number => {
+  switch (unit) {
+    case PlanDurationUnitEnum.Months: {
+      return value * 4;
+    } // Approximation: 1 month ≈ 4 weeks
+    case PlanDurationUnitEnum.Weeks: {
+      return value;
+    }
+    default: {
+      return 0;
+    }
+  }
+};
+
+export const getMaxPossibleBillingCycleCountInPlan = (plan: IPlan): number => {
+  Logger("getMaxPossibleBillingCycleCountInPlan").info(JSON.stringify(plan));
+  const { duration, billingCycle } = plan;
+
+  if (!duration || !billingCycle || !duration.value || !billingCycle.value) {
+    Logger("getMaxPossibleBillingCycleCountInPlan").info("Missing plan data returning 1");
+    return 1;
+  }
+
+  const durationInWeeks = convertToWeeks(duration.unit, duration.value);
+  const billingCycleInWeeks = convertToWeeks(
+    billingCycle.unit,
+    billingCycle.value
+  );
+
+  if (durationInWeeks === 0 || billingCycleInWeeks === 0) {
+    return 1;
+  }
+
+  return Math.ceil(durationInWeeks / billingCycleInWeeks) || 1;
 };

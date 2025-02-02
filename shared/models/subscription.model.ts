@@ -8,6 +8,7 @@ export interface ISubscription extends Document {
   status: SubscriptionStatusEnum;
   startedAt: Date;
   expiresAt: Date;
+  billingCycleCount?: number;
   comment?: string;
   cancelledAt?: Date;
   createdAt: Date;
@@ -20,6 +21,7 @@ export interface ISubscriptionCreate {
   status: SubscriptionStatusEnum;
   startedAt: Date;
   expiresAt: Date;
+  billingCycleCount?: number;
   cancelledAt?: Date;
   comment?: string;
 }
@@ -35,6 +37,7 @@ const SubscriptionSchema = new Schema(
     },
     startedAt: { type: Date, required: true },
     expiresAt: { type: Date, required: true },
+    billingCycleCount: { type: Number },
     cancelledAt: { type: Date },
     comment: { type: String },
   },

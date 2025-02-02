@@ -8,5 +8,4 @@ src/examples
 .tests
 .dist
 /notes
-
 *.pem

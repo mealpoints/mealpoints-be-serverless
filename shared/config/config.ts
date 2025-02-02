@@ -22,6 +22,17 @@ export const USER_MESSAGES = {
       rejected_by_user: `Your refund request has been cancelled. If you need help, please contact us at ${SUPPORT.email}`,
       processed: `Your refund has been processed. I should be in your account in 3-5 business days. If you need any further assistance, please contact us at ${SUPPORT.email}`,
     },
+    subscription: {
+      expired: `Your journey doesn’t stop here. Every meal is still a chance to push forward, to fuel greatness, to be your best.
+
+We’re rooting for you. Always.`,
+      expired_header: `Your subscription ran out. Your goals didn’t.`,
+      paused: `Your current subscription for the chosen plan has been expired. Please renew your subscription using the link below OR contact us at ${SUPPORT.email} if you need any further assistance.`,
+      paused_header: `Subscription Paused`,
+      not_subscribed: `Every meal is a chance to level up, but you need the right plan to crush it. Don’t wait—commit to yourself today. 
+Click the link below to grab your plan and make every bite count.`,
+      not_subscribed_header: "You’re not in the game yet",
+    },
     feature_not_supported:
       "Sorry, we only accept food photos and text messages at the moment. The format of the message you sent is not supported. Please stay tuned for further updates.",
     user_not_subscribed: `Hi there! 
@@ -39,6 +50,7 @@ export const QUEUE_MESSAGE_GROUP_IDS = {
   meal_report: "meal_report",
   onboard_user: "onboard_user",
   feat_intro_meal_via_text: "feat_intro_meal_via_text",
+  subscription_expired: "subscription_expired",
 };
 
 export const DEFAULT_GEO_INFO = {

@@ -4,12 +4,15 @@ import logger from "../../../shared/config/logger";
 import { queue } from "../../../shared/config/queue";
 import { IUser } from "../../../shared/models/user.model";
 import { SqsQueueService } from "../../../shared/services/queue.service";
-import { IUserToSendReminders } from "../../../shared/types/queueMessages";
+import {
+  IUserToSendReminders,
+  IUserWithSubscription,
+} from "../../../shared/types/queueMessages";
 
 const Logger = logger("user-engagement/enqueue.service");
 
 export const enqueueUsersToSendEngagement = async (
-  usersToEngage: (IUserToSendReminders | IUser)[],
+  usersToEngage: (IUserWithSubscription | IUserToSendReminders | IUser)[],
   messageGroupId: keyof typeof QUEUE_MESSAGE_GROUP_IDS
 ): Promise<void> => {
   Logger("enqueueUsersToSendEngagement").info(
