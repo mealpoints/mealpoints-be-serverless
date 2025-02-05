@@ -45,9 +45,8 @@ interface IRenewSubscription {
   subscription: ISubscription;
 }
 
-// TODO: This function is not tested even once!
 export const renewSubscription = async (data: IRenewSubscription) => {
-  Logger("renewSubscription").info("%o", data);
+  Logger("renewSubscription").info("");
   try {
     const { order, plan, subscription } = data;
     const { endDate } = getSubscriptionStartAndEndDates(order, plan);
@@ -61,7 +60,7 @@ export const renewSubscription = async (data: IRenewSubscription) => {
 
     return renewedSubscription;
   } catch (error) {
-    Logger("renewSubscription").error("%o", error);
+    Logger("renewSubscription").error(JSON.stringify(error));
     throw error;
   }
 };

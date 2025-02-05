@@ -1,3 +1,4 @@
+import logger from "../../config/logger";
 import {
   ComponentTypesEnum,
   WhatsappTemplateNameEnum,
@@ -24,11 +25,15 @@ import {
   IReminderToPostMealsThree,
   IReminderToPostMealsTwo,
 } from "./reminder";
-import { ISubscriptionRenewedV1Data } from "./subscriptionRenewedV1";
+import {
+  createSubscriptionRenewedV1Template,
+  ISubscriptionRenewedV1Data,
+} from "./subscriptionRenewedV1";
 import {
   createWelcomeMessageTemplate,
   IWelcomeMessageData,
 } from "./welcomeMessage";
+const Logger = logger("shared/utils/whatsapp-templates");
 
 // Mapping the enum values to their respective data types
 type WhatsappTemplateDataMap = {
@@ -47,6 +52,7 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
   templateName: T,
   data: WhatsappTemplateDataMap[T]
 ): MessageTemplateObject<ComponentTypesEnum> => {
+  Logger("createWhatsappTemplate").info(`Creating template: ${templateName}`);
   switch (templateName) {
     case WhatsappTemplateNameEnum.ReminderToPostMealsOne: {
       return createReminderToPostMealsOneTemplate();
@@ -71,6 +77,9 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
     }
     case WhatsappTemplateNameEnum.MissingNutritionBudget: {
       return createMissingNutritionBudgetTemplate();
+    }
+    case WhatsappTemplateNameEnum.SubscriptionRenewedV1: {
+      return createSubscriptionRenewedV1Template();
     }
     default: {
       throw new Error("Template not found");

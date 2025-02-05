@@ -23,7 +23,7 @@ export const updateSubscriptionById = async (
   subscriptionId: string,
   data: Partial<ISubscription>
 ) => {
-  Logger("updateSubscriptionById").info("%o", { subscriptionId, data });
+  Logger("updateSubscriptionById").info("");
   try {
     const subscription = await Subscription.findByIdAndUpdate(
       subscriptionId,

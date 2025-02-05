@@ -72,7 +72,7 @@ export const processOnboardUser = async (data: IProcessOnboardUser) => {
     });
 
     return;
-  } catch {
+  } catch (error) {
     Logger("processOnboardUser").error(
       "Failed to process onboard user messages"
     );
@@ -81,6 +81,6 @@ export const processOnboardUser = async (data: IProcessOnboardUser) => {
       severity: "critical",
     });
 
-    throw new Error("Failed to process onboard user messages");
+    throw error;
   }
 };
