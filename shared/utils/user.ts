@@ -24,6 +24,7 @@ export const timeAndLocationOfUser = (user: IUser) => {
 };
 
 export const todaysMealsByUser = async (user: IUser): Promise<string> => {
+  Logger("todaysMealsByUser").info("");
   try {
     const userMeals = await getTodaysUserMealsByUserId(user.id);
     const mealDetails = userMeals.map((userMeal) => {
@@ -47,6 +48,7 @@ export const todaysMealsByUser = async (user: IUser): Promise<string> => {
 };
 
 export const getInstructionForUser = async (user: IUser): Promise<string> => {
+  Logger("getInstructionForUser").info("");
   const instructionFetchers = [
     timeAndLocationOfUser,
     todaysMealsByUser,

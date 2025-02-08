@@ -24,7 +24,7 @@ export const processImageMessage = async (
   user: IUser
 ) => {
   Logger("processImageMessage").info("");
-  const { imageId } = new WhatsappData(payload);
+  const { imageId, imageCaption } = new WhatsappData(payload);
 
   const settings = await SettingsSingleton.getInstance();
   const assistantId = settings.get(
@@ -43,7 +43,10 @@ export const processImageMessage = async (
       const openaiResponse = (await openAIService.ask(s3Path, user, {
         messageType: OpenAIMessageTypesEnum.Image,
         assistantId,
-        additionalInstructions: await getOpenAiInstructions(user),
+        additionalInstructions: await getOpenAiInstructions({
+          user,
+          imageCaption,
+        }),
       })) as MealResponse;
 
       cleanupLocalFile(imageFilePath);

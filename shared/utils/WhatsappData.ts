@@ -100,6 +100,12 @@ export class WhatsappData {
       ?.id as string;
   }
 
+  get imageCaption(): string | undefined {
+    if (this._webhookType !== WebhookTypesEnum.Image) return undefined;
+    return this.data.entry[0].changes[0].value.messages?.[0].image
+      ?.caption as string;
+  }
+
   get interactiveMessageContent(): InteractiveObject | undefined {
     if (this._webhookType !== WebhookTypesEnum.Interactive) return undefined;
     return this.data.entry[0].changes[0].value.messages?.[0].interactive;
