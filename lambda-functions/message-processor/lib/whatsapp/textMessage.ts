@@ -37,7 +37,7 @@ export const processTextMessage = async (
       const result = (await openAIService.ask(userMessage as string, user, {
         messageType: OpenAIMessageTypesEnum.Text,
         assistantId,
-        additionalInstructions: await getOpenAiInstructions(user),
+        additionalInstructions: await getOpenAiInstructions({ user }),
       })) as MealResponse;
 
       if (result.type === "food") {
