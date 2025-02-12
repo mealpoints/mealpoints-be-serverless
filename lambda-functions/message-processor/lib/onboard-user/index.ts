@@ -71,6 +71,11 @@ export const processOnboardUser = async (data: IProcessOnboardUser) => {
       template: createWhatsappTemplate(templateName, {}),
     });
 
+    await sendInternalAlert({
+      message: `User with contact ${user.contact} onboarded successfully`,
+      severity: "major",
+    });
+
     return;
   } catch (error) {
     Logger("processOnboardUser").error(
