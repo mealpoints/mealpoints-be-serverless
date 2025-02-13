@@ -1,21 +1,17 @@
+import { USER_MESSAGES } from "../../../../../shared/config/config";
 import logger from "../../../../../shared/config/logger";
-import SettingsSingleton from "../../../../../shared/config/settings";
 import { IUser } from "../../../../../shared/models/user.model";
 import * as messageService from "../../../../../shared/services/message.service";
 import * as nutritionBudgetService from "../../../../../shared/services/nutritionBudget.service";
-import * as openAIService from "../../../../../shared/services/openAI.service";
 import * as userPreferencesService from "../../../../../shared/services/userPreferences.service";
 import {
   GenderEnum,
   HeightUnitEnum,
   MessageTypesEnum,
-  OpenAIMessageTypesEnum,
   PhysicalActivityEnum,
   WeightUnitEnum,
 } from "../../../../../shared/types/enums";
-import { IWeightLossTargetResponse } from "../../../../../shared/types/openai";
-import { convertToHumanReadableMessage } from "../../../../../shared/utils/string";
-import { getDate, getNumber } from "./utils";
+import { calculateNutritionBudget, getAge, getDate, getNumber } from "./utils";
 
 const Logger = logger("flowReply/onboardingV1");
 
@@ -113,17 +109,6 @@ export const onboardingV1 = async (
       screen_0_Physical_Activity_4 as string
     ) as PhysicalActivityEnum;
 
-    const prompt = JSON.stringify({
-      currentWeight,
-      height,
-      targetWeight,
-      birthDate: birthDate?.toLocaleDateString(),
-      currentDate: new Date().toLocaleDateString(),
-      targetDate: targetDate?.toLocaleDateString(),
-      gender,
-      physicalActivity,
-    });
-
     await userPreferencesService.createUserPreferences({
       user: user.id,
       birthDate,
@@ -143,22 +128,22 @@ export const onboardingV1 = async (
       physicalActivity,
     });
 
-    const settings = await SettingsSingleton.getInstance();
-    const assistantId = settings.get(
-      "openai.assistant.goal-setting-coach"
-    ) as string;
-
-    const response = (await openAIService.ask(prompt, user, {
-      messageType: OpenAIMessageTypesEnum.Text,
-      assistantId,
-    })) as IWeightLossTargetResponse;
+    const calculatedBudget = calculateNutritionBudget({
+      currentWeight,
+      height,
+      age: getAge(birthDate),
+      gender,
+      physicalActivity,
+      targetWeight,
+      durationMonths: targetDate.getMonth() - birthDate.getMonth(),
+    });
 
     await nutritionBudgetService.createNutritionBudget({
       user: user.id,
-      calories: response.target.calories,
-      protein: response.target.protein,
-      fat: response.target.fats,
-      carbohydrates: response.target.carbs,
+      calories: calculatedBudget.calories,
+      protein: calculatedBudget.protein,
+      fat: calculatedBudget.fat,
+      carbohydrates: calculatedBudget.carbohydrates,
       targetWeight,
       targetDate,
       currentWeight,
@@ -166,7 +151,8 @@ export const onboardingV1 = async (
 
     await messageService.sendTextMessage({
       user: user.id,
-      payload: convertToHumanReadableMessage(response.message),
+      payload:
+        USER_MESSAGES.info.welcome.notify_nutrition_budget(calculatedBudget),
       type: MessageTypesEnum.Text,
     });
   } catch (error) {
