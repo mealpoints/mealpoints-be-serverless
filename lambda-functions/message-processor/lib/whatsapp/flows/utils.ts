@@ -67,8 +67,8 @@ export const calculateNutritionBudget = (
     age === undefined ||
     durationMonths === undefined
   ) {
-    Logger("calculateNutritionBudget").error("Height and age are required");
-    throw new Error("Height and age must be provided");
+    Logger("calculateNutritionBudget").error("Invalid inputs");
+    throw new Error("Invalid inputs");
   }
 
   // 1. Calculate BMR (Basal Metabolic Rate)
