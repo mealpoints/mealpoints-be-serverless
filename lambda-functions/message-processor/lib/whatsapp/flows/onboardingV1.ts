@@ -11,7 +11,7 @@ import {
   PhysicalActivityEnum,
   WeightUnitEnum,
 } from "../../../../../shared/types/enums";
-import { calculateNutritionBudget, getAge, getDate, getNumber } from "./utils";
+import { calculateNutritionBudget, getAge, getDate, getDurationMonths, getNumber } from "./utils";
 
 const Logger = logger("flowReply/onboardingV1");
 
@@ -135,7 +135,7 @@ export const onboardingV1 = async (
       gender,
       physicalActivity,
       targetWeight,
-      durationMonths: targetDate.getMonth() - birthDate.getMonth(),
+      durationMonths: getDurationMonths(targetDate),
     });
 
     await nutritionBudgetService.createNutritionBudget({

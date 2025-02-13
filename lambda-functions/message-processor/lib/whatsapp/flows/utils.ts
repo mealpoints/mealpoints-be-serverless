@@ -1,3 +1,4 @@
+import { differenceInDays } from "date-fns";
 import { isNaN } from "lodash";
 import { ACTIVITY_MULTIPLIERS } from "../../../../../shared/config/config";
 import logger from "../../../../../shared/config/logger";
@@ -31,6 +32,12 @@ export const getAge = (date_: Date) => {
   return isNaN(age) ? undefined : age;
 };
 
+export const getDurationMonths = (date_: Date) => {
+  if (date_ === undefined) return undefined;
+  const now = new Date();
+  return differenceInDays(date_, now) / 30.44;
+};
+
 export interface ICalculateNutritionBudgetArguments {
   currentWeight: number; // in kg
   height?: number; // in cm
@@ -38,7 +45,7 @@ export interface ICalculateNutritionBudgetArguments {
   gender: GenderEnum;
   physicalActivity: PhysicalActivityEnum;
   targetWeight: number;
-  durationMonths: number;
+  durationMonths?: number;
 }
 
 export const calculateNutritionBudget = (
@@ -56,15 +63,10 @@ export const calculateNutritionBudget = (
   } = input;
 
   if (
-    ![currentWeight, height, age, targetWeight, durationMonths].every(
-      (v) => v && v > 0
-    )
+    height === undefined ||
+    age === undefined ||
+    durationMonths === undefined
   ) {
-    Logger("calculateNutritionBudget").error("Invalid inputs");
-    throw new Error("Invalid inputs");
-  }
-
-  if (height === undefined || age === undefined) {
     Logger("calculateNutritionBudget").error("Height and age are required");
     throw new Error("Height and age must be provided");
   }
