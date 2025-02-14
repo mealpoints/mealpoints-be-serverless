@@ -18,3 +18,18 @@ export const home = catchAsync(async (request: Request, response: Response) => {
     settings,
   });
 });
+
+export const checkout = catchAsync(
+  async (request: Request, response: Response) => {
+    Logger("checkout").info("");
+    const allSettings = await SettingsSingleton.getInstance();
+
+    const settings = {
+      planId: allSettings.get("ui.home.plan") as string,
+    };
+
+    return ApiResponse.Ok(response, {
+      settings,
+    });
+  }
+);
