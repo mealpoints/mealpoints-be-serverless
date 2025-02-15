@@ -40,12 +40,12 @@ export const getDurationMonths = (date_: Date) => {
 
 export interface ICalculateNutritionBudgetArguments {
   currentWeight: number; // in kg
-  height?: number; // in cm
-  age?: number; // in years
+  height: number; // in cm
+  age: number;
   gender: GenderEnum;
   physicalActivity: PhysicalActivityEnum;
   targetWeight: number;
-  durationMonths?: number;
+  durationMonths: number;
 }
 
 export const calculateNutritionBudget = (
@@ -62,55 +62,51 @@ export const calculateNutritionBudget = (
     durationMonths,
   } = input;
 
-  if (
-    height === undefined ||
-    age === undefined ||
-    durationMonths === undefined
-  ) {
-    Logger("calculateNutritionBudget").error("Invalid inputs");
-    throw new Error("Invalid inputs");
-  }
+  const validDurationMonths = durationMonths <= 0 ? 0.01 : durationMonths;
 
-  // 1. Calculate BMR (Basal Metabolic Rate)
-  const BMR =
+  // 1. Calculate BMR
+  const rawBMR =
     gender === GenderEnum.Male
       ? 10 * currentWeight + 6.25 * height - 5 * age + 5
       : 10 * currentWeight + 6.25 * height - 5 * age - 161;
+  const BMR = Math.round(rawBMR);
 
-  // 2. Total Daily Energy Expenditure (TDEE)
+  // 2. Calculate TDEE
   const TDEE = Math.round(BMR * ACTIVITY_MULTIPLIERS[physicalActivity]);
 
-  // 3. Total weight gain/loss required
-  const totalWeightGoal = currentWeight - targetWeight;
+  // 3. Calculate Total Weight Change (kg)
+  const weightChange = Math.abs(targetWeight - currentWeight);
 
-  // 4. Weekly weight gain/loss goal
-  // const weeklyWeightGoal = Math.round(totalWeightGoal / (durationMonths * 4));
-
-  // 5. Calorie deficit target (each kg = 7700 kcal)
+  // 4. Calculate Daily Calorie Adjustment (Deficit or Surplus)
   const dailyCalorieAdjustment = Math.round(
-    (totalWeightGoal * 7700) / (durationMonths * 30)
+    (weightChange * 7700) / (validDurationMonths * 30)
   );
 
-  // 6. Daily calorie target (TDEE ± adjustment based on goal)
-  const dailyCalorieTarget = TDEE + dailyCalorieAdjustment;
+  // 5. Determine the Calculated Daily Calorie Target
+  let calculatedDailyCalTarget = TDEE;
+  if (targetWeight > currentWeight) {
+    calculatedDailyCalTarget = TDEE + dailyCalorieAdjustment;
+  } else if (targetWeight < currentWeight) {
+    calculatedDailyCalTarget = TDEE - dailyCalorieAdjustment;
+  }
 
-  // 7. Adjusted daily calorie target (ensuring safe limits, at least 65% of TDEE)
-  const adjustedCalorieTarget = Math.round(
-    Math.max(dailyCalorieTarget, 0.65 * TDEE)
+  // 6. Adjusted Daily Calorie Target
+  const adjustedDailyCalTarget = Math.round(
+    Math.max(calculatedDailyCalTarget, 0.65 * TDEE)
   );
 
-  // 8. Macronutrient Targets (Protein, Fats, Carbs)
+  // 7. Calculate Macronutrient Targets
   const proteinTarget = Math.round(
     Math.min(
-      Math.max((adjustedCalorieTarget * 0.35) / 4, currentWeight * 1.75),
+      Math.max((adjustedDailyCalTarget * 0.35) / 4, currentWeight * 1.75),
       currentWeight * 2
     )
   );
-  const carbsTarget = Math.round((adjustedCalorieTarget * 0.4) / 4);
-  const fatTarget = Math.round((adjustedCalorieTarget * 0.28) / 9);
+  const carbsTarget = Math.round((adjustedDailyCalTarget * 0.4) / 4);
+  const fatTarget = Math.round((adjustedDailyCalTarget * 0.28) / 9);
 
   return {
-    calories: adjustedCalorieTarget,
+    calories: adjustedDailyCalTarget,
     protein: proteinTarget,
     fat: fatTarget,
     carbohydrates: carbsTarget,

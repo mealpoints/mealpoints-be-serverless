@@ -11,7 +11,13 @@ import {
   PhysicalActivityEnum,
   WeightUnitEnum,
 } from "../../../../../shared/types/enums";
-import { calculateNutritionBudget, getAge, getDate, getDurationMonths, getNumber } from "./utils";
+import {
+  calculateNutritionBudget,
+  getAge,
+  getDate,
+  getDurationMonths,
+  getNumber,
+} from "./utils";
 
 const Logger = logger("flowReply/onboardingV1");
 
@@ -79,41 +85,77 @@ export interface IOnboardingV1ParsedReply {
   screen_0_Physical_Activity_4?: string;
 }
 
+export const validateOnboardingInputs = (parsedReply: IOnboardingV1ParsedReply) => {
+  const {
+    screen_1_Target_Weight_0,
+    screen_1_Target_Date_1,
+    screen_0_Birthdate_0,
+    screen_0_Gender_1,
+    screen_0_Height_2,
+    screen_0_Current_Weight_3,
+    screen_0_Physical_Activity_4,
+  } = parsedReply;
+
+  const currentWeight = getNumber(screen_0_Current_Weight_3 as string);
+  const height = getNumber(screen_0_Height_2 as string);
+  const targetWeight = getNumber(screen_1_Target_Weight_0 as string);
+  const birthDate = getDate(screen_0_Birthdate_0 as string);
+  const targetDate = getDate(screen_1_Target_Date_1 as string);
+  const gender = getGender(screen_0_Gender_1 as string);
+  const physicalActivity = getPhysicalActivity(
+    screen_0_Physical_Activity_4 as string
+  );
+
+  // Check for any missing or invalid fields which is essential for further calculations
+  const errors: string[] = [];
+  if (currentWeight === undefined)
+    errors.push("Current Weight is missing or invalid");
+  if (height === undefined) errors.push("Height is missing or invalid");
+  if (targetWeight === undefined)
+    errors.push("Target Weight is missing or invalid");
+  if (birthDate === undefined) errors.push("Birthdate is missing or invalid");
+  if (targetDate === undefined)
+    errors.push("Target Date is missing or invalid");
+  if (gender === undefined) errors.push("Gender is missing or invalid");
+  if (physicalActivity === undefined)
+    errors.push("Physical Activity is missing or invalid");
+
+  if (errors.length > 0) {
+    throw new Error(`Validation Error(s): \n ${errors.join("\n")}`);
+  }
+
+  return {
+    currentWeight: currentWeight as number,
+    height: height as number,
+    targetWeight: targetWeight as number,
+    birthDate: birthDate as Date,
+    targetDate: targetDate as Date,
+    gender: gender as GenderEnum,
+    physicalActivity: physicalActivity as PhysicalActivityEnum,
+  };
+};
+
 export const onboardingV1 = async (
   parsedReply: IOnboardingV1ParsedReply,
   user: IUser
 ) => {
-  Logger("onboardingV1").info("");
+  Logger("onboardingV1").info("Starting onboarding process ✨");
   try {
     const {
-      screen_1_Target_Weight_0,
-      screen_1_Target_Date_1,
-      screen_0_Birthdate_0,
-      screen_0_Gender_1,
-      screen_0_Height_2,
-      screen_0_Current_Weight_3,
-      screen_0_Physical_Activity_4,
-    } = parsedReply;
-
-    const currentWeight = getNumber(
-      screen_0_Current_Weight_3 as string
-    ) as number;
-    const height = getNumber(screen_0_Height_2 as string);
-    const targetWeight = getNumber(
-      screen_1_Target_Weight_0 as string
-    ) as number;
-    const birthDate = getDate(screen_0_Birthdate_0 as string) as Date;
-    const targetDate = getDate(screen_1_Target_Date_1 as string) as Date;
-    const gender = getGender(screen_0_Gender_1 as string) as GenderEnum;
-    const physicalActivity = getPhysicalActivity(
-      screen_0_Physical_Activity_4 as string
-    ) as PhysicalActivityEnum;
+      currentWeight,
+      height,
+      targetWeight,
+      birthDate,
+      targetDate,
+      gender,
+      physicalActivity,
+    } = validateOnboardingInputs(parsedReply);
 
     await userPreferencesService.createUserPreferences({
       user: user.id,
       birthDate,
       height: {
-        value: height as number,
+        value: height,
         unit: HeightUnitEnum.CM,
       },
       currentWeight: {
@@ -128,14 +170,22 @@ export const onboardingV1 = async (
       physicalActivity,
     });
 
+    const age = getAge(birthDate);
+    const durationMonths = getDurationMonths(targetDate);
+    if (age === undefined || durationMonths === undefined) {
+      throw new Error(
+        "Unable to calculate age or duration months due to invalid date inputs"
+      );
+    }
+
     const calculatedBudget = calculateNutritionBudget({
       currentWeight,
       height,
-      age: getAge(birthDate),
+      age,
       gender,
       physicalActivity,
       targetWeight,
-      durationMonths: getDurationMonths(targetDate),
+      durationMonths,
     });
 
     await nutritionBudgetService.createNutritionBudget({
@@ -155,6 +205,7 @@ export const onboardingV1 = async (
         USER_MESSAGES.info.welcome.notify_nutrition_budget(calculatedBudget),
       type: MessageTypesEnum.Text,
     });
+    Logger("onboardingV1").info("Onboarding process completed successfully 🎉");
   } catch (error) {
     Logger("onboardingV1").error(error);
     throw error;
