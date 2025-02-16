@@ -1,21 +1,23 @@
+import { USER_MESSAGES } from "../../../../../shared/config/config";
 import logger from "../../../../../shared/config/logger";
-import SettingsSingleton from "../../../../../shared/config/settings";
 import { IUser } from "../../../../../shared/models/user.model";
 import * as messageService from "../../../../../shared/services/message.service";
 import * as nutritionBudgetService from "../../../../../shared/services/nutritionBudget.service";
-import * as openAIService from "../../../../../shared/services/openAI.service";
 import * as userPreferencesService from "../../../../../shared/services/userPreferences.service";
 import {
   GenderEnum,
   HeightUnitEnum,
   MessageTypesEnum,
-  OpenAIMessageTypesEnum,
   PhysicalActivityEnum,
   WeightUnitEnum,
 } from "../../../../../shared/types/enums";
-import { IWeightLossTargetResponse } from "../../../../../shared/types/openai";
-import { convertToHumanReadableMessage } from "../../../../../shared/utils/string";
-import { getDate, getNumber } from "./utils";
+import {
+  calculateNutritionBudget,
+  getAge,
+  getDate,
+  getDurationMonths,
+  getNumber,
+} from "./utils";
 
 const Logger = logger("flowReply/onboardingV1");
 
@@ -83,52 +85,77 @@ export interface IOnboardingV1ParsedReply {
   screen_0_Physical_Activity_4?: string;
 }
 
+export const validateOnboardingInputs = (parsedReply: IOnboardingV1ParsedReply) => {
+  const {
+    screen_1_Target_Weight_0,
+    screen_1_Target_Date_1,
+    screen_0_Birthdate_0,
+    screen_0_Gender_1,
+    screen_0_Height_2,
+    screen_0_Current_Weight_3,
+    screen_0_Physical_Activity_4,
+  } = parsedReply;
+
+  const currentWeight = getNumber(screen_0_Current_Weight_3 as string);
+  const height = getNumber(screen_0_Height_2 as string);
+  const targetWeight = getNumber(screen_1_Target_Weight_0 as string);
+  const birthDate = getDate(screen_0_Birthdate_0 as string);
+  const targetDate = getDate(screen_1_Target_Date_1 as string);
+  const gender = getGender(screen_0_Gender_1 as string);
+  const physicalActivity = getPhysicalActivity(
+    screen_0_Physical_Activity_4 as string
+  );
+
+  // Check for any missing or invalid fields which is essential for further calculations
+  const errors: string[] = [];
+  if (currentWeight === undefined)
+    errors.push("Current Weight is missing or invalid");
+  if (height === undefined) errors.push("Height is missing or invalid");
+  if (targetWeight === undefined)
+    errors.push("Target Weight is missing or invalid");
+  if (birthDate === undefined) errors.push("Birthdate is missing or invalid");
+  if (targetDate === undefined)
+    errors.push("Target Date is missing or invalid");
+  if (gender === undefined) errors.push("Gender is missing or invalid");
+  if (physicalActivity === undefined)
+    errors.push("Physical Activity is missing or invalid");
+
+  if (errors.length > 0) {
+    throw new Error(`Validation Error(s): \n ${errors.join("\n")}`);
+  }
+
+  return {
+    currentWeight: currentWeight as number,
+    height: height as number,
+    targetWeight: targetWeight as number,
+    birthDate: birthDate as Date,
+    targetDate: targetDate as Date,
+    gender: gender as GenderEnum,
+    physicalActivity: physicalActivity as PhysicalActivityEnum,
+  };
+};
+
 export const onboardingV1 = async (
   parsedReply: IOnboardingV1ParsedReply,
   user: IUser
 ) => {
-  Logger("onboardingV1").info("");
+  Logger("onboardingV1").info("Starting onboarding process ✨");
   try {
     const {
-      screen_1_Target_Weight_0,
-      screen_1_Target_Date_1,
-      screen_0_Birthdate_0,
-      screen_0_Gender_1,
-      screen_0_Height_2,
-      screen_0_Current_Weight_3,
-      screen_0_Physical_Activity_4,
-    } = parsedReply;
-
-    const currentWeight = getNumber(
-      screen_0_Current_Weight_3 as string
-    ) as number;
-    const height = getNumber(screen_0_Height_2 as string);
-    const targetWeight = getNumber(
-      screen_1_Target_Weight_0 as string
-    ) as number;
-    const birthDate = getDate(screen_0_Birthdate_0 as string) as Date;
-    const targetDate = getDate(screen_1_Target_Date_1 as string) as Date;
-    const gender = getGender(screen_0_Gender_1 as string) as GenderEnum;
-    const physicalActivity = getPhysicalActivity(
-      screen_0_Physical_Activity_4 as string
-    ) as PhysicalActivityEnum;
-
-    const prompt = JSON.stringify({
       currentWeight,
       height,
       targetWeight,
-      birthDate: birthDate?.toLocaleDateString(),
-      currentDate: new Date().toLocaleDateString(),
-      targetDate: targetDate?.toLocaleDateString(),
+      birthDate,
+      targetDate,
       gender,
       physicalActivity,
-    });
+    } = validateOnboardingInputs(parsedReply);
 
     await userPreferencesService.createUserPreferences({
       user: user.id,
       birthDate,
       height: {
-        value: height as number,
+        value: height,
         unit: HeightUnitEnum.CM,
       },
       currentWeight: {
@@ -143,22 +170,30 @@ export const onboardingV1 = async (
       physicalActivity,
     });
 
-    const settings = await SettingsSingleton.getInstance();
-    const assistantId = settings.get(
-      "openai.assistant.goal-setting-coach"
-    ) as string;
+    const age = getAge(birthDate);
+    const durationMonths = getDurationMonths(targetDate);
+    if (age === undefined || durationMonths === undefined) {
+      throw new Error(
+        "Unable to calculate age or duration months due to invalid date inputs"
+      );
+    }
 
-    const response = (await openAIService.ask(prompt, user, {
-      messageType: OpenAIMessageTypesEnum.Text,
-      assistantId,
-    })) as IWeightLossTargetResponse;
+    const calculatedBudget = calculateNutritionBudget({
+      currentWeight,
+      height,
+      age,
+      gender,
+      physicalActivity,
+      targetWeight,
+      durationMonths,
+    });
 
     await nutritionBudgetService.createNutritionBudget({
       user: user.id,
-      calories: response.target.calories,
-      protein: response.target.protein,
-      fat: response.target.fats,
-      carbohydrates: response.target.carbs,
+      calories: calculatedBudget.calories,
+      protein: calculatedBudget.protein,
+      fat: calculatedBudget.fat,
+      carbohydrates: calculatedBudget.carbohydrates,
       targetWeight,
       targetDate,
       currentWeight,
@@ -166,9 +201,11 @@ export const onboardingV1 = async (
 
     await messageService.sendTextMessage({
       user: user.id,
-      payload: convertToHumanReadableMessage(response.message),
+      payload:
+        USER_MESSAGES.info.welcome.notify_nutrition_budget(calculatedBudget),
       type: MessageTypesEnum.Text,
     });
+    Logger("onboardingV1").info("Onboarding process completed successfully 🎉");
   } catch (error) {
     Logger("onboardingV1").error(error);
     throw error;

@@ -1,3 +1,6 @@
+import { PhysicalActivityEnum } from "../types/enums";
+import { Macros } from "./../types/openai";
+
 export const SUPPORT = {
   email: "mealpoints.coach@gmail.com",
 };
@@ -39,6 +42,18 @@ Click the link below to grab your plan and make every bite count.`,
 👋 Meal Points is a subscription-based service that offers personalized meal feedback and guidance to help you reach your health goals. 
 🌟 Subscribe now at ${process.env.MEALPOINTS_BASE_URL} to get started! 
 We’d love to have you join us! 😊.`,
+    welcome: {
+      notify_nutrition_budget: (macros: Macros) => `
+      🎉 Your journey starts NOW! 
+      
+      Here’s your game plan to crush your goals:  
+      🍴 Calories: ${macros.calories || ""} kcal/day  
+      🥩 Protein: ${macros.protein || ""} g/day  
+      🥑 Fats: ${macros.fat || ""} g/day  
+      🍞 Carbs: ${macros.carbohydrates || ""} g/day  
+      
+      Don’t worry—Meal Points has your back. We’ll track everything for you, so all you need to do is focus on making each meal a win! 💪 Let’s make this journey epic. 🚀`,
+    },
   },
 };
 export const START_HOUR_OF_DAY = 3;
@@ -226,4 +241,12 @@ export const CORS_OPTIONS = {
   origin: ["http://localhost:5050", /\.getmealpoints\.com$/],
   methods: "GET,POST,PUT,DELETE",
   allowedHeaders: "Content-Type,Authorization",
+};
+
+export const ACTIVITY_MULTIPLIERS: Record<PhysicalActivityEnum, number> = {
+  [PhysicalActivityEnum.Sedentary]: 1.2,
+  [PhysicalActivityEnum.Light]: 1.375,
+  [PhysicalActivityEnum.Moderate]: 1.55,
+  [PhysicalActivityEnum.Active]: 1.725,
+  [PhysicalActivityEnum.VeryActive]: 1.9,
 };

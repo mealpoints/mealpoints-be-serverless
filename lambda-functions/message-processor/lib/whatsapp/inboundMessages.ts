@@ -29,7 +29,7 @@ export const processInboundMessageWebhook = async (
     // Ensure user exists
     const user = await userService.ensureUserByContact(contact as string);
 
-    // Only restrict in development. feature is not released in Prod yet.
+    // Subs check paywall
     const { isSubscribed, subscription } = await isUserSubscribed(user);
     if (!isSubscribed) {
       return handleNonSubscribedUser(user, subscription);
@@ -40,6 +40,7 @@ export const processInboundMessageWebhook = async (
       !(await nutritionBudgetService.getNutritionBudgetByUser(user.id)) &&
       webhookType !== WebhookTypesEnum.Interactive // This is to make sure that the when the user creates a budget via the interactive message, the user is not stopped (stuck in a loop)
     ) {
+      // At this point, user's current msg is left unprocessed
       return await requestNutritionBudget(user);
     }
 
