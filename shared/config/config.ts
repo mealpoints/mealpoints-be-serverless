@@ -44,15 +44,15 @@ Click the link below to grab your plan and make every bite count.`,
 We’d love to have you join us! 😊.`,
     welcome: {
       notify_nutrition_budget: (macros: Macros) => `
-      🎉 Your journey starts NOW! 
+🎉 Your journey starts NOW! 
       
-      Here’s your game plan to crush your goals:  
-      🍴 Calories: ${macros.calories || ""} kcal/day  
-      🥩 Protein: ${macros.protein || ""} g/day  
-      🥑 Fats: ${macros.fat || ""} g/day  
-      🍞 Carbs: ${macros.carbohydrates || ""} g/day  
+Here’s your game plan to crush your goals:  
+🍴 Calories: ${macros.calories || ""} kcal/day  
+🥩 Protein: ${macros.protein || ""} g/day  
+🥑 Fats: ${macros.fat || ""} g/day  
+🍞 Carbs: ${macros.carbohydrates || ""} g/day  
       
-      Don’t worry—Meal Points has your back. We’ll track everything for you, so all you need to do is focus on making each meal a win! 💪 Let’s make this journey epic. 🚀`,
+Don’t worry—Meal Points has your back. We’ll track everything for you, so all you need to do is focus on making each meal a win! 💪 Let’s make this journey epic. 🚀`,
     },
   },
 };
