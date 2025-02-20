@@ -5,9 +5,21 @@ import {
 } from "../../types/enums";
 import { MessageTemplateObject } from "../../types/message";
 import {
+  createBreakfastReminderV1Template,
+  IBreakfastReminderV1,
+} from "./bfReminderV1";
+import {
+  createDinnerReminderV1Template,
+  IDinnerReminderV1,
+} from "./dinnerReminderV1";
+import {
   createFeatIntro_MealViaTextTemplate,
   IFeatIntro_MealViaText,
 } from "./featIntro";
+import {
+  createLunchReminderV1Template,
+  ILunchReminderV1,
+} from "./lunchReminderV1";
 import {
   createUserMealReportTemplate,
   IUserMealReportData,
@@ -46,6 +58,9 @@ type WhatsappTemplateDataMap = {
   [WhatsappTemplateNameEnum.OnboardingV1]: IOnboardingV1Data;
   [WhatsappTemplateNameEnum.SubscriptionRenewedV1]: ISubscriptionRenewedV1Data;
   [WhatsappTemplateNameEnum.MissingNutritionBudget]: IMissingNutritionBudgetData;
+  [WhatsappTemplateNameEnum.BreakfastReminderV1]: IBreakfastReminderV1;
+  [WhatsappTemplateNameEnum.LunchReminderV1]: ILunchReminderV1;
+  [WhatsappTemplateNameEnum.DinnerReminderV1]: IDinnerReminderV1;
 };
 
 export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
@@ -80,6 +95,15 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
     }
     case WhatsappTemplateNameEnum.SubscriptionRenewedV1: {
       return createSubscriptionRenewedV1Template();
+    }
+    case WhatsappTemplateNameEnum.BreakfastReminderV1: {
+      return createBreakfastReminderV1Template();
+    }
+    case WhatsappTemplateNameEnum.LunchReminderV1: {
+      return createLunchReminderV1Template();
+    }
+    case WhatsappTemplateNameEnum.DinnerReminderV1: {
+      return createDinnerReminderV1Template();
     }
     default: {
       throw new Error("Template not found");

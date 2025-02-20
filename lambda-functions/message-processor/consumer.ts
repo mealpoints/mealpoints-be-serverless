@@ -12,11 +12,13 @@ import { processReminder } from "./lib/reminder";
 import { processSubscriptionExpired } from "./lib/subscription-expired";
 import { processWhatsappWebhook } from "./lib/whatsapp";
 import { EventService } from "./services/event.service";
+import { processBldReminders } from "./lib/bld-reminders";
 const Logger = logger("handler");
 
 const messageProcessors = {
   [QUEUE_MESSAGE_GROUP_IDS.whatsapp_messages]: processWhatsappWebhook,
   [QUEUE_MESSAGE_GROUP_IDS.reminder]: processReminder,
+  [QUEUE_MESSAGE_GROUP_IDS.bld_reminder]: processBldReminders,
   [QUEUE_MESSAGE_GROUP_IDS.meal_report]: processMealReport,
   [QUEUE_MESSAGE_GROUP_IDS.onboard_user]: processOnboardUser,
   [QUEUE_MESSAGE_GROUP_IDS.subscription_expired]: processSubscriptionExpired,

@@ -66,6 +66,7 @@ export const QUEUE_MESSAGE_GROUP_IDS = {
   onboard_user: "onboard_user",
   feat_intro_meal_via_text: "feat_intro_meal_via_text",
   subscription_expired: "subscription_expired",
+  bld_reminder: "bld_reminder",
 };
 
 export const DEFAULT_GEO_INFO = {
