@@ -1,5 +1,6 @@
 import { ISubscription } from "../models/subscription.model";
 import { IUser } from "../models/user.model";
+import { UserEngagementMessageTypesEnum } from "./enums";
 import { WhastappWebhookObject } from "./message";
 
 export interface IMessage {
@@ -19,4 +20,9 @@ export interface IUserToSendReminders {
 export interface IUserWithSubscription extends Partial<IUser> {
   id: string;
   subscription: ISubscription;
+}
+
+export interface IUserWithBLDReminderType extends Partial<IUser> {
+  id: string;
+  bldReminderType: UserEngagementMessageTypesEnum;
 }

@@ -6,13 +6,19 @@ import { IUser } from "../../../shared/models/user.model";
 import { SqsQueueService } from "../../../shared/services/queue.service";
 import {
   IUserToSendReminders,
+  IUserWithBLDReminderType,
   IUserWithSubscription,
 } from "../../../shared/types/queueMessages";
 
 const Logger = logger("user-engagement/enqueue.service");
 
 export const enqueueUsersToSendEngagement = async (
-  usersToEngage: (IUserWithSubscription | IUserToSendReminders | IUser)[],
+  usersToEngage: (
+    | IUserWithSubscription
+    | IUserToSendReminders
+    | IUser
+    | IUserWithBLDReminderType
+  )[],
   messageGroupId: keyof typeof QUEUE_MESSAGE_GROUP_IDS
 ): Promise<void> => {
   Logger("enqueueUsersToSendEngagement").info(

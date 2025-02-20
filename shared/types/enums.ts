@@ -35,6 +35,9 @@ export enum UserEngagementMessageTypesEnum {
   Welcome = "welcome",
   FeatIntro_MealViaText = "feat_intro_meal_via_text",
   SubscriptionCheck = "subscription_check",
+  BFReminder = "bf_reminder",
+  LunchReminder = "lunch_reminder",
+  DinnerReminder = "dinner_reminder",
 }
 
 export enum ParametersTypesEnum {
@@ -562,6 +565,9 @@ export enum WhatsappTemplateNameEnum {
   OnboardingV1 = "onboarding_v1",
   SubscriptionRenewedV1 = "subscription_renewed_v1",
   MissingNutritionBudget = "missing_nutrition_budget",
+  BFReminderV1 = "bf_reminder_v1",
+  LunchReminderV1 = "lunch_reminder_v1",
+  DinnerReminderV1 = "dinner_reminder_v1",
 }
 
 export enum CountryCodeToDefaultTimezoneEnum {
