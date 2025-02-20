@@ -29,7 +29,7 @@ export const executeFlow = async (
         await subscriptionCheckFlow(timezone);
         break;
       }
-      case UserEngagementMessageTypesEnum.BFReminder:
+      case UserEngagementMessageTypesEnum.BreakfastReminder:
       case UserEngagementMessageTypesEnum.LunchReminder:
       case UserEngagementMessageTypesEnum.DinnerReminder: {
         await bldReminders(flowName, timezone);

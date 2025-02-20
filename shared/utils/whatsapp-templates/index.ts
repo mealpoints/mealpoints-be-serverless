@@ -4,7 +4,10 @@ import {
   WhatsappTemplateNameEnum,
 } from "../../types/enums";
 import { MessageTemplateObject } from "../../types/message";
-import { createBFReminderV1Template, IBFReminderV1 } from "./bfReminderV1";
+import {
+  createBreakfastReminderV1Template,
+  IBreakfastReminderV1,
+} from "./bfReminderV1";
 import {
   createDinnerReminderV1Template,
   IDinnerReminderV1,
@@ -55,7 +58,7 @@ type WhatsappTemplateDataMap = {
   [WhatsappTemplateNameEnum.OnboardingV1]: IOnboardingV1Data;
   [WhatsappTemplateNameEnum.SubscriptionRenewedV1]: ISubscriptionRenewedV1Data;
   [WhatsappTemplateNameEnum.MissingNutritionBudget]: IMissingNutritionBudgetData;
-  [WhatsappTemplateNameEnum.BFReminderV1]: IBFReminderV1;
+  [WhatsappTemplateNameEnum.BreakfastReminderV1]: IBreakfastReminderV1;
   [WhatsappTemplateNameEnum.LunchReminderV1]: ILunchReminderV1;
   [WhatsappTemplateNameEnum.DinnerReminderV1]: IDinnerReminderV1;
 };
@@ -93,8 +96,8 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
     case WhatsappTemplateNameEnum.SubscriptionRenewedV1: {
       return createSubscriptionRenewedV1Template();
     }
-    case WhatsappTemplateNameEnum.BFReminderV1: {
-      return createBFReminderV1Template();
+    case WhatsappTemplateNameEnum.BreakfastReminderV1: {
+      return createBreakfastReminderV1Template();
     }
     case WhatsappTemplateNameEnum.LunchReminderV1: {
       return createLunchReminderV1Template();

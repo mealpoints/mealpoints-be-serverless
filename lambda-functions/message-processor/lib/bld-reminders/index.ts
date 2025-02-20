@@ -13,8 +13,8 @@ const Logger = logger("message-processor/lib/bld-reminders/index");
 const templateMapping: Partial<
   Record<UserEngagementMessageTypesEnum, WhatsappTemplateNameEnum>
 > = {
-  [UserEngagementMessageTypesEnum.BFReminder]:
-    WhatsappTemplateNameEnum.BFReminderV1,
+  [UserEngagementMessageTypesEnum.BreakfastReminder]:
+    WhatsappTemplateNameEnum.BreakfastReminderV1,
   [UserEngagementMessageTypesEnum.LunchReminder]:
     WhatsappTemplateNameEnum.LunchReminderV1,
   [UserEngagementMessageTypesEnum.DinnerReminder]:

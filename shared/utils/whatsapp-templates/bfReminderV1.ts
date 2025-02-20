@@ -5,12 +5,12 @@ import {
 } from "../../types/enums";
 import { MessageTemplateObject } from "../../types/message";
 
-export interface IBFReminderV1 {}
+export interface IBreakfastReminderV1 {}
 
-export const createBFReminderV1Template =
+export const createBreakfastReminderV1Template =
   (): MessageTemplateObject<ComponentTypesEnum> => {
     return {
-      name: WhatsappTemplateNameEnum.BFReminderV1,
+      name: WhatsappTemplateNameEnum.BreakfastReminderV1,
       language: {
         policy: "deterministic",
         code: LanguagesEnum.English,
