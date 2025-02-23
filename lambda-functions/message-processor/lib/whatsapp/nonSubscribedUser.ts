@@ -94,10 +94,10 @@ const handleUserWithoutAnySubscription = async (user: IUser) => {
 
   try {
     const settings = await SettingsSingleton.getInstance();
-    const activeFreeTrailPlanId = settings.get("free-trial.plan") as string;
+    const activeFreeTrialPlanId = settings.get("free-trial.plan") as string;
 
-    if (activeFreeTrailPlanId && activeFreeTrailPlanId.trim() !== "") {
-      const plan = await getPlanById(activeFreeTrailPlanId);
+    if (activeFreeTrialPlanId && activeFreeTrialPlanId.trim() !== "") {
+      const plan = await getPlanById(activeFreeTrialPlanId);
       if (plan) {
         const onboardingData = {
           user,
@@ -108,12 +108,12 @@ const handleUserWithoutAnySubscription = async (user: IUser) => {
         return;
       } else {
         Logger("handleUserWithoutAnySubscription").info(
-          "Free trail plan not found, Sending subscription based service notice to user"
+          "Free Trial plan not found, Sending subscription based service notice to user"
         );
       }
     } else {
       Logger("handleUserWithoutAnySubscription").info(
-        "No active free trail plan id found in settings, Sending subscription based service notice to user"
+        "No active free Trial plan id found in settings, Sending subscription based service notice to user"
       );
     }
 
