@@ -18,7 +18,7 @@ import { createWhatsappTemplate } from "../../../../shared/utils/whatsapp-templa
 
 const Logger = logger("lib/onboard-user");
 
-interface IProcessOnboardUser extends Omit<IOrder, "user" | "plan"> {
+export interface IProcessOnboardUser extends Omit<IOrder, "user" | "plan"> {
   user: IUser;
   plan: IPlan;
 }
