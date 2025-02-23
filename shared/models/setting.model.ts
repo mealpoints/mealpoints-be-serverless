@@ -8,6 +8,7 @@ export type SettingKey =
   | "openai.assistant.goal-setting-coach"
   | "blacklist"
   | "ui.home.plan"
+  | "free-trial.plan"
   | "rate-limit.message-limit-per-day"
   | "internal-alerts.alert-list"
   | "open-ai.max-runs-on-a-thread"
