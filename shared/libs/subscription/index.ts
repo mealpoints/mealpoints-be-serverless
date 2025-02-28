@@ -4,7 +4,6 @@ import { IOrder } from "../../models/order.model";
 import { IPlan } from "../../models/plan.model";
 import { ISubscription } from "../../models/subscription.model";
 import { IUser } from "../../models/user.model";
-import * as settingService from "../../services/setting.service";
 import * as subscriptionService from "../../services/subscription.service";
 import { SubscriptionStatusEnum } from "../../types/enums";
 import { getSubscriptionStartAndEndDates } from "./utils";
@@ -80,17 +79,6 @@ export const isUserSubscribed = async (user: IUser) => {
     const lastSubscription = await subscriptionService.getSubscriptionByUserId(
       user.id
     );
-
-    // We will exempt users who are created before 2025-30-01.
-    // This is to ensure that the users who are created before the subscription system was implemented are not blocked.
-    // In the future we will remove this check and only rely on exempt-contacts
-    if (!lastSubscription && user.createdAt < new Date("2025-01-30")) {
-      await settingService.addToSettingArray(
-        "subscription.exempt-contacts",
-        user.contact
-      );
-      return { isSubscribed: true, subscription: null };
-    }
 
     if (!lastSubscription) {
       return { isSubscribed: false, subscription: null };
