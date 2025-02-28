@@ -13,14 +13,17 @@ const Logger = logger("lib/subscription");
 interface IActivateSubscription {
   user: IUser;
   plan: IPlan;
-  order: IOrder;
+  order?: IOrder; // Optional as we do not need an order for free trial
 }
 
 export const activateSubscription = async (data: IActivateSubscription) => {
   Logger("activateSubscription").info("");
   try {
     const { user, plan, order } = data;
-    const { startDate, endDate } = getSubscriptionStartAndEndDates(order, plan);
+    const { startDate, endDate } = getSubscriptionStartAndEndDates(
+      order?.createdAt || new Date(),
+      plan
+    );
 
     const subscription = await subscriptionService.createSubscription({
       user: user.id,
@@ -48,7 +51,7 @@ export const renewSubscription = async (data: IRenewSubscription) => {
   Logger("renewSubscription").info("");
   try {
     const { order, plan, subscription } = data;
-    const { endDate } = getSubscriptionStartAndEndDates(order, plan);
+    const { endDate } = getSubscriptionStartAndEndDates(order.createdAt, plan);
 
     const renewedSubscription =
       await subscriptionService.updateSubscriptionById(subscription.id, {
