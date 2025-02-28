@@ -4,7 +4,6 @@ import { IOrder } from "../../models/order.model";
 import { IPlan } from "../../models/plan.model";
 import { ISubscription } from "../../models/subscription.model";
 import { IUser } from "../../models/user.model";
-import * as settingService from "../../services/setting.service";
 import * as subscriptionService from "../../services/subscription.service";
 import { SubscriptionStatusEnum } from "../../types/enums";
 import { getSubscriptionStartAndEndDates } from "./utils";
@@ -14,14 +13,17 @@ const Logger = logger("lib/subscription");
 interface IActivateSubscription {
   user: IUser;
   plan: IPlan;
-  order: IOrder;
+  order?: IOrder; // Optional as we do not need an order for free trial
 }
 
 export const activateSubscription = async (data: IActivateSubscription) => {
   Logger("activateSubscription").info("");
   try {
     const { user, plan, order } = data;
-    const { startDate, endDate } = getSubscriptionStartAndEndDates(order, plan);
+    const { startDate, endDate } = getSubscriptionStartAndEndDates(
+      order?.createdAt || new Date(),
+      plan
+    );
 
     const subscription = await subscriptionService.createSubscription({
       user: user.id,
@@ -49,7 +51,7 @@ export const renewSubscription = async (data: IRenewSubscription) => {
   Logger("renewSubscription").info("");
   try {
     const { order, plan, subscription } = data;
-    const { endDate } = getSubscriptionStartAndEndDates(order, plan);
+    const { endDate } = getSubscriptionStartAndEndDates(order.createdAt, plan);
 
     const renewedSubscription =
       await subscriptionService.updateSubscriptionById(subscription.id, {
@@ -80,17 +82,6 @@ export const isUserSubscribed = async (user: IUser) => {
     const lastSubscription = await subscriptionService.getSubscriptionByUserId(
       user.id
     );
-
-    // We will exempt users who are created before 2025-30-01.
-    // This is to ensure that the users who are created before the subscription system was implemented are not blocked.
-    // In the future we will remove this check and only rely on exempt-contacts
-    if (!lastSubscription && user.createdAt < new Date("2025-01-30")) {
-      await settingService.addToSettingArray(
-        "subscription.exempt-contacts",
-        user.contact
-      );
-      return { isSubscribed: true, subscription: null };
-    }
 
     if (!lastSubscription) {
       return { isSubscribed: false, subscription: null };

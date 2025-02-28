@@ -53,5 +53,5 @@ functions:
     timeout: 300
     events:
       - schedule:
-          rate: rate(30 minutes)
+          rate: cron(0,30 * * * ? *)
           enabled: true

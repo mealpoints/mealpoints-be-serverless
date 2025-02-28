@@ -17,6 +17,10 @@ import {
   IFeatIntro_MealViaText,
 } from "./featIntro";
 import {
+  createFreeTrialOnboardingV1Template,
+  IFreeTrailOnboardingV1Data,
+} from "./freeTrialOnboardingV1";
+import {
   createLunchReminderV1Template,
   ILunchReminderV1,
 } from "./lunchReminderV1";
@@ -61,6 +65,7 @@ type WhatsappTemplateDataMap = {
   [WhatsappTemplateNameEnum.BreakfastReminderV1]: IBreakfastReminderV1;
   [WhatsappTemplateNameEnum.LunchReminderV1]: ILunchReminderV1;
   [WhatsappTemplateNameEnum.DinnerReminderV1]: IDinnerReminderV1;
+  [WhatsappTemplateNameEnum.FreeTrialOnboardingV1]: IFreeTrailOnboardingV1Data;
 };
 
 export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
@@ -104,6 +109,11 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
     }
     case WhatsappTemplateNameEnum.DinnerReminderV1: {
       return createDinnerReminderV1Template();
+    }
+    case WhatsappTemplateNameEnum.FreeTrialOnboardingV1: {
+      return createFreeTrialOnboardingV1Template(
+        data as IFreeTrailOnboardingV1Data
+      );
     }
     default: {
       throw new Error("Template not found");

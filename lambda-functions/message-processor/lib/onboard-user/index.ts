@@ -24,7 +24,7 @@ export interface IProcessOnboardUser extends Omit<IOrder, "user" | "plan"> {
 }
 
 export const processOnboardUser = async (data: IProcessOnboardUser) => {
-  Logger("processOnboardUser").info("%o", data);
+  Logger("processOnboardUser").info(JSON.stringify(data));
   const { user, plan } = data;
   const order: IOrder = { ...data, user: user.id, plan: plan.id };
 
