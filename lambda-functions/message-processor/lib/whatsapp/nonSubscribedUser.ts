@@ -12,6 +12,7 @@ import {
   SubscriptionStatusEnum,
   WhatsappTemplateNameEnum,
 } from "../../../../shared/types/enums";
+import { getHumanReadablePlanDuration } from "../../../../shared/utils/plan";
 import { createWhatsappTemplate } from "../../../../shared/utils/whatsapp-templates";
 
 const Logger = logger("lib/whatsapp/handleNonSubscribedUser");
@@ -149,9 +150,9 @@ const handleUserWithoutAnyPastSubscriptions = async (user: IUser) => {
       user: user.id,
       type: MessageTypesEnum.Template,
       template: createWhatsappTemplate(
-        WhatsappTemplateNameEnum.FreeTrialOnboardingV1,
+        WhatsappTemplateNameEnum.FreeTrialOnboardingV2,
         {
-          trailDuration: `${plan.duration.value}-${plan.duration.unit}`,
+          trailDuration: getHumanReadablePlanDuration(plan.duration),
         }
       ),
     });

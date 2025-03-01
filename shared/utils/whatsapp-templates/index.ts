@@ -16,10 +16,11 @@ import {
   createFeatIntro_MealViaTextTemplate,
   IFeatIntro_MealViaText,
 } from "./featIntro";
+
 import {
-  createFreeTrialOnboardingV1Template,
-  IFreeTrailOnboardingV1Data,
-} from "./freeTrialOnboardingV1";
+  createFreeTrialOnboardingV2Template,
+  IFreeTrailOnboardingV2Data,
+} from "./freeTrialOnboardingV2";
 import {
   createLunchReminderV1Template,
   ILunchReminderV1,
@@ -65,7 +66,7 @@ type WhatsappTemplateDataMap = {
   [WhatsappTemplateNameEnum.BreakfastReminderV1]: IBreakfastReminderV1;
   [WhatsappTemplateNameEnum.LunchReminderV1]: ILunchReminderV1;
   [WhatsappTemplateNameEnum.DinnerReminderV1]: IDinnerReminderV1;
-  [WhatsappTemplateNameEnum.FreeTrialOnboardingV1]: IFreeTrailOnboardingV1Data;
+  [WhatsappTemplateNameEnum.FreeTrialOnboardingV2]: IFreeTrailOnboardingV2Data;
 };
 
 export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
@@ -110,9 +111,9 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
     case WhatsappTemplateNameEnum.DinnerReminderV1: {
       return createDinnerReminderV1Template();
     }
-    case WhatsappTemplateNameEnum.FreeTrialOnboardingV1: {
-      return createFreeTrialOnboardingV1Template(
-        data as IFreeTrailOnboardingV1Data
+    case WhatsappTemplateNameEnum.FreeTrialOnboardingV2: {
+      return createFreeTrialOnboardingV2Template(
+        data as IFreeTrailOnboardingV2Data
       );
     }
     default: {

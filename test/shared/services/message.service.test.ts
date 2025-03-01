@@ -140,4 +140,23 @@ describe("Message Service", () => {
     Logger("sendTextMessage").info(JSON.stringify(response.data));
     expect(response.data).toBeDefined();
   });
+
+  it("should send free trail onboarding V2 template", async () => {
+    const dataService = DataService.getInstance();
+    const userId = dataService.getUser().id;
+
+    const response = await messageService.sendTemplateMessage({
+      user: userId,
+      type: MessageTypesEnum.Template,
+      template: createWhatsappTemplate(
+        WhatsappTemplateNameEnum.FreeTrialOnboardingV2,
+        {
+          trailDuration: "7 days",
+        }
+      ),
+    });
+
+    Logger("sendTemplateMessage").info(JSON.stringify(response.data));
+    expect(response.data).toBeDefined();
+  });
 });
