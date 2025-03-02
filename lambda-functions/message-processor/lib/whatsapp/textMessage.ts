@@ -15,6 +15,7 @@ import { MealResponse } from "../../../../shared/types/openai";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { getOpenAiInstructions } from "../../../../shared/utils/openai";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
+import { sendProcessingNotification } from "../../../../shared/utils/user";
 
 const Logger = logger("lib/whatsapp/textMessage");
 
@@ -33,6 +34,8 @@ export const processTextMessage = async (
     try {
       // Check if user has entered a command
       if (await doesMessageContainCommand(userMessage as string, user)) return;
+
+      await sendProcessingNotification(user);
 
       const result = (await openAIService.ask(userMessage as string, user, {
         messageType: OpenAIMessageTypesEnum.Text,

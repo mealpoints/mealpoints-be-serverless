@@ -1,10 +1,39 @@
+import { LOADING_MESSAGES } from "../config/config";
 import logger from "../config/logger";
 import { IUser } from "../models/user.model";
+import * as messageService from "../services/message.service";
 import { getTodaysUserMealsByUserId } from "../services/userMeal.service";
-import { CountryCodeToNameEnum } from "../types/enums";
+import { CountryCodeToNameEnum, MessageTypesEnum } from "../types/enums";
 import { getLocaleTimeInTimezone, getTimeInTimezone } from "./timezone";
 import { userPreferencesInstruction } from "./userPreferences";
 const Logger = logger("shared/utils/user");
+
+export const sendProcessingNotification = async (user: IUser) => {
+  Logger("sendProcessingNotification").info("");
+
+  if (LOADING_MESSAGES.length === 0) {
+    Logger("sendProcessingNotification").info(
+      "LOADING_MESSAGES array is empty. Aborting notification."
+    );
+    return;
+  }
+
+  try {
+    const randomMessageIndex = Math.floor(
+      Math.random() * LOADING_MESSAGES.length
+    );
+
+    await messageService.sendTextMessage({
+      user: user.id,
+      payload: LOADING_MESSAGES[randomMessageIndex],
+      type: MessageTypesEnum.Text,
+    });
+  } catch (error) {
+    Logger("sendProcessingNotification").error(JSON.stringify(error));
+    // just logging the error and NOT throwing back
+    // As failure of notifying user is not that critical, let other processes run
+  }
+};
 
 export const getUserLocalTime = (user: IUser): Date => {
   Logger("getUserLocalTime").info("");
