@@ -19,6 +19,7 @@ export const getSubscriptionStartAndEndDates = (
   }
 
   const endDate = add(startDate, {
+    days: duration.unit === PlanDurationUnitEnum.Days ? duration.value : 0,
     weeks: duration.unit === PlanDurationUnitEnum.Weeks ? duration.value : 0,
     months: duration.unit === PlanDurationUnitEnum.Months ? duration.value : 0,
   });
