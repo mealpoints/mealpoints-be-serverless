@@ -1,3 +1,4 @@
+import { analyticsClient } from "../../config/analytics";
 import logger from "../../config/logger";
 import { IUser } from "../../models/user.model";
 import * as messageService from "../../services/message.service";
@@ -41,6 +42,17 @@ export const processUserMeal = async (properties: IProcessUserMeal) => {
       user: user.id,
       payload: formatMessage(openAIMealresponse, dailyNutritionTracker),
       type: MessageTypesEnum.Text,
+    });
+
+    analyticsClient.capture({
+      distinctId: user.id,
+      event: "user_meal_created",
+      properties: {
+        meal: meal.name,
+        score: meal.score,
+        macros: meal.macros,
+        localTime: getUserLocalTime(user),
+      },
     });
 
     return userMeal;

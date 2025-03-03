@@ -1,3 +1,4 @@
+import { analyticsClient } from "../../../../../shared/config/analytics";
 import { USER_MESSAGES } from "../../../../../shared/config/config";
 import logger from "../../../../../shared/config/logger";
 import { IUser } from "../../../../../shared/models/user.model";
@@ -85,7 +86,9 @@ export interface IOnboardingV1ParsedReply {
   screen_0_Physical_Activity_4?: string;
 }
 
-export const validateOnboardingInputs = (parsedReply: IOnboardingV1ParsedReply) => {
+export const validateOnboardingInputs = (
+  parsedReply: IOnboardingV1ParsedReply
+) => {
   const {
     screen_1_Target_Weight_0,
     screen_1_Target_Date_1,
@@ -205,6 +208,27 @@ export const onboardingV1 = async (
         USER_MESSAGES.info.welcome.notify_nutrition_budget(calculatedBudget),
       type: MessageTypesEnum.Text,
     });
+
+    analyticsClient.capture({
+      distinctId: user.id,
+      event: "onboarding_v1_completed",
+      properties: {
+        prefences: {
+          age,
+          height,
+          currentWeight,
+          targetDate,
+          targetWeight,
+          birthDate,
+          gender,
+          physicalActivity,
+        },
+        budget: {
+          ...calculatedBudget,
+        },
+      },
+    });
+
     Logger("onboardingV1").info("Onboarding process completed successfully 🎉");
   } catch (error) {
     Logger("onboardingV1").error(error);

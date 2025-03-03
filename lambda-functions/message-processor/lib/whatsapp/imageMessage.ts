@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { analyticsClient } from "../../../../shared/config/analytics";
 import { USER_MESSAGES } from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
@@ -33,6 +34,15 @@ export const processImageMessage = async (
   ) as string;
 
   try {
+    analyticsClient.capture({
+      distinctId: user.id,
+      event: "inbound_image_message",
+      properties: {
+        type: "image",
+        ...payload,
+      },
+    });
+
     await sendLoadingNotification(user);
 
     const imageFilePath = await fetchImage(imageId as string);
