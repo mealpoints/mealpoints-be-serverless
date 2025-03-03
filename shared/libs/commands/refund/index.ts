@@ -1,10 +1,12 @@
+import { USER_MESSAGES } from "../../../config/config";
 import logger from "../../../config/logger";
 import { IOrder } from "../../../models/order.model";
 import { ISubscription } from "../../../models/subscription.model";
 import { IUser } from "../../../models/user.model";
+import * as messageService from "../../../services/message.service";
 import * as orderService from "../../../services/order.service";
 import * as subscriptionService from "../../../services/subscription.service";
-import { SubscriptionStatusEnum } from "../../../types/enums";
+import { MessageTypesEnum, SubscriptionStatusEnum } from "../../../types/enums";
 import { sendInternalAlert } from "../../internal-alerts";
 import * as userMessages from "./userMessages";
 import { isValidSubscription } from "./validSubscription";
@@ -20,7 +22,12 @@ export const refundRequested = async (user: IUser) => {
 
     if (!(await isValidSubscription(user, subscription))) {
       Logger("refundRequested").error("No subscription found");
-      throw new Error("No subscription found");
+
+      return await messageService.sendTextMessage({
+        user: user.id,
+        payload: USER_MESSAGES.errors.refund.subscription_not_found,
+        type: MessageTypesEnum.Text,
+      });
     }
 
     // @ts-expect-error - We know that subscription exists
@@ -45,9 +52,6 @@ export const refundRequested = async (user: IUser) => {
       });
       throw new Error("No order found");
     }
-
-    // Confirm refund from user.
-    await userMessages.confirmRefund(user);
   } catch (error) {
     Logger("refundRequested").error(JSON.stringify(error));
     throw error;
