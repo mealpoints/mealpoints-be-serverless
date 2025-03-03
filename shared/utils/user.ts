@@ -8,15 +8,8 @@ import { getLocaleTimeInTimezone, getTimeInTimezone } from "./timezone";
 import { userPreferencesInstruction } from "./userPreferences";
 const Logger = logger("shared/utils/user");
 
-export const sendProcessingNotification = async (user: IUser) => {
-  Logger("sendProcessingNotification").info("");
-
-  if (LOADING_MESSAGES.length === 0) {
-    Logger("sendProcessingNotification").info(
-      "LOADING_MESSAGES array is empty. Aborting notification."
-    );
-    return;
-  }
+export const sendLoadingNotification = async (user: IUser) => {
+  Logger("sendLoadingNotification").info("");
 
   try {
     const randomMessageIndex = Math.floor(
@@ -29,7 +22,7 @@ export const sendProcessingNotification = async (user: IUser) => {
       type: MessageTypesEnum.Text,
     });
   } catch (error) {
-    Logger("sendProcessingNotification").error(JSON.stringify(error));
+    Logger("sendLoadingNotification").error(JSON.stringify(error));
     // just logging the error and NOT throwing back
     // As failure of notifying user is not that critical, let other processes run
   }
