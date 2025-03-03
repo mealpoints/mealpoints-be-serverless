@@ -123,22 +123,101 @@ describe("getMaxPossibleBillingCycleCountInPlan", () => {
       const result = getMaxPossibleBillingCycleCountInPlan(plan);
       expect(result).toBe(1);
     });
+  });
 
-    it("should handle unexpected units gracefully", () => {
-      const plan: IPlan = {
-        type: PlanTypeEnum.Recurring,
-        duration: {
-          unit: "unexpectedUnit" as PlanDurationUnitEnum,
-          value: 10,
-        },
-        billingCycle: {
-          unit: "unexpectedUnit" as PlanDurationUnitEnum,
-          value: 5,
-        },
-      } as IPlan;
+  it("should correctly compute cycles for plan duration in months and billing cycle in days", () => {
+    const plan: IPlan = {
+      type: PlanTypeEnum.Recurring,
+      duration: {
+        unit: PlanDurationUnitEnum.Months,
+        value: 3,
+      },
+      billingCycle: {
+        unit: PlanDurationUnitEnum.Days,
+        value: 15,
+      },
+    } as IPlan;
+    const result = getMaxPossibleBillingCycleCountInPlan(plan);
+    expect(result).toBe(6);
+  });
 
-      const result = getMaxPossibleBillingCycleCountInPlan(plan);
-      expect(result).toBe(1); // Fallback to the default behavior
-    });
+  it("should correctly compute cycles for plan duration in days and billing cycle in months", () => {
+    const plan: IPlan = {
+      type: PlanTypeEnum.Recurring,
+      duration: {
+        unit: PlanDurationUnitEnum.Days,
+        value: 60,
+      },
+      billingCycle: {
+        unit: PlanDurationUnitEnum.Months,
+        value: 1,
+      },
+    } as IPlan;
+    const result = getMaxPossibleBillingCycleCountInPlan(plan);
+    expect(result).toBe(2);
+  });
+
+  it("should correctly compute cycles for plan duration in weeks and billing cycle in days", () => {
+    const plan: IPlan = {
+      type: PlanTypeEnum.Recurring,
+      duration: {
+        unit: PlanDurationUnitEnum.Weeks,
+        value: 3,
+      },
+      billingCycle: {
+        unit: PlanDurationUnitEnum.Days,
+        value: 5,
+      },
+    } as IPlan;
+    const result = getMaxPossibleBillingCycleCountInPlan(plan);
+    expect(result).toBe(4);
+  });
+
+  it("should correctly compute cycles for plan duration in days and billing cycle in weeks", () => {
+    const plan: IPlan = {
+      type: PlanTypeEnum.Recurring,
+      duration: {
+        unit: PlanDurationUnitEnum.Days,
+        value: 20,
+      },
+      billingCycle: {
+        unit: PlanDurationUnitEnum.Weeks,
+        value: 1,
+      },
+    } as IPlan;
+    const result = getMaxPossibleBillingCycleCountInPlan(plan);
+    expect(result).toBe(2);
+  });
+
+  it("should correctly compute cycles for plan duration in days and billing cycle in days", () => {
+    const plan: IPlan = {
+      type: PlanTypeEnum.Recurring,
+      duration: {
+        unit: PlanDurationUnitEnum.Days,
+        value: 45,
+      },
+      billingCycle: {
+        unit: PlanDurationUnitEnum.Days,
+        value: 15,
+      },
+    } as IPlan;
+    const result = getMaxPossibleBillingCycleCountInPlan(plan);
+    expect(result).toBe(3);
+  });
+
+  it("should correctly compute cycles for plan duration in weeks and billing cycle in months", () => {
+    const plan: IPlan = {
+      type: PlanTypeEnum.Recurring,
+      duration: {
+        unit: PlanDurationUnitEnum.Weeks,
+        value: 8,
+      },
+      billingCycle: {
+        unit: PlanDurationUnitEnum.Months,
+        value: 1,
+      },
+    } as IPlan;
+    const result = getMaxPossibleBillingCycleCountInPlan(plan);
+    expect(result).toBe(1);
   });
 });
