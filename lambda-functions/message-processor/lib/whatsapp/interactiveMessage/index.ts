@@ -1,4 +1,4 @@
-import { analyticsClient } from "../../../../../shared/config/analytics";
+import { analytics } from "../../../../../shared/config/analytics";
 import { USER_MESSAGES } from "../../../../../shared/config/config";
 import logger from "../../../../../shared/config/logger";
 import { IUser } from "../../../../../shared/models/user.model";
@@ -20,7 +20,7 @@ export const processInteractiveMessage = async (
   try {
     const { interactiveMessageContent } = new WhatsappData(payload);
 
-    analyticsClient.capture({
+    analytics.capture({
       distinctId: user.id,
       event: "inbound_interactive_message",
       properties: {

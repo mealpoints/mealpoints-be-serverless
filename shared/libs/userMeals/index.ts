@@ -1,4 +1,4 @@
-import { analyticsClient } from "../../config/analytics";
+import { analytics } from "../../config/analytics";
 import logger from "../../config/logger";
 import { IUser } from "../../models/user.model";
 import * as messageService from "../../services/message.service";
@@ -44,7 +44,7 @@ export const processUserMeal = async (properties: IProcessUserMeal) => {
       type: MessageTypesEnum.Text,
     });
 
-    analyticsClient.capture({
+    analytics.capture({
       distinctId: user.id,
       event: "user_meal_created",
       properties: {

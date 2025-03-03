@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { analyticsClient } from "../../../../shared/config/analytics";
+import { analytics } from "../../../../shared/config/analytics";
 import { USER_MESSAGES } from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
@@ -34,7 +34,7 @@ export const processImageMessage = async (
   ) as string;
 
   try {
-    analyticsClient.capture({
+    analytics.capture({
       distinctId: user.id,
       event: "inbound_image_message",
       properties: {

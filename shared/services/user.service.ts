@@ -1,3 +1,4 @@
+import { analytics } from "../config/analytics";
 import logger from "../config/logger";
 import User, { IUser, IUserCreate } from "../models/user.model";
 import { getGeoInfoFromcontact } from "../utils/timezone";
@@ -13,6 +14,15 @@ export const createUser = async (userData: IUserCreate): Promise<IUser> => {
   userData.countryCode ??= countryCode;
 
   const user = await User.create(userData);
+
+  analytics.capture({
+    distinctId: user.id,
+    event: "user_created",
+    properties: {
+      ...userData,
+    },
+  });
+
   return user;
 };
 

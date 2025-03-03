@@ -1,4 +1,4 @@
-import { analyticsClient } from "../../../../shared/config/analytics";
+import { analytics } from "../../../../shared/config/analytics";
 import logger from "../../../../shared/config/logger";
 import { isUserSubscribed } from "../../../../shared/libs/subscription";
 import * as messageService from "../../../../shared/services/message.service";
@@ -30,7 +30,7 @@ export const processInboundMessageWebhook = async (
     // Ensure user exists
     const user = await userService.ensureUserByContact(contact as string);
 
-    analyticsClient.capture({
+    analytics.capture({
       distinctId: user.id,
       event: "inbound_message",
       properties: {
