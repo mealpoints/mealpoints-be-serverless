@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { analytics } from "../../../shared/config/analytics";
 import { QUEUE_MESSAGE_GROUP_IDS } from "../../../shared/config/config";
 import logger from "../../../shared/config/logger";
 import { queue } from "../../../shared/config/queue";
@@ -62,6 +63,16 @@ export const createOrder = catchAsync(
       amount: plan.currentPrice.value,
     });
 
+    analytics.capture({
+      distinctId: user.id,
+      event: "order_created",
+      properties: {
+        orderId: order.id,
+        planId: plan.id,
+        amount: order.amount,
+      },
+    });
+
     return ApiResponse.Created(response, order);
   }
 );
@@ -111,6 +122,16 @@ export const validatePayment = catchAsync(
     if (!order) {
       return ApiResponse.NotFound(response, "Order not found");
     }
+
+    analytics.capture({
+      distinctId: order.user,
+      event: "payment_completed",
+      properties: {
+        orderId: order.id,
+        planId: order.plan,
+        amount: order.amount,
+      },
+    });
 
     const queueService = new SqsQueueService(queue);
     await queueService.enqueueMessage({
