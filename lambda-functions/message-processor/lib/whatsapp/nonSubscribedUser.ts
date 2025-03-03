@@ -1,3 +1,4 @@
+import { analytics } from "../../../../shared/config/analytics";
 import { USER_MESSAGES } from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
