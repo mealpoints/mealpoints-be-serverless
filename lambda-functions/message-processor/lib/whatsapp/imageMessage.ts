@@ -17,6 +17,7 @@ import { MealResponse } from "../../../../shared/types/openai";
 import { WhatsappData } from "../../../../shared/utils/WhatsappData";
 import { getOpenAiInstructions } from "../../../../shared/utils/openai";
 import { convertToHumanReadableMessage } from "../../../../shared/utils/string";
+import { sendLoadingNotification } from "../../../../shared/utils/user";
 const Logger = logger("lib/whatsapp/imageMessage");
 
 export const processImageMessage = async (
@@ -32,6 +33,8 @@ export const processImageMessage = async (
   ) as string;
 
   try {
+    await sendLoadingNotification(user);
+
     const imageFilePath = await fetchImage(imageId as string);
     const s3Path = await uploadImageToS3(
       user.id,
