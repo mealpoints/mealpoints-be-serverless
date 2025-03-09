@@ -1,4 +1,5 @@
 import { UPDATE_MEAL_BUTTON_TEXT } from "../../config/config";
+import { analytics } from "../../config/analytics";
 import logger from "../../config/logger";
 import { IUser } from "../../models/user.model";
 import * as messageService from "../../services/message.service";
@@ -57,6 +58,17 @@ export const processUserMeal = async (properties: IProcessUserMeal) => {
             },
           ],
         },
+      },
+    });
+
+    analytics.capture({
+      distinctId: user.id,
+      event: "user_meal_created",
+      properties: {
+        meal: meal.name,
+        score: meal.score,
+        macros: meal.macros,
+        localTime: getUserLocalTime(user),
       },
     });
 

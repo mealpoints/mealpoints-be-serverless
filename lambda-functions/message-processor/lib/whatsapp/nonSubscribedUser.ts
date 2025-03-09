@@ -1,3 +1,4 @@
+import { analytics } from "../../../../shared/config/analytics";
 import { USER_MESSAGES } from "../../../../shared/config/config";
 import logger from "../../../../shared/config/logger";
 import SettingsSingleton from "../../../../shared/config/settings";
@@ -155,6 +156,14 @@ const handleUserWithoutAnyPastSubscriptions = async (user: IUser) => {
           trailDuration: getHumanReadablePlanDuration(plan.duration),
         }
       ),
+    });
+
+    analytics.capture({
+      distinctId: user.id,
+      event: "free_trial_activated",
+      properties: {
+        ...plan,
+      },
     });
   } catch (error) {
     Logger("handleUserWithoutAnyPastSubscriptions").error(
