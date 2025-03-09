@@ -960,4 +960,5 @@ export enum PlanDurationUnitEnum {
 export enum ButtonReplyEnum {
   RefundConfirmed = "refund_confirmed",
   RefundRejected = "refund_rejected",
+  UpdateMeal = "update_meal",
 }

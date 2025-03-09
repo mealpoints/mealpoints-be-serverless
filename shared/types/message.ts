@@ -281,7 +281,7 @@ export type InteractiveReplyObject = {
     buttons: {
       type: "reply";
       reply: {
-        id: ButtonReplyEnum; // Unique identifier for the button, max 256 characters
+        id: ButtonReplyEnum | `${ButtonReplyEnum}__${string}`; // Unique identifier for the button, max 256 characters
         title: string; // Button label text, max 20 characters
       };
     }[];
