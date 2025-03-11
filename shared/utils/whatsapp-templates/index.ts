@@ -22,6 +22,14 @@ import {
   IFreeTrailOnboardingV2Data,
 } from "./freeTrialOnboardingV2";
 import {
+  createFreeTrialOnboardingV3Template,
+  IFreeTrailOnboardingV3Data,
+} from "./freeTrialOnboardingV3";
+import {
+  createFreeTrialOnboardingV4Template,
+  IFreeTrailOnboardingV4Data,
+} from "./freeTrialOnboardingV4";
+import {
   createLunchReminderV1Template,
   ILunchReminderV1,
 } from "./lunchReminderV1";
@@ -67,6 +75,8 @@ type WhatsappTemplateDataMap = {
   [WhatsappTemplateNameEnum.LunchReminderV1]: ILunchReminderV1;
   [WhatsappTemplateNameEnum.DinnerReminderV1]: IDinnerReminderV1;
   [WhatsappTemplateNameEnum.FreeTrialOnboardingV2]: IFreeTrailOnboardingV2Data;
+  [WhatsappTemplateNameEnum.FreeTrialOnboardingV3]: IFreeTrailOnboardingV3Data;
+  [WhatsappTemplateNameEnum.FreeTrialOnboardingV4]: IFreeTrailOnboardingV4Data;
 };
 
 export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
@@ -115,6 +125,12 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
       return createFreeTrialOnboardingV2Template(
         data as IFreeTrailOnboardingV2Data
       );
+    }
+    case WhatsappTemplateNameEnum.FreeTrialOnboardingV3: {
+      return createFreeTrialOnboardingV3Template();
+    }
+    case WhatsappTemplateNameEnum.FreeTrialOnboardingV4: {
+      return createFreeTrialOnboardingV4Template();
     }
     default: {
       throw new Error("Template not found");

@@ -13,7 +13,6 @@ import {
   SubscriptionStatusEnum,
   WhatsappTemplateNameEnum,
 } from "../../../../shared/types/enums";
-import { getHumanReadablePlanDuration } from "../../../../shared/utils/plan";
 import { createWhatsappTemplate } from "../../../../shared/utils/whatsapp-templates";
 
 const Logger = logger("lib/whatsapp/handleNonSubscribedUser");
@@ -147,14 +146,25 @@ const handleUserWithoutAnyPastSubscriptions = async (user: IUser) => {
       throw new Error("Failed to activate subscription");
     }
 
+    // TODO: Might use this later
+
+    // await messageService.sendTemplateMessage({
+    //   user: user.id,
+    //   type: MessageTypesEnum.Template,
+    //   template: createWhatsappTemplate(
+    //     WhatsappTemplateNameEnum.FreeTrialOnboardingV2,
+    //     {
+    //       trailDuration: getHumanReadablePlanDuration(plan.duration),
+    //     }
+    //   ),
+    // });
+
     await messageService.sendTemplateMessage({
       user: user.id,
       type: MessageTypesEnum.Template,
       template: createWhatsappTemplate(
-        WhatsappTemplateNameEnum.FreeTrialOnboardingV2,
-        {
-          trailDuration: getHumanReadablePlanDuration(plan.duration),
-        }
+        WhatsappTemplateNameEnum.FreeTrialOnboardingV4,
+        {}
       ),
     });
 
@@ -162,6 +172,7 @@ const handleUserWithoutAnyPastSubscriptions = async (user: IUser) => {
       distinctId: user.id,
       event: "free_trial_activated",
       properties: {
+        onboardingTemplate: WhatsappTemplateNameEnum.FreeTrialOnboardingV4,
         ...plan,
       },
     });
