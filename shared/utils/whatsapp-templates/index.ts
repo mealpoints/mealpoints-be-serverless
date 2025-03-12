@@ -130,7 +130,9 @@ export const createWhatsappTemplate = <T extends WhatsappTemplateNameEnum>(
       return createFreeTrialOnboardingV3Template();
     }
     case WhatsappTemplateNameEnum.FreeTrialOnboardingV4: {
-      return createFreeTrialOnboardingV4Template();
+      return createFreeTrialOnboardingV4Template(
+        data as IFreeTrailOnboardingV4Data
+      );
     }
     default: {
       throw new Error("Template not found");

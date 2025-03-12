@@ -146,25 +146,18 @@ const handleUserWithoutAnyPastSubscriptions = async (user: IUser) => {
       throw new Error("Failed to activate subscription");
     }
 
-    // TODO: Might use this later
-
-    // await messageService.sendTemplateMessage({
-    //   user: user.id,
-    //   type: MessageTypesEnum.Template,
-    //   template: createWhatsappTemplate(
-    //     WhatsappTemplateNameEnum.FreeTrialOnboardingV2,
-    //     {
-    //       trailDuration: getHumanReadablePlanDuration(plan.duration),
-    //     }
-    //   ),
-    // });
+    const videoLink = settings.get(
+      "user-engagement.onboarding.activation-video"
+    ) as string;
 
     await messageService.sendTemplateMessage({
       user: user.id,
       type: MessageTypesEnum.Template,
       template: createWhatsappTemplate(
         WhatsappTemplateNameEnum.FreeTrialOnboardingV4,
-        {}
+        {
+          videoLink,
+        }
       ),
     });
 
