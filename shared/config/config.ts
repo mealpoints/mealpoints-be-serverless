@@ -15,6 +15,7 @@ export const USER_MESSAGES = {
       user_not_subscribed: `We could not find your subscription. If you feel this is an error, please contact us at ${SUPPORT.email}`,
       subscription_already_cancelled: `Your subscription has already been cancelled. If you feel this is an error, please contact us at ${SUPPORT.email}`,
       subscription_expired: `Your subscription has expired. If you feel this is an error, please contact us at ${SUPPORT.email}`,
+      subscription_not_found: `We could not find your subscription. If you feel this is an error, please contact us at ${SUPPORT.email}`,
     },
   },
   info: {

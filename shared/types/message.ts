@@ -418,9 +418,9 @@ export type DocumentParametersObject =
 export type VideoParametersObject =
   ParametersObject<ParametersTypesEnum.Video> & VideoMediaObject;
 
-export type VideoMediaObject =
-  | MetaHostedVideoMediaObject
-  | SelfHostedVideoMediaObject;
+export type VideoMediaObject = {
+  video: MetaHostedVideoMediaObject | SelfHostedVideoMediaObject;
+};
 
 export type MetaHostedVideoMediaObject = {
   id: string;
