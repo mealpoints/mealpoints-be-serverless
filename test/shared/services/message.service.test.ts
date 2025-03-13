@@ -141,7 +141,7 @@ describe("Message Service", () => {
     expect(response.data).toBeDefined();
   });
 
-  it("should send free trail onboarding V2 template", async () => {
+  it("should send free trail onboarding V4 template", async () => {
     const dataService = DataService.getInstance();
     const userId = dataService.getUser().id;
 
@@ -149,10 +149,8 @@ describe("Message Service", () => {
       user: userId,
       type: MessageTypesEnum.Template,
       template: createWhatsappTemplate(
-        WhatsappTemplateNameEnum.FreeTrialOnboardingV2,
-        {
-          trailDuration: "7 days",
-        }
+        WhatsappTemplateNameEnum.FreeTrialOnboardingV4,
+        {}
       ),
     });
 

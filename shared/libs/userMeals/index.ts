@@ -1,9 +1,10 @@
+import { UPDATE_MEAL_BUTTON_TEXT } from "../../config/config";
 import { analytics } from "../../config/analytics";
 import logger from "../../config/logger";
 import { IUser } from "../../models/user.model";
 import * as messageService from "../../services/message.service";
 import * as userMealService from "../../services/userMeal.service";
-import { MessageTypesEnum } from "../../types/enums";
+import { ButtonReplyEnum, MessageTypesEnum } from "../../types/enums";
 import { Food } from "../../types/openai";
 import { getUserLocalTime } from "../../utils/user";
 import { updateDailyNutritionTrackerWithMeal } from "../dailyNutritionTracker";
@@ -38,10 +39,26 @@ export const processUserMeal = async (properties: IProcessUserMeal) => {
       macros: meal.macros,
     });
 
-    await messageService.sendTextMessage({
+    await messageService.sendInteractiveMessage({
       user: user.id,
-      payload: formatMessage(openAIMealresponse, dailyNutritionTracker),
-      type: MessageTypesEnum.Text,
+      type: MessageTypesEnum.Interactive,
+      interactive: {
+        type: "button",
+        body: {
+          text: formatMessage(openAIMealresponse, dailyNutritionTracker),
+        },
+        action: {
+          buttons: [
+            {
+              type: "reply",
+              reply: {
+                id: `${ButtonReplyEnum.UpdateMeal}__${userMeal.id}`,
+                title: UPDATE_MEAL_BUTTON_TEXT,
+              },
+            },
+          ],
+        },
+      },
     });
 
     analytics.capture({

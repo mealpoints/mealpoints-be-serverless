@@ -168,3 +168,13 @@ export const getUserMealsInPeriod = async (
     throw error;
   }
 };
+
+export const deleteUserMealById = async (id: string) => {
+  try {
+    Logger("deleteUserMealById").info("");
+    await UserMeal.findByIdAndDelete(id);
+  } catch (error) {
+    Logger("deleteUserMealById").error(JSON.stringify(error));
+    throw error;
+  }
+};

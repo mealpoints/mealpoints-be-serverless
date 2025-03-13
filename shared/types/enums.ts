@@ -569,6 +569,8 @@ export enum WhatsappTemplateNameEnum {
   LunchReminderV1 = "lunch_reminder_v1",
   DinnerReminderV1 = "dinner_reminder_v1",
   FreeTrialOnboardingV2 = "free_trial_onboarding_v2",
+  FreeTrialOnboardingV3 = "free_trial_onboarding_v3",
+  FreeTrialOnboardingV4 = "free_trial_onboarding_v4",
 }
 
 export enum CountryCodeToDefaultTimezoneEnum {
@@ -960,4 +962,5 @@ export enum PlanDurationUnitEnum {
 export enum ButtonReplyEnum {
   RefundConfirmed = "refund_confirmed",
   RefundRejected = "refund_rejected",
+  UpdateMeal = "update_meal",
 }
