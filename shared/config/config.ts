@@ -43,6 +43,14 @@ Click the link below to grab your plan and make every bite count.`,
 👋 Meal Points is a subscription-based service that offers personalized meal feedback and guidance to help you reach your health goals. 
 🌟 Subscribe now at ${process.env.MEALPOINTS_BASE_URL} to get started! 
 We’d love to have you join us! 😊.`,
+    meal: {
+      updated: `
+✅ Got it! Your previous meal has been removed from today’s calorie budget.
+🍽️ Share a new meal to continue tracking your progress! 🚀💪
+`,
+      not_updated: `
+❌ Your update meal request could not be fullfilled. Please try again in some time. If you need help, please contact us at ${SUPPORT.email}`,
+    },
     welcome: {
       notify_nutrition_budget: (macros: Macros) => `
 🎉 Your journey starts NOW! 
@@ -252,6 +260,8 @@ export const ACTIVITY_MULTIPLIERS: Record<PhysicalActivityEnum, number> = {
   [PhysicalActivityEnum.Active]: 1.725,
   [PhysicalActivityEnum.VeryActive]: 1.9,
 };
+
+export const UPDATE_MEAL_BUTTON_TEXT = "Update Meal";
 
 export const LOADING_MESSAGES = [
   "Loading... almost ready! 🌐",

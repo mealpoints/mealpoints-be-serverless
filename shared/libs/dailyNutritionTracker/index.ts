@@ -71,20 +71,23 @@ export const ensureDailyNutritionTrackerExists = async (
 interface IUpdateDailyNutritionTrackerWithMeal {
   user: string;
   macros: Macros;
+  operation?: "add" | "subtract";
 }
 
 export const updateDailyNutritionTrackerWithMeal = async ({
   user,
   macros,
+  operation = "add",
 }: IUpdateDailyNutritionTrackerWithMeal) => {
   Logger("updateDailyNutritionTrackerWithMeal").info("");
   try {
     const dailyNutritionTracker = await ensureDailyNutritionTrackerExists(user);
 
+    const multiplier = operation === 'add' ? 1 : -1;
     const nutrients = ["calories", "protein", "fat", "carbohydrates"] as const;
     nutrients.forEach((nutrient) => {
       dailyNutritionTracker[nutrient].consumed = Math.round(
-        (dailyNutritionTracker[nutrient].consumed || 0) + macros[nutrient]
+        (dailyNutritionTracker[nutrient].consumed || 0) + multiplier * macros[nutrient]
       );
     });
 
