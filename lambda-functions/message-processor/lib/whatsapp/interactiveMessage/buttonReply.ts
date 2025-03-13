@@ -3,6 +3,7 @@ import {
   refundConfirmed,
   refundRejectedByUser,
 } from "../../../../../shared/libs/commands/refund";
+import { updateMealRequested } from "../../../../../shared/libs/commands/update-meal";
 import { IUser } from "../../../../../shared/models/user.model";
 import { ButtonReplyEnum } from "../../../../../shared/types/enums";
 import {
@@ -11,7 +12,6 @@ import {
 } from "../../../../../shared/types/message";
 import { WhatsappData } from "../../../../../shared/utils/WhatsappData";
 import { processUnknownMessage } from "../unknownMessage";
-import { updateMealRequested } from "../../../../../shared/libs/commands/update-meal";
 
 const Logger = logger("lib/whatsapp/interactiveMessage/buttonReply");
 
@@ -24,10 +24,10 @@ export const buttonReply = async (
     const { interactiveMessageContent } = new WhatsappData(payload);
     const { button_reply } = interactiveMessageContent as ButtonReplyObject;
 
-    const buttonRreplyId = button_reply.id.split("__")[0] as ButtonReplyEnum;
-    const attachedContextId = button_reply.id.split("__")[1];
+    const buttonReplyId = button_reply.id.split("__")[0] as ButtonReplyEnum;
+    const attachedContext = button_reply.id.split("__")[1];
 
-    switch (buttonRreplyId) {
+    switch (buttonReplyId) {
       case ButtonReplyEnum.RefundConfirmed: {
         Logger("buttonReply").info("RefundConfirmed");
         await refundConfirmed(user);
@@ -40,7 +40,7 @@ export const buttonReply = async (
       }
       case ButtonReplyEnum.UpdateMeal: {
         Logger("buttonReply").info("UpdateMeal");
-        await updateMealRequested(user, attachedContextId);
+        await updateMealRequested(user, attachedContext);
         break;
       }
       default: {
