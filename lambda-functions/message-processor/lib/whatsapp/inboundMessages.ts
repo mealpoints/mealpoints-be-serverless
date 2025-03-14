@@ -1,6 +1,7 @@
 import { analytics } from "../../../../shared/config/analytics";
 import logger from "../../../../shared/config/logger";
 import { isUserSubscribed } from "../../../../shared/libs/subscription";
+import { IUser } from "../../../../shared/models/user.model";
 import * as messageService from "../../../../shared/services/message.service";
 import * as nutritionBudgetService from "../../../../shared/services/nutritionBudget.service";
 import * as userService from "../../../../shared/services/user.service";
@@ -21,9 +22,7 @@ export const processInboundMessageWebhook = async (
   payload: WhastappWebhookObject
 ) => {
   try {
-    const { webhookType, contact, whatsappMessageId } = new WhatsappData(
-      payload
-    );
+    const { webhookType, contact } = new WhatsappData(payload);
 
     Logger("processInboundMessageWebhook").info(webhookType);
 
@@ -39,6 +38,9 @@ export const processInboundMessageWebhook = async (
       },
     });
 
+    // Store the received message
+    await storeRecivedMessage(payload, user);
+
     // Subs check paywall
     const { isSubscribed, subscription } = await isUserSubscribed(user);
     if (!isSubscribed) {
@@ -53,26 +55,6 @@ export const processInboundMessageWebhook = async (
       // At this point, user's current msg is left unprocessed
       return await requestNutritionBudget(user);
     }
-
-    const existingMessage = await messageService.findRecievedMessage({
-      whatsappMessageId,
-    });
-
-    if (existingMessage.length > 0) {
-      // Sometimes the same message is sent twice, this usually happens because the first time the message was processed unccesdfully
-      Logger("processInboundMessageWebhook").info(
-        "This message was already processed earlier"
-      );
-      return;
-    }
-
-    // Create message
-    await messageService.createRecievedMessage({
-      user: user.id,
-      payload,
-      type: webhookType,
-      wamid: whatsappMessageId as string,
-    });
 
     // Ensure user had not exceeded the limit of messages per day
     if (await isUserRateLimited(user)) return;
@@ -98,4 +80,31 @@ export const processInboundMessageWebhook = async (
     Logger("processInboundMessageWebhook").error(error);
     throw error;
   }
+};
+
+const storeRecivedMessage = async (
+  payload: WhastappWebhookObject,
+  user: IUser
+) => {
+  const { webhookType, whatsappMessageId } = new WhatsappData(payload);
+
+  const existingMessage = await messageService.findRecievedMessage({
+    whatsappMessageId,
+  });
+
+  if (existingMessage.length > 0) {
+    // Sometimes the same message is sent twice, this usually happens because the first time the message was processed unccesdfully
+    Logger("processInboundMessageWebhook").info(
+      "This message was already processed earlier"
+    );
+    return;
+  }
+
+  // Create message
+  await messageService.createRecievedMessage({
+    user: user.id,
+    payload,
+    type: webhookType,
+    wamid: whatsappMessageId as string,
+  });
 };
