@@ -36,7 +36,7 @@ export const processSubscriptionExpired = async (
       }
 
       // TODO: endDate of last billing cycle must not exceed the plan's end date (this may arise due to delayed renewals from user end.) 
-      const maxCycles = getMaxPossibleBillingCycleCountInPlan(usersCurrentPlan);
+      const maxCycles = getMaxPossibleBillingCycleCountInPlan(usersCurrentPlan, user.subscription?.createdAt);
       if (user.subscription?.billingCycleCount < maxCycles) {
         subscriptionStatusToBeMarked = SubscriptionStatusEnum.Paused;
       }

@@ -955,6 +955,7 @@ export enum PlanTypeEnum {
 }
 
 export enum PlanDurationUnitEnum {
+  Days = "days",
   Weeks = "weeks",
   Months = "months",
 }
